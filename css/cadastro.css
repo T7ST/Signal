@@ -6,6 +6,20 @@ body {
   box-sizing: border-box;
   overflow: hidden;
 }
+/*-----------------------FONTES--------------------------*/
+.roboto-condensed-bold {
+  font-family: "Roboto Condensed", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: bold;
+  font-style: normal;
+}
+.roboto-condensed {
+  font-family: "Roboto Condensed", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: lighter;
+  font-style: normal;
+}
+/*-------------------------------------------------------*/
 
 .pagina {
     display: flex;
@@ -16,9 +30,27 @@ body {
 
 .caixa1{
     display: flex;
-    justify-content: center;
     align-items: center;
-    height: 100%;
-    width: 60%;
+    height: 90%;
+    width: 40%;
     flex-direction: column;
+    background-color: #313030;
+    border: 3px solid #484647;
+    border-radius: 5px;
+    
+}
+
+.titulo {
+    display: flex;
+    font-size: 2em;
+    color: rgb(241, 19, 19);
+    font-family: "Roboto Condensed";
+    margin-top: 10%;
+    height: 20%;
+}
+
+.subtitulo{
+    display: flex;
+    font-size: medium;
+    font-family: "Roboto Condensed";
 }
