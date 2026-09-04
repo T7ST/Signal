@@ -208,7 +208,10 @@ body {
   width: 50%;
 }
 .imagem img {
-  height: 100%;
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  flex-shrink: 0;
 }
 .tt {
   display: flex;
@@ -217,6 +220,7 @@ body {
   margin-left: 5%;
   height: 30%;
   width: 100%;
+  align-items: center;
 }
 .textocaixa3 {
   display: flex;
@@ -237,6 +241,10 @@ body {
   font-family: "Roboto Condensed";
   color: #ffffff;
   font-size: 1.2em;
+  width: 100%;
+  justify-content: center;
+  text-align: center;
+
 }
 .caixasc4 {
   display: flex;
@@ -350,4 +358,133 @@ body {
   text-decoration: none;
   border: none;
   color: #ffffff;
+}
+
+
+@media (max-width: 1024px) {
+  .caixasc2 {
+    flex-wrap: wrap;
+    height: auto;
+    gap: 20px;
+  }
+  .caixa1 {
+    width: 45%;
+    margin-bottom: 20px;
+  }
+
+  .separacao {
+    flex-direction: column;
+    height: auto;
+  }
+  .lado1, .lado2 {
+    width: 100%;
+  }
+
+  .caixasc4 {
+    width: 80%;
+  }
+
+  .subtituloc1 {
+    width: 60%;
+  }
+}
+
+
+@media (max-width: 600px) {
+  .cabecalho {
+    height: auto;
+    padding: 15px 0;
+    flex-wrap: wrap;
+  }
+  .cabecalho img {
+    margin-left: 5%;
+    margin-top: 0;
+  }
+  .tituloCabecalho {
+    margin-left: 2%;
+    margin-right: auto;
+    font-size: 1.3em;
+  }
+  .botaoCabecalho {
+    margin-right: 5%;
+  }
+  .botaoCabecalho button {
+    padding: 0 20px;
+    width: auto;
+  }
+
+  .corpo1 {
+    height: auto;
+    padding: 40px 0;
+  }
+  .tituloc1 {
+    width: 90%;
+    font-size: 1.2em;
+    margin-top: 15%;
+  }
+  .subtituloc1 {
+    width: 90%;
+    font-size: 1em;
+  }
+
+  .corpo2 {
+    height: auto;
+    padding: 40px 0;
+  }
+  .caixasc2 {
+    flex-direction: column;
+    width: 90%;
+    align-items: center;
+  }
+  .caixa1 {
+    width: 100%;
+    height: auto;
+    padding: 20px 0;
+    margin-bottom: 20px;
+  }
+
+  .corpo3 {
+    height: auto;
+    padding: 40px 0;
+  }
+  .separacao {
+    width: 90%;
+  }
+  .caixac3 {
+    height: auto;
+    padding: 15px 0;
+  }
+  .titulocaixa3 {
+    font-size: 1em;
+    width: 100%;
+  }
+
+  .corpo4 {
+    height: auto;
+    padding: 40px 0;
+  }
+  .caixasc4 {
+    flex-direction: column;
+    width: 90%;
+    height: auto;
+    gap: 20px;
+  }
+  .plano {
+    padding: 20px 0;
+  }
+
+  .corpo5 {
+    height: auto;
+    flex-direction: column;
+    padding: 20px 0;
+    text-align: center;
+  }
+  .nomesite {
+    margin: 10px 0;
+  }
+  .topicos {
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
 }
