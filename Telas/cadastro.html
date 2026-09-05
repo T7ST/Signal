@@ -9,14 +9,47 @@
     <link rel="stylesheet" href="../css/cadastro.css">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
 </head>
 
 <body>
-   <div class="plano">
-        <span id="nomePlano"></span>
-        <span id="precoPlano"></span>
+    <div class="voltar">
+        <a href="./instirucional.html">↩</a>
+    </div>
+    <div class="corpo1">
+        <div class="plano">
+            <span>🔴</span>
+            <span id="nomePlano"></span>
+        </div>
+        <div class="titulo">
+            <h1>Complete seu Cadastro</h1>
+        </div>
+        <div class="sub">
+            Configure suas credenciais para explorar métricas de bilheteria e straming
+        </div>
+        <div class="campos">
+            <span>NOME COMPLETO</span> <br>
+            <input type="text" id="input_nome" placeholder="Ex: Elena Rostova"><br>
+            <span>EMAIL PROFISSIONAL</span> <br>
+            <input type="text" id="input_email" placeholder="✉ nome@estudio.com"><br>
+            <span>SENHA DE ACESSO</span> <br>
+            <input type="text" oninput="validacao()" id="input_senha" placeholder="🔒︎ Mínimo de 8 dígitos alfanuméricos"><br>
+            <div class="barraForca">
+                <div class="preenchimento" id="preenchimento"></div>
+            </div>
+            <span>CONFIRMAÇÃO DA SENHA</span> <br>
+            <input type="text" id="input_senhaConfirmacao" placeholder="🔒︎ Repita sua senha"><br>
+        </div>
+        <div class="botao">
+            <div class="proximo">
+                <button onclick="pagamento()">Próximo ➝</button>
+            </div>
+            <div class="login">
+                <span>Já possui uma conta? <a href="./login.html">Entrar</a></span>
+            </div>
+        </div>
     </div>
 
 
@@ -28,8 +61,8 @@
     //Explicação para quem for estudar isso:
     //Aqui foi definido dps da pagina institucional, que definimos os parametros
     // se clicarmos no plano anual o parametro (plano=) vai ter seu valor =anual
-    
-     const params = new URLSearchParams(window.location.search); //o new... organiza o parametro e transforma em objeto e o window... faz com que a query seja mostrada no caso o dps do ? (?plano=anual)
+
+    const params = new URLSearchParams(window.location.search); //o new... organiza o parametro e transforma em objeto e o window... faz com que a query seja mostrada no caso o dps do ? (?plano=anual)
     const planoDaURL = params.get('plano'); //pegamos o valor do objeto plano(foi transformado em obj na linha de cima)
     const planoSalvo = localStorage.getItem('planoEscolhido'); //foi definido o comando no onclick na pagina institucional para definir como anual ou mensal
     const plano = planoDaURL || planoSalvo || 'padrao'; //definimos que o paramentro plano tem uma ordem de prioridade
@@ -37,7 +70,7 @@
 
     const planos = { //objeto js nao é .json
         mensal: { nome: 'Plano Mensal', preco: 'R$ 49,90/mês' },
-        anual:  { nome: 'Plano Anual',  preco: 'R$ 499,90/ano' },
+        anual: { nome: 'Plano Anual', preco: 'R$ 499,90/ano' },
         padrao: { nome: 'Plano não selecionado', preco: '' }
     };
 
@@ -45,4 +78,51 @@
 
     document.getElementById('nomePlano').textContent = infoPlano.nome; //procura o elemento com o nome nomePlano (defini no html como id) e dps joga o texto la
     document.getElementById('precoPlano').textContent = infoPlano.preco;
+
+
+    let validaçãoS = ``;
+    let mensagem = ``;
+    function validacao() {
+        let contadorSenha = 0;
+
+        let senha = input_senha.value;
+
+        let temNumero = false;
+
+        for (let i = 0; i < senha.length; i++) {
+            if (senha[i] >= "0" && senha[i] <= "9") {
+                temNumero = true;
+            }
+        }
+
+        if (senha == senha.toLowerCase()) {
+        } else if (senha != senha.toLowerCase()) {
+            contadorSenha++;
+        }
+        if (senha == senha.toUpperCase()) {
+        } else if (senha != senha.toUpperCase()) {
+            contadorSenha++;
+        }
+        if (temNumero != true) {
+        } else if (temNumero == true) {
+            contadorSenha++;
+        }
+        if (senha.length < 8) {
+        } else if (senha.length >= 8) {
+            contadorSenha++;
+        }
+
+         const porcentagem = (contadorSenha / 4) * 100;
+    preenchimento.style.width = porcentagem + '%';
+
+        if (contadorSenha == 4) {
+           preenchimento.style.backgroundColor = 'green';
+        } else if (contadorSenha >= 2) {
+           preenchimento.style.backgroundColor = 'darkorange';
+        } else if (contadorSenha == 1) {
+           preenchimento.style.backgroundColor = 'orange';
+        } else if (contadorSenha == 0) {
+            preenchimento.style.backgroundColor = 'red';
+        }
+    }
 </script>

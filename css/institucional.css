@@ -312,13 +312,13 @@ body {
   width: 60%;
   padding: 0 50px;
   font-family: "Roboto Condensed";
-
   font-weight: bolder;
   border-radius: 10px;
   font-size: 1em;
-  margin-top: 10%;
+  margin-top: 7%;
   transition: all 0.2s ease-in-out;
 }
+
 .plano:hover .botaoAssinatura a {
   background-color: #bb152c;
   border: 1px solid #ff535b;
