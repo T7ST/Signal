@@ -23,7 +23,7 @@ body {
   display: flex;
   background-color: #121316;
 }
-.voltar a{
+.voltar a {
   margin-top: 2%;
   margin-left: 3%;
   background-color: #E50914;
@@ -33,10 +33,9 @@ body {
   font-weight: bolder;
   border-radius: 10px;
 }
-.voltar a:hover{
+.voltar a:hover {
   background-color: #91091b;
   color: #f8c4be;
-  
 }
 
 .corpo1 {
@@ -45,7 +44,7 @@ body {
   flex-direction: column;
   height: 120vh;
   background-color: #121316;
-   font-family: "Roboto Condensed";
+  font-family: "Roboto Condensed";
 }
 .plano {
   display: flex;
@@ -63,9 +62,9 @@ body {
   font-size: x-small;
 }
 .titulo {
- color: #F2F0F6;
- font-size: 1.5em;
- height: 13%;
+  color: #F2F0F6;
+  font-size: 1.5em;
+  height: 13%;
 }
 .sub {
   display: flex;
@@ -75,45 +74,45 @@ body {
   width: 24%;
   text-align: center;
   margin-bottom: 2%;
-  }
-  .campos {
-    color: #F2F0F6;
-    width: 90%;
-    height: 50%;
-  }
-  .campos input{
-    width: 100%;
-    height: 10%;
-    margin-bottom: 2%;
-    margin-top: 1%;
-    border-radius: 10px;
-    color: #FFB4AA;
-    background-color: #0B0C10;
-    border: none;
-  }
-  .campos ::placeholder{
-    display: flex;
-    color: #FFB4AA;
-  }
+}
+.campos {
+  color: #F2F0F6;
+  width: 90%;
+  height: 50%;
+}
+.campos input {
+  width: 100%;
+  height: 10%;
+  margin-bottom: 2%;
+  margin-top: 1%;
+  border-radius: 10px;
+  color: #FFB4AA;
+  background-color: #0B0C10;
+  border: none;
+}
+.campos ::placeholder {
+  display: flex;
+  color: #FFB4AA;
+}
 
 .barraForca {
-    width: 100%;
-    height: 6px;
-    background-color: #2F3035;
-    border-radius: 4px;
-    margin-bottom: 2%;
-    overflow: hidden; 
+  width: 100%;
+  height: 6px;
+  background-color: #2F3035;
+  border-radius: 4px;
+  margin-bottom: 2%;
+  overflow: hidden;
 }
 .preenchimento {
-    height: 100%;
-    width: 0%;
-    background-color: red;
-    border-radius: 4px;
-    transition: width 0.3s ease, background-color 0.3s ease;
+  height: 100%;
+  width: 0%;
+  background-color: red;
+  border-radius: 4px;
+  transition: width 0.3s ease, background-color 0.3s ease;
 }
 
 .botao {
- width: 90%;
+  width: 90%;
 }
 .botao button {
   width: 100%;
@@ -125,7 +124,7 @@ body {
   font-weight: bold;
 }
 .botao button:hover {
-   background-color: #91091b;
+  background-color: #91091b;
   color: #f8c4be;
 }
 .login {
@@ -139,4 +138,66 @@ body {
   text-decoration: none;
   color: #FF8A7C;
   font-weight: bold;
+}
+
+
+@media (max-width: 1024px) {
+  .corpo1 {
+    height: auto;
+    padding: 40px 0;
+  }
+  .plano {
+    width: 25%;
+    height: auto;
+    padding: 8px 16px;
+  }
+  .sub {
+    width: 60%;
+  }
+  .campos {
+    width: 90%;
+    height: auto;
+  }
+  .campos input {
+    height: auto;
+    padding: 12px 0;
+  }
+}
+
+
+@media (max-width: 600px) {
+  .corpo1 {
+    padding: 80px 0;
+  }
+  .voltar a {
+    margin-top: 15px;
+    margin-left: 15px;
+  }
+  .plano {
+    width: auto;
+    max-width: 90%;
+    padding: 6px 14px;
+    font-size: 0.9em;
+    white-space: nowrap;
+  }
+  .titulo {
+    height: auto;
+    font-size: 1.2em;
+    text-align: center;
+    width: 90%;
+    margin-top: 20px;
+  }
+  .sub {
+    width: 90%;
+    font-size: 1em;
+  }
+  .campos {
+    width: 90%;
+  }
+  .campos input {
+    font-size: 16px;
+  }
+  .botao {
+    width: 90%;
+  }
 }
