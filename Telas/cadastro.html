@@ -14,41 +14,35 @@
 </head>
 
 <body>
-    <div class="pagina">
-        <div class="caixa1">
-            <div class="titulo">
-                <h1>SIGNAL</h1>
-            </div>
-            <div class="subtitulo">
-                <h3>Cadastre-se no site!</h3>
-            </div>
-
-
-            <div class="campos">
-                <span>Nome Completo:</span> <br>
-                <input type="text" id="nome"><br>
-
-                <span>Email:</span> <br>
-                <input type="text" id="email"><br>
-
-                <span>Senha:</span> <br>
-                <input type="text" id="senha"><br>
-
-                <span>Confirme sua senha:</span> <br>
-                <input type="text" id="senha2"><br>
-            </div>
-
-            <div class="botaoCadastro">
-                <button onclick="cadastrar()">Cadastrar →</button>
-            </div>
-
-            <div class="botaoLogin">
-                <span>Já possui uma conta? <a href="">Entrar</a></span>
-            </div>
-        </div>
+   <div class="plano">
+        <span id="nomePlano"></span>
+        <span id="precoPlano"></span>
     </div>
 
 
 </body>
 
 </html>
+<script>
+
+    //Explicação para quem for estudar isso:
+    //Aqui foi definido dps da pagina institucional, que definimos os parametros
+    // se clicarmos no plano anual o parametro (plano=) vai ter seu valor =anual
+    
+     const params = new URLSearchParams(window.location.search); //o new... organiza o parametro e transforma em objeto e o window... faz com que a query seja mostrada no caso o dps do ? (?plano=anual)
+    const planoDaURL = params.get('plano'); //pegamos o valor do objeto plano(foi transformado em obj na linha de cima)
+    const planoSalvo = localStorage.getItem('planoEscolhido'); //foi definido o comando no onclick na pagina institucional para definir como anual ou mensal
+    const plano = planoDaURL || planoSalvo || 'padrao'; //definimos que o paramentro plano tem uma ordem de prioridade
+    if (planoDaURL) localStorage.setItem('planoEscolhido', planoDaURL); //faz com que o plano n fique salvo pra sempre, ent se a pessoa sair e escolher o outro plano, o plano mais recente(da URL) que vai ser salvo e definido como escolhido
+
+    const planos = { //objeto js nao é .json
+        mensal: { nome: 'Plano Mensal', preco: 'R$ 49,90/mês' },
+        anual:  { nome: 'Plano Anual',  preco: 'R$ 499,90/ano' },
+        padrao: { nome: 'Plano não selecionado', preco: '' }
+    };
+
+    const infoPlano = planos[plano] || planos.padrao; //aqui pegamos qual tipo de plano pra trazer pra tela pro usuario ver. planos[plano] busca no objeto usando o valor da variável plano como chave
+
+    document.getElementById('nomePlano').textContent = infoPlano.nome; //procura o elemento com o nome nomePlano (defini no html como id) e dps joga o texto la
+    document.getElementById('precoPlano').textContent = infoPlano.preco;
+</script>

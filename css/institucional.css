@@ -300,7 +300,11 @@ body {
   justify-content: center;
   width: 100%;
 }
-.botaoAssinatura button {
+.botaoAssinatura a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
   color: #ffffff;
   background-color: black;
   border: 2px solid #ff535b;
@@ -308,18 +312,19 @@ body {
   width: 60%;
   padding: 0 50px;
   font-family: "Roboto Condensed";
+
   font-weight: bolder;
   border-radius: 10px;
   font-size: 1em;
   margin-top: 10%;
   transition: all 0.2s ease-in-out;
 }
-.plano:hover .botaoAssinatura button {
+.plano:hover .botaoAssinatura a {
   background-color: #bb152c;
   border: 1px solid #ff535b;
   color: #ffffff;
 }
-.botaoAssinatura button:hover {
+.botaoAssinatura a:hover {
   background-color: #bb152c;
   color: #c6c6c6;
 }

@@ -172,15 +172,16 @@
                     <span>R$ xxxx</span>
                 </div>
                 <div class="vantagem">
-                    <span><span style= "color: red">✓</span>Relatórios semestrais</span>
-                    <span><span style= "color: red">✓</span>Armazenamento de relatórios</span>
-                    <span><span style= "color: red">✓</span>Análises avançada</span>
-<div class="botaoAssinatura">
-                    <button onclick="assinar()">Assinar Agora</button>
-                </div>
+                    <span><span style="color: red">✓</span>Relatórios semestrais</span>
+                    <span><span style="color: red">✓</span>Armazenamento de relatórios</span>
+                    <span><span style="color: red">✓</span>Análises avançada</span>
+                    <div class="botaoAssinatura">
+                        <a href="cadastro.html?plano=mensal"
+                            onclick="localStorage.setItem('planoEscolhido','mensal')">Assinar Mensal</a>  <!-- ?plano=mensal é uma query para o navedador sabero q esta levando -->
+                    </div>
                 </div>
 
-                
+
             </div>
 
             <div class="plano">
@@ -191,15 +192,16 @@
                     <span>R$ xxxx</span>
                 </div>
                 <div class="vantagem">
-                    <span> <span style= "color: red">✓</span> Relatórios semestrais</span>
-                    <span><span style= "color: red">✓</span>Armazenamento de relatórios</span>
-                    <span><span style= "color: red">✓</span>Análises avançada</span>
+                    <span> <span style="color: red">✓</span> Relatórios semestrais</span>
+                    <span><span style="color: red">✓</span>Armazenamento de relatórios</span>
+                    <span><span style="color: red">✓</span>Análises avançada</span>
                     <div class="botaoAssinatura">
-                    <button onclick="assinar()">Assinar Agora</button>
-                </div>
+                        <a href="cadastro.html?plano=anual"
+                            onclick="localStorage.setItem('planoEscolhido','anual')">Assinar Anual</a>
+                    </div>
                 </div>
 
-                
+
             </div>
         </div>
     </div>
@@ -219,3 +221,8 @@
 </body>
 
 </html>
+<script>
+    function entrar() {
+        window.location = "./login.html";
+    }
+</script>

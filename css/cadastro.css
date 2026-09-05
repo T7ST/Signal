@@ -20,37 +20,3 @@ body {
   font-style: normal;
 }
 /*-------------------------------------------------------*/
-
-.pagina {
-    display: flex;
-    height: 100vh;
-    justify-content: center;
-    align-items: center;
-}
-
-.caixa1{
-    display: flex;
-    align-items: center;
-    height: 90%;
-    width: 40%;
-    flex-direction: column;
-    background-color: #313030;
-    border: 3px solid #484647;
-    border-radius: 5px;
-    
-}
-
-.titulo {
-    display: flex;
-    font-size: 2em;
-    color: rgb(241, 19, 19);
-    font-family: "Roboto Condensed";
-    margin-top: 10%;
-    height: 20%;
-}
-
-.subtitulo{
-    display: flex;
-    font-size: medium;
-    font-family: "Roboto Condensed";
-}
