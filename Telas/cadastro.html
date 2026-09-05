@@ -30,16 +30,17 @@
             Configure suas credenciais para explorar métricas de bilheteria e straming
         </div>
         <div class="campos">
-            <span>NOME COMPLETO</span> <br>
+            <span>NOME COMPLETO <span id="mensagemnome"></span> </span> <br>
             <input type="text" id="input_nome" placeholder="Ex: Elena Rostova"><br>
-            <span>EMAIL PROFISSIONAL</span> <br>
+            <span>EMAIL PROFISSIONAL <span id="mensagememail"></span></span> <br>
             <input type="text" id="input_email" placeholder="✉ nome@estudio.com"><br>
-            <span>SENHA DE ACESSO</span> <br>
-            <input type="text" oninput="validacao()" id="input_senha" placeholder="🔒︎ Mínimo de 8 dígitos alfanuméricos"><br>
+            <span>SENHA DE ACESSO <span id="mensagemsenha"></span></span> <br>
+            <input type="text" oninput="validacao()" id="input_senha"
+                placeholder="🔒︎ Mínimo de 8 dígitos alfanuméricos maiúsculo e minúsculo"><br>
             <div class="barraForca">
                 <div class="preenchimento" id="preenchimento"></div>
             </div>
-            <span>CONFIRMAÇÃO DA SENHA</span> <br>
+            <span>CONFIRMAÇÃO DA SENHA <span id="mensagemconfirm"></span></span> <br>
             <input type="text" id="input_senhaConfirmacao" placeholder="🔒︎ Repita sua senha"><br>
         </div>
         <div class="botao">
@@ -57,7 +58,8 @@
 
 </html>
 <script>
-
+    let validaçãoS = ``;
+    let mensagem = ``;
     //Explicação para quem for estudar isso:
     //Aqui foi definido dps da pagina institucional, que definimos os parametros
     // se clicarmos no plano anual o parametro (plano=) vai ter seu valor =anual
@@ -80,9 +82,9 @@
     document.getElementById('precoPlano').textContent = infoPlano.preco;
 
 
-    let validaçãoS = ``;
-    let mensagem = ``;
+    
     function validacao() {
+
         let contadorSenha = 0;
 
         let senha = input_senha.value;
@@ -112,17 +114,57 @@
             contadorSenha++;
         }
 
-         const porcentagem = (contadorSenha / 4) * 100;
-    preenchimento.style.width = porcentagem + '%';
+        const porcentagem = (contadorSenha / 4) * 100;
+        preenchimento.style.width = porcentagem + '%';
 
         if (contadorSenha == 4) {
-           preenchimento.style.backgroundColor = 'green';
+            validaçãoS = "Forte";
+            preenchimento.style.backgroundColor = 'green';
         } else if (contadorSenha >= 2) {
-           preenchimento.style.backgroundColor = 'darkorange';
+            preenchimento.style.backgroundColor = 'darkorange';
         } else if (contadorSenha == 1) {
-           preenchimento.style.backgroundColor = 'orange';
+            preenchimento.style.backgroundColor = 'orange';
         } else if (contadorSenha == 0) {
             preenchimento.style.backgroundColor = 'red';
+        }
+    }
+
+    function pagamento() {
+        let nome = input_nome.value;
+        let email = input_email.value;
+        let senha = input_senha.value;
+        let confirmação = input_senhaConfirmacao.value;
+        let mensagem = "";
+        let contador = 0;
+
+        if (nome.length < 3) {
+            mensagemnome.innerHTML = `<span style= "color: red">*Insira um nome válido</span>`;
+        } else {
+            contador++;
+            mensagemnome.innerHTML = ``;
+        }
+        if (!email.includes("@") || !email.includes(".com") || email.endsWith("@")) {
+            mensagememail.innerHTML = `<span style= "color: red">*Insira um email válido</span>`;
+        } else {
+            contador++;
+            mensagememail.innerHTML = ``;
+        }
+        if (validaçãoS != "Forte") {
+            mensagemsenha.innerHTML = `<span style= "color: red">*Necessita de uma senha forte (barrinha verde)</span>`;
+        } else {
+            contador++;
+            mensagemsenha.innerHTML = mensagem;
+        }
+
+        if (senha != confirmação) {
+            mensagemconfirm.innerHTML = `<span style= "color: red">*Senha incorreta</span>`;
+        } else {
+            contador++;
+            mensagemconfirm.innerHTML = ``;
+        }
+
+        if (contador == 4) {
+            window.location = "./pagamento.html"
         }
     }
 </script>

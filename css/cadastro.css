@@ -33,6 +33,11 @@ body {
   font-weight: bolder;
   border-radius: 10px;
 }
+.voltar a:hover{
+  background-color: #91091b;
+  color: #f8c4be;
+  
+}
 
 .corpo1 {
   display: flex;
@@ -118,6 +123,10 @@ body {
   border: none;
   border-radius: 10px;
   font-weight: bold;
+}
+.botao button:hover {
+   background-color: #91091b;
+  color: #f8c4be;
 }
 .login {
   display: flex;
