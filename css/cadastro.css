@@ -161,6 +161,7 @@ body {
   .campos input {
     height: auto;
     padding: 12px 0;
+    margin-bottom: 5%;
   }
 }
 
@@ -172,6 +173,9 @@ body {
   .voltar a {
     margin-top: 15px;
     margin-left: 15px;
+  }
+  .sub {
+    margin-bottom: 10%;
   }
   .plano {
     width: auto;
