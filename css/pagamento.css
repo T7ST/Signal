@@ -1,0 +1,236 @@
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+/* ======================================= */
+/*-----------------------FONTES--------------------------*/
+.roboto-condensed-bold {
+  font-family: "Roboto Condensed", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: bold;
+  font-style: normal;
+}
+.roboto-condensed {
+  font-family: "Roboto Condensed", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: lighter;
+  font-style: normal;
+}
+/* =========================================== */
+
+.cabecalho {
+  display: flex;
+  align-items: center;
+  background-color: #0b0c10;
+  font-family: "Roboto Condensed";
+  height: 10vh;
+}
+.foto {
+  display: flex;
+  width: 5%;
+}
+.foto img {
+  width: 80%;
+  height: 80%;
+  margin-left: 10%;
+}
+.titulo {
+  display: flex;
+  flex-direction: column;
+}
+.titulo h3 {
+  margin: 0;
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 1.5em;
+}
+.titulo span {
+  color: #ffb4aa;
+  font-weight: bold;
+  font-size: 0.8em;
+}
+
+.corpo {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  height: 120vh;
+  background-color: #121316;
+  font-family: "Roboto Condensed";
+}
+.t2 {
+  display: flex;
+  width: 95%;
+  margin-top: 2%;
+  height: auto;
+  min-height: 30px;
+  align-items: center;
+  margin-bottom: 1%;
+}
+.t2 span:nth-child(1) {
+  display: flex;
+  color: #ffffff;
+  background-color: #e50914;
+  width: 2%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+}
+.t2 span:nth-child(2) {
+  display: flex;
+  color: #ffffff;
+  width: 10%;
+  justify-content: center;
+  align-items: center;
+}
+.plano {
+  background-color: #1a1b20;
+  width: 95%;
+  height: auto;
+  padding: 1% 0;
+  border-radius: 10px;
+  margin-bottom: 2%;
+  box-shadow: #0b0c10 5px 5px 15px;
+}
+.t3 {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #ffffff;
+  margin-left: 2%;
+  margin-bottom: 0.5%;
+}
+.sub {
+  color: #ffb4aa;
+  font-size: 1em;
+  margin-left: 2%;
+  margin-bottom: 3;
+}
+.preco {
+  margin-top: 2%;
+  margin-left: 2%;
+}
+.preco span:nth-child(1) {
+  color: #ffb4aa;
+  font-size: 1em;
+  font-weight: bold;
+}
+#precoPlano {
+  color: #ffffff;
+  font-size: 2em;
+  font-weight: bolder;
+}
+.formas {
+  display: flex;
+  width: 95%;
+  height: 20%;
+  flex-direction: column;
+}
+
+.t4 {
+  display: flex;
+  width: 100%;
+  height: 10%;
+  margin-bottom: 1%;
+}
+.t4 span {
+  display: flex;
+  color: #ffb4aa;
+  width: 100%;
+  font-size: 0.8em;
+  font-weight: bolder;
+}
+.opcao {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  width: 100%;
+  background-color: #0b0c10;
+  border-radius: 10px;
+}
+.opcao img {
+  display: flex;
+  height: 8vh;
+}
+.opcao span {
+  color: #ffdad5;
+}
+.o1,
+.o2 {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  cursor: pointer;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  padding: 10px;
+  transition: border 0.2s ease;
+  width: 50%;
+}
+.o1.selecionado,
+.o2.selecionado {
+  border: 4px solid #0b0c10;
+  background-color: #1a1b20;
+}
+.campos {
+  display: flex;
+  width: 95%;
+  flex-direction: column;
+  color: #FFDAD9;
+}
+.campos span {
+  font-size: medium;
+  font-weight: bold;
+  height: 10%;
+}
+.campos input {
+  width: 100%;
+  height: 50px;
+  border-radius: 5px;
+  color: #ffb4aa;
+  background-color: #0b0c10;
+  border: none;
+  margin-bottom: 1%;
+}
+.campos ::placeholder {
+  display: flex;
+  color: #94a3b8;
+}
+.campo2 {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+.p1,
+.p2 {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+}
+#blocoParcelamento {
+     width: 100%;
+     height: 20%;
+}
+#input_parcelamento {
+    width: 100%;
+    height: 90%;
+    margin-top: 1%;
+    background-color: #0b0c10;
+    color: #ffffff;
+    border-radius: 10px;
+}
+.botao {
+    margin-top: 5%;
+    width: 95%;
+    height: 5%;
+}
+.botao button {
+    width: 100%;
+    height: 100%;
+    color: #ffffff;
+     border: none;
+     background-color: #e50914;
+}
