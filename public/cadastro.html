@@ -6,8 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 
-    <link rel="stylesheet" href="../css/cadastro.css">
-
+    <link rel="stylesheet" href="./css/cadastro.css">
+    <script src="./js/sessao.js"></script>
+    <script src="./js/alerta.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap"
@@ -16,7 +17,7 @@
 
 <body>
     <div class="voltar">
-        <a href="./instirucional.html">↩</a>
+        <a href="./index.html">↩</a>
     </div>
     <div class="corpo1">
         <div class="plano">
@@ -130,6 +131,7 @@
     }
 
     function pagamento() {
+        let perfil = 1;
         let nome = input_nome.value;
         let email = input_email.value;
         let senha = input_senha.value;
@@ -164,7 +166,44 @@
         }
 
         if (contador == 4) {
-            window.location = "./pagamento.html"
+            fetch("/usuarios/cadastrar", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        nomeServer: nome,
+        emailServer: email,
+        senhaServer: senha,
+        fkPerfilServer: perfil
+      }),
+    })
+      .then(function (resposta) {
+        console.log("resposta: ", resposta);
+
+        if (resposta.ok) {
+          cardErro.style.display = "block";
+
+          mensagem_erro.innerHTML =
+            "Cadastro realizado com sucesso! Redirecionando para tela de Login...";
+
+          setTimeout(() => {
+            window.location = "login.html";
+          }, "2000");
+
+          limparFormulario();
+          finalizarAguardar();
+        } else {
+          throw "Houve um erro ao tentar realizar o cadastro!";
         }
+      })
+      .catch(function (resposta) {
+        console.log(`#ERRO: ${resposta}`);
+        finalizarAguardar();
+      });
+
+        }
+
+    
     }
 </script>
