@@ -4,6 +4,8 @@ Signal: Sistema de Recomendações de gêneros de Filmes/Series.
 
 ## Versionamento
 
+-- Nomenclatura de Tasks em branches e cards - "SGN-XX"
+
 ---- No projeto ----
 
 - **Criação da branch** — `git checkout -b "nome-da-branch"`
