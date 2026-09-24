@@ -13,6 +13,11 @@ Signal: Sistema de Recomendações de gêneros de Filmes/Series.
 - **Envio da branch para o github** — `git push origin "nome-da-branch"`
   **_Exemplo_**: git push origin SGN-01
 
+- **Listar branches** — `git branch`
+  **_Exemplo_**: git branch
+- **Navegação pelas branches** — `git checkout "nome-da-branch"`
+  **_Exemplo_**: git checkout main
+
 ---- No github ----
 
 - **Branch no github** — Após o push, a branch estará disponível no github. Clique no botão verde.
