@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Signal – Upload XLS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&family=Montserrat:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/upload.css">
+</head>
+<body>
+
+  <!-- Topo -->
+  <header class="topbar">
+    <div class="topbar__inner">
+      <div class="brand">
+        <img class="brand__logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgEbefr3SijfX6Agn2GElTheOc8BDXJlgNQ3oh5wNkOAiRPoCFa6dSsvEJwmrlJrQAo7jUJOQdpgeWAtZPV0Gw8leEHhASB2Ln7Fy5HdJI_AkVzhIC6EeGqiw4r4blY4Q9TRhG2zop4zD_CbGVKONhKI34j_1YxRlmZKzs86_EEjk01AyFUpkxvCtExlEhSpLaf5N3LgzhwYqcK-F4716fPUVJ9_8iLncXFpcPlNDCl76ggFwE2B_jQA" alt="CineMetrics">
+        <div class="brand__text">
+          <span class="brand__name">Signal</span>
+          <span class="brand__page">Upload XLS</span>
+        </div>
+      </div>
+      <div class="topbar__actions">
+        <button class="icon-btn icon-btn--notify" aria-label="Notificações">
+          <span class="material-symbols-outlined">notifications</span>
+        </button>
+        <img class="avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAbLxPUhX-FFr9kMtpGov-6pbcfpw2G8RyrPFFEXRB-GNhPQoYST-M8Mi3jaoeMbNNRM_C79_eHwoAD4Fxbw5tzpzHMuZeXvBQ-Mv86SQknrMm_tMTeU3P4cH9WFz0WkhZxi1JIS1MXfnbskxeQtDADfKKEeg9V2HD2y6HKJ10666oL6PKUeRdiN_T3753mytJADZ49VneEhz-xrJMVsaFjA7bb6fEiD9xauZMljMKU4sivUC0XwqaYwg" alt="Perfil">
+      </div>
+    </div>
+  </header>
+
+  <main class="page">
+
+    <!-- Título e colunas recomendadas -->
+    <section class="intro">
+      <div class="intro__title">
+        <span class="intro__icon"><span class="material-symbols-outlined">table_chart</span></span>
+        <h1>Importar Catálogo</h1>
+      </div>
+      <p class="intro__text">
+        Adicione dados de bilheteria e telemetria via planilhas
+        <strong>.xls</strong> ou <strong>.xlsx</strong>.
+      </p>
+
+      <div class="hint">
+        <div class="hint__title">
+          <span class="material-symbols-outlined">info</span>
+          <span>Colunas recomendadas</span>
+        </div>
+        <ul class="chips">
+          <li>Título</li>
+          <li>Ano</li>
+          <li>Gênero</li>
+          <li>Orçamento</li>
+          <li>Bilheteria</li>
+          <li>IMDb / Rotten</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Área de upload -->
+    <section class="upload">
+      <div class="dropzone" id="dropzone">
+        <div class="dropzone__icon">
+          <span class="material-symbols-outlined dropzone__cloud">cloud_upload</span>
+          <span class="dropzone__badge"><span class="material-symbols-outlined">description</span></span>
+        </div>
+        <h2 class="dropzone__title">Arraste sua planilha aqui</h2>
+        <p class="dropzone__text">Arquivos no formato Microsoft Excel (.xls, .xlsx) até 45MB</p>
+
+        <input type="file" id="file-selector" accept=".xls,.xlsx" hidden>
+        <button type="button" class="btn btn--secondary" id="pick-file">
+          <span class="material-symbols-outlined">folder_open</span>
+          Escolher arquivo do dispositivo
+        </button>
+      </div>
+
+      <a class="template" href="modelo_Signal.xlsx" download>
+        <span class="material-symbols-outlined template__icon">download_for_offline</span>
+        <span class="template__info">
+          <span class="template__name">Planilha Modelo Padrão</span>
+          <span class="template__desc">Estrutura pré-validada com macros</span>
+        </span>
+        <span class="tag">.XLSX</span>
+      </a>
+    </section>
+
+    <!-- Processamento -->
+    <section class="block" aria-live="polite">
+      <div class="block__head">
+        <h2 class="block__title">Processamento em tempo real</h2>
+        <span class="live"><span class="live__dot"></span>Ativo</span>
+      </div>
+
+      <div class="card progress">
+        <div class="progress__top">
+          <span class="file-icon file-icon--dark"><span class="material-symbols-outlined">database</span></span>
+          <div class="progress__info">
+            <span class="progress__name" id="current-file">catalogo_filmes_2024_v2.xlsx</span>
+            <span class="progress__sub">1.420 títulos mapeados</span>
+          </div>
+          <span class="progress__pct">85%</span>
+        </div>
+
+        <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="85">
+          <div class="bar__fill" style="width:85%"></div>
+        </div>
+
+        <div class="stats">
+          <div class="stat">
+            <span class="material-symbols-outlined">movie</span>
+            <strong>1.420</strong>
+            <span>Detectados</span>
+          </div>
+          <div class="stat">
+            <span class="material-symbols-outlined">category</span>
+            <strong>12</strong>
+            <span>Gêneros</span>
+          </div>
+          <div class="stat">
+            <span class="material-symbols-outlined">check_circle</span>
+            <strong>0</strong>
+            <span>Erros</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Histórico -->
+    <section class="block">
+      <div class="block__head">
+        <h2 class="block__title">Histórico de arquivos</h2>
+        <span class="block__meta">3 importações</span>
+      </div>
+
+      <ul class="history">
+        <li class="history__item">
+          <span class="file-icon"><span class="material-symbols-outlined">assessment</span></span>
+          <div class="history__info">
+            <span class="history__name">boxoffice_global_q3.xlsx</span>
+            <span class="history__meta">Hoje, 14:22 • 840 filmes</span>
+          </div>
+          <span class="status">Concluído</span>
+          <button class="icon-btn icon-btn--sm" aria-label="Opções"><span class="material-symbols-outlined">more_vert</span></button>
+        </li>
+        <li class="history__item">
+          <span class="file-icon"><span class="material-symbols-outlined">table_view</span></span>
+          <div class="history__info">
+            <span class="history__name">indie_studios_festivals.xls</span>
+            <span class="history__meta">Ontem, 09:15 • 312 filmes</span>
+          </div>
+          <span class="status">Processado</span>
+          <button class="icon-btn icon-btn--sm" aria-label="Opções"><span class="material-symbols-outlined">more_vert</span></button>
+        </li>
+        <li class="history__item">
+          <span class="file-icon"><span class="material-symbols-outlined">history</span></span>
+          <div class="history__info">
+            <span class="history__name">streaming_vod_latam.xlsx</span>
+            <span class="history__meta">28 Out, 18:40 • 2.100 filmes</span>
+          </div>
+          <span class="status">Concluído</span>
+          <button class="icon-btn icon-btn--sm" aria-label="Opções"><span class="material-symbols-outlined">more_vert</span></button>
+        </li>
+      </ul>
+    </section>
+
+    <!-- CTA fixo -->
+    <div class="cta">
+      <button type="button" class="btn btn--primary">
+        <span class="material-symbols-outlined">auto_awesome</span>
+        Gerar Insights e Ir para Dashboard
+      </button>
+    </div>
+  </main>
+
+  <!-- Navegação inferior -->
+  <nav class="tabbar" aria-label="Navegação principal">
+    <div class="tabbar__inner">
+      <a href="#"><span class="material-symbols-outlined">bar_chart</span>Dashboard</a>
+      <a href="#" class="is-active" aria-current="page"><span class="material-symbols-outlined">cloud_upload</span>Upload XLS</a>
+      <a href="#"><span class="material-symbols-outlined">workspace_premium</span>Assinatura</a>
+      <a href="#"><span class="material-symbols-outlined">manage_accounts</span>Perfil</a>
+    </div>
+  </nav>
+
+  <script>
+    const dropzone = document.getElementById('dropzone');
+    const input = document.getElementById('file-selector');
+    const currentFile = document.getElementById('current-file');
+
+    document.getElementById('pick-file').addEventListener('click', () => input.click());
+    dropzone.addEventListener('click', (e) => { if (e.target === dropzone) input.click(); });
+
+    ['dragenter', 'dragover'].forEach(evt =>
+      dropzone.addEventListener(evt, (e) => { e.preventDefault(); dropzone.classList.add('is-dragover'); }));
+
+    ['dragleave', 'drop'].forEach(evt =>
+      dropzone.addEventListener(evt, (e) => { e.preventDefault(); dropzone.classList.remove('is-dragover'); }));
+
+    dropzone.addEventListener('drop', (e) => {
+      if (e.dataTransfer.files.length) showFile(e.dataTransfer.files[0]);
+    });
+    input.addEventListener('change', () => { if (input.files.length) showFile(input.files[0]); });
+
+    function showFile(file) {
+      currentFile.textContent = file.name;
+    }
+  </script>
+</body>
+</html>
