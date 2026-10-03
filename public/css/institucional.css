@@ -263,6 +263,7 @@ body {
   width: 100%;
   align-items: flex-start;
   transition: all 0.2s ease-in-out;
+  height: 100%; /* garante que os dois planos tenham a mesma altura (herdada do stretch do .caixasc4) */
 }
 .plano:hover {
   background-color: #1c1b1b;
@@ -286,6 +287,7 @@ body {
   display: flex;
   flex-direction: column;
   width: 100%;
+  flex: 1; /* ocupa o espaço restante do card */
 }
 .vantagem span {
   margin-top: 5%;
@@ -299,6 +301,8 @@ body {
   display: flex;
   justify-content: center;
   width: 100%;
+  margin-top: auto;
+  padding-bottom: 20px; /* espaço entre o botão e a borda do card */
 }
 .botaoAssinatura a {
     display: flex;

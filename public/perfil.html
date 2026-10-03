@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Signal - Perfil</title>
+
+  <!-- Fontes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&family=Montserrat:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="./css/perfil.css" />
+</head>
+
+<body>
+  <!-- ================= HEADER ================= -->
+  <header class="topbar">
+    <div class="topbar__inner">
+      <div class="brand">
+        <img class="brand__logo" alt="Logo Signal"
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgEbefr3SijfX6Agn2GElTheOc8BDXJlgNQ3oh5wNkOAiRPoCFa6dSsvEJwmrlJrQAo7jUJOQdpgeWAtZPV0Gw8leEHhASB2Ln7Fy5HdJI_AkVzhIC6EeGqiw4r4blY4Q9TRhG2zop4zD_CbGVKONhKI34j_1YxRlmZKzs86_EEjk01AyFUpkxvCtExlEhSpLaf5N3LgzhwYqcK-F4716fPUVJ9_8iLncXFpcPlNDCl76ggFwE2B_jQA" />
+        <div class="brand__text">
+          <span class="brand__name">Signal</span>
+          <span class="brand__page label-sm">Perfil</span>
+        </div>
+      </div>
+
+      <div class="topbar__actions">
+        <button class="icon-btn" type="button" aria-label="Notificações">
+          <span class="material-symbols-outlined">notifications</span>
+          <span class="icon-btn__dot"></span>
+        </button>
+        <div class="topbar__avatar">
+          <img alt="Perfil"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAbLxPUhX-FFr9kMtpGov-6pbcfpw2G8RyrPFFEXRB-GNhPQoYST-M8Mi3jaoeMbNNRM_C79_eHwoAD4Fxbw5tzpzHMuZeXvBQ-Mv86SQknrMm_tMTeU3P4cH9WFz0WkhZxi1JIS1MXfnbskxeQtDADfKKEeg9V2HD2y6HKJ10666oL6PKUeRdiN_T3753mytJADZ49VneEhz-xrJMVsaFjA7bb6fEiD9xauZMljMKU4sivUC0XwqaYwg" />
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= CONTEÚDO ================= -->
+  <main class="content">
+    <div class="stack">
+
+      <!-- Cartão de identidade -->
+      <section class="card hero">
+        <div class="hero__glow"></div>
+        <div class="hero__shade"></div>
+
+        <div class="hero__content">
+          <div class="avatar">
+            <div class="avatar__frame">
+              <img alt="Avatar de Carlos Mendonça"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAbLxPUhX-FFr9kMtpGov-6pbcfpw2G8RyrPFFEXRB-GNhPQoYST-M8Mi3jaoeMbNNRM_C79_eHwoAD4Fxbw5tzpzHMuZeXvBQ-Mv86SQknrMm_tMTeU3P4cH9WFz0WkhZxi1JIS1MXfnbskxeQtDADfKKEeg9V2HD2y6HKJ10666oL6PKUeRdiN_T3753mytJADZ49VneEhz-xrJMVsaFjA7bb6fEiD9xauZMljMKU4sivUC0XwqaYwg" />
+            </div>
+            <button class="avatar__edit" id="avatar-edit-btn" type="button" aria-label="Alterar foto de avatar">
+              <span class="material-symbols-outlined">photo_camera</span>
+            </button>
+          </div>
+
+          <h1 class="hero__name">Carlos Mendonça</h1>
+          <p class="hero__role">Head de Aquisição &amp; Curadoria</p>
+
+          <div class="badge label-sm">
+            <span class="badge__dot"></span>
+            <span>Membro Pro / Curador</span>
+          </div>
+
+          <button class="btn-chip label-md" type="button">
+            <span class="material-symbols-outlined">wallpaper</span>
+            <span>Alterar Imagem de Fundo</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Assinatura & Faturamento -->
+      <section class="card">
+        <div class="card__header card__header--between" style="margin-bottom: var(--gutter-sm);">
+          <div class="card__title-group">
+            <div class="card__icon card__icon--accent">
+              <span class="material-symbols-outlined icon-filled">workspace_premium</span>
+            </div>
+            <h2 class="card__title">Assinatura &amp; Faturamento</h2>
+          </div>
+          <span class="status-pill label-sm">
+            <span class="status-pill__dot"></span>
+            ATIVO
+          </span>
+        </div>
+
+        <div class="plan">
+          <div>
+            <span class="plan__label label-sm">Plano Atual</span>
+            <span class="plan__name">Signal Pro</span>
+            <span class="plan__cycle">Ciclo Anual • Renovação em Out/2025</span>
+          </div>
+          <span class="plan__price label-lg">R$ 1.890/ano</span>
+        </div>
+
+        <div class="plan-actions">
+          <button class="plan-action label-sm" type="button">
+            <span class="material-symbols-outlined">credit_card</span>
+            Trocar Pagamento
+          </button>
+          <button class="plan-action label-sm" type="button">
+            <span class="material-symbols-outlined">receipt_long</span>
+            Ver Faturas
+          </button>
+          <button class="plan-action label-sm" type="button">
+            <span class="material-symbols-outlined">tune</span>
+            Gerenciar Plano
+          </button>
+        </div>
+      </section>
+
+      <!-- Dados Pessoais -->
+      <section class="card">
+        <div class="card__header">
+          <div class="card__icon">
+            <span class="material-symbols-outlined">badge</span>
+          </div>
+          <h2 class="card__title">Dados Pessoais</h2>
+        </div>
+
+        <form class="form" id="profile-form">
+          <div class="field">
+            <label class="field__label label-md" for="user-name">Nome Completo</label>
+            <div class="field__control">
+              <span class="material-symbols-outlined">person</span>
+              <input class="field__input" id="user-name" type="text" value="Carlos Mendonça" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="field__label label-md" for="user-email">E-mail Corporativo</label>
+            <div class="field__control">
+              <span class="material-symbols-outlined">mail</span>
+              <input class="field__input" id="user-email" type="email" value="carlos@Signal.io" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="field__label label-md" for="user-studio">Empresa / Estúdio</label>
+            <div class="field__control">
+              <span class="material-symbols-outlined">movie</span>
+              <input class="field__input" id="user-studio" type="text" value="Aurora Filmes" />
+            </div>
+          </div>
+
+          <div class="form__footer">
+            <span class="form__status label-sm" id="save-status">Modificações salvas!</span>
+            <button class="btn-primary label-lg" id="save-btn" type="submit">
+              <span class="material-symbols-outlined">check</span>
+              <span>Salvar Alterações</span>
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Preferências da Plataforma -->
+      <section class="card">
+        <div class="card__header">
+          <div class="card__icon">
+            <span class="material-symbols-outlined">tune</span>
+          </div>
+          <h2 class="card__title">Preferências da Plataforma</h2>
+        </div>
+
+        <div class="list">
+          <!-- Moeda -->
+          <div class="row">
+            <div class="row__text">
+              <span class="row__title">Moeda de Exibição</span>
+              <span class="row__desc">Relatórios de Bilheteria &amp; VOD</span>
+            </div>
+            <div class="segmented" id="currency-group">
+              <button class="segmented__btn label-md" type="button" data-curr="USD">USD</button>
+              <button class="segmented__btn label-md is-active" type="button" data-curr="BRL">BRL</button>
+              <button class="segmented__btn label-md" type="button" data-curr="EUR">EUR</button>
+            </div>
+          </div>
+
+          <!-- Alertas XLS -->
+          <div class="row">
+            <div class="row__info">
+              <span class="material-symbols-outlined">table_chart</span>
+              <div class="row__text">
+                <span class="row__title">Alertas de Novos XLS</span>
+                <span class="row__desc">Notificar ao processar planilhas de bilheteria</span>
+              </div>
+            </div>
+            <label class="switch">
+              <input class="switch__input sr-only" id="toggle-xls" type="checkbox" checked />
+              <span class="switch__track"></span>
+            </label>
+          </div>
+
+          <!-- Modo escuro -->
+          <div class="row row--muted">
+            <div class="row__info">
+              <span class="material-symbols-outlined row__icon--tertiary">dark_mode</span>
+              <div class="row__text">
+                <span class="row__title">Modo Escuro</span>
+                <span class="row__desc">Ambiente Cinema Master (Padrão)</span>
+              </div>
+            </div>
+            <span class="tag label-sm">Sempre Ativo</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Segurança -->
+      <section class="card">
+        <div class="card__header">
+          <div class="card__icon">
+            <span class="material-symbols-outlined">security</span>
+          </div>
+          <h2 class="card__title">Segurança</h2>
+        </div>
+
+        <div class="list">
+          <button class="row row--link" type="button">
+            <div class="row__info">
+              <span class="material-symbols-outlined row__icon--muted">lock_reset</span>
+              <div class="row__text">
+                <span class="row__title">Alterar Senha</span>
+                <span class="row__desc">Última atualização há 45 dias</span>
+              </div>
+            </div>
+            <span class="material-symbols-outlined">chevron_right</span>
+          </button>
+
+          <button class="row row--link" type="button">
+            <div class="row__info">
+              <span class="material-symbols-outlined">verified_user</span>
+              <div class="row__text">
+                <span class="row__title">Autenticação em Duas Etapas (2FA)</span>
+                <span class="row__desc row__desc--accent">Ativado via Aplicativo Autenticador</span>
+              </div>
+            </div>
+            <span class="material-symbols-outlined">chevron_right</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Sair -->
+      <div class="logout">
+        <button class="btn-logout label-lg" id="logout-btn" type="button">
+          <span class="material-symbols-outlined">logout</span>
+          <span>Sair da Conta</span>
+        </button>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ================= NAVEGAÇÃO INFERIOR ================= -->
+  <nav class="bottom-nav" aria-label="Navegação principal">
+    <div class="bottom-nav__inner">
+      <a class="nav-item label-sm" href="./dash.html">
+        <span class="material-symbols-outlined">bar_chart</span>
+        Dashboard
+      </a>
+      <a class="nav-item label-sm" href="#">
+        <span class="material-symbols-outlined">cloud_upload</span>
+        Upload XLS
+      </a>
+      <a class="nav-item label-sm" href="#">
+        <span class="material-symbols-outlined">workspace_premium</span>
+        Assinatura
+      </a>
+      <a class="nav-item label-sm is-active" href="#" aria-current="page">
+        <span class="material-symbols-outlined">manage_accounts</span>
+        Perfil
+      </a>
+    </div>
+  </nav>
+
+  <script>
+    // Seleção de moeda
+    const currButtons = document.querySelectorAll('.segmented__btn');
+    currButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        currButtons.forEach((b) => b.classList.remove('is-active'));
+        btn.classList.add('is-active');
+      });
+    });
+
+    // Feedback ao salvar
+    const form = document.getElementById('profile-form');
+    const saveBtn = document.getElementById('save-btn');
+    const saveStatus = document.getElementById('save-status');
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      saveStatus.classList.add('is-visible');
+      saveBtn.classList.add('is-pressed');
+      setTimeout(() => saveBtn.classList.remove('is-pressed'), 150);
+      setTimeout(() => saveStatus.classList.remove('is-visible'), 2500);
+    });
+
+    // Animação do botão de avatar
+    const avatarBtn = document.getElementById('avatar-edit-btn');
+    avatarBtn.addEventListener('click', () => {
+      avatarBtn.classList.add('is-rotating');
+      setTimeout(() => avatarBtn.classList.remove('is-rotating'), 300);
+    });
+  </script>
+</body>
+</html>
