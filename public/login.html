@@ -27,9 +27,9 @@
         </div>
         <div class="campos">
             <span>E-MAIL</span>
-            <input type="text" id="i_email" placeholder="✉ produtor@estudio.com">
+            <input type="text" id="email_input" placeholder="✉ produtor@estudio.com">
             <span>SENHA</span>
-            <input type="password" id="i_senha" placeholder="🔒︎ ●●●●●●●●">
+            <input type="password" id="senha_input" placeholder="🔒︎ ●●●●●●●●">
             <button onclick="entrar()">Entrar na Plataforma ➝</button>
 
             <span>Novo na Signal? <a href="./index.html#p">ASSINAR</a></span>
@@ -73,7 +73,7 @@
 
             if (resposta.ok) {
                 console.log(resposta);
-                window.location = "/dashboard/dashboard.html";
+                window.location = "/dash.html";
                 resposta.json().then(json => {
                     console.log(json);
                     console.log(JSON.stringify(json));
@@ -88,7 +88,7 @@
 
                 resposta.text().then(texto => {
                     console.error(texto);
-                    finalizarAguardar(texto);
+                    // finalizarAguardar(texto);
                 });
             }
 
