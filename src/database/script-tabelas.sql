@@ -12,20 +12,16 @@ CREATE TABLE usuario (
     nome VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     senha VARCHAR(255) NOT NULL,
-    fk_perfil INT NOT NULL,
-    data_cadastro DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (fk_perfil) REFERENCES perfil(id_perfil)
-) ;
+    data_cadastro DATETIME DEFAULT CURRENT_TIMESTAMP
+);
 
-CREATE TABLE filme (
-    id_filme INT AUTO_INCREMENT PRIMARY KEY,
-    titulo VARCHAR(150) NOT NULL,
-    genero VARCHAR(50) NOT NULL,
-    ano_lancamento INT,
-    avaliacao_audiencia DECIMAL(3, 1),
-    tempo_assistido_minutos INT DEFAULT 0,
-    engajamento_score DECIMAL(5, 2) DEFAULT 0.00
-) ;
+CREATE TABLE perfil (
+    id_perfil INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(50) NOT NULL UNIQUE,
+    descricao VARCHAR(255),
+    fk_usuario INT NOT NULL,
+     FOREIGN KEY (fk_usuario) REFERENCES usuario(id_usuario)
+);
 
 CREATE TABLE importacao_planilha (
     id_importacao INT AUTO_INCREMENT PRIMARY KEY,
