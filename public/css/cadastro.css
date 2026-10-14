@@ -1,10 +1,16 @@
-body {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #121316;
+  font-family: "Roboto Condensed", sans-serif;
+}
+
 /*-----------------------FONTES--------------------------*/
 .roboto-condensed-bold {
   font-family: "Roboto Condensed", sans-serif;
@@ -19,12 +25,13 @@ body {
   font-style: normal;
 }
 /*-------------------------------------------------------*/
+
 .voltar {
   display: flex;
   background-color: #121316;
 }
 .voltar a {
-  margin-top: 2%;
+  margin-top: 20px;
   margin-left: 3%;
   background-color: #E50914;
   color: #FFDAD5;
@@ -42,65 +49,119 @@ body {
   display: flex;
   align-items: center;
   flex-direction: column;
-  height: 120vh;
+  min-height: 100vh;
+  padding: 20px 20px 60px;
   background-color: #121316;
-  font-family: "Roboto Condensed";
 }
+
 .plano {
-  display: flex;
+  display: inline-flex;
   justify-content: center;
   align-items: center;
+  gap: 8px;
   background-color: #2F3035;
-  width: 10%;
-  height: 5%;
+  padding: 8px 20px;
   color: #FFB4AA;
   text-transform: uppercase;
-  gap: 2%;
   border-radius: 20px;
+  white-space: nowrap;
 }
 .plano span:nth-child(1) {
   font-size: x-small;
 }
+
 .titulo {
   color: #F2F0F6;
   font-size: 1.5em;
-  height: 13%;
+  text-align: center;
 }
+.titulo h1 {
+  margin: 20px 0 10px;
+}
+
 .sub {
-  display: flex;
-  justify-content: center;
   color: #FFB4AA;
   font-size: 1.2em;
-  width: 24%;
+  max-width: 420px;
   text-align: center;
-  margin-bottom: 2%;
+  margin-bottom: 30px;
 }
+
+/*-----------------------FORMULÁRIO----------------------*/
 .campos {
-  color: #F2F0F6;
   width: 90%;
-  height: 50%;
+  color: #F2F0F6;
 }
-.campos input {
+
+.secao {
+  margin: 30px 0 5px;
+  padding-bottom: 8px;
+  font-size: 1.1em;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #FF8A7C;
+  border-bottom: 1px solid #2F3035;
+}
+.secao:first-child {
+  margin-top: 0;
+}
+
+.campos label {
+  display: block;
+  margin-top: 16px;
+  font-size: 0.9em;
+  letter-spacing: 0.5px;
+}
+
+.campos input,
+.campos select {
+  display: block;
   width: 100%;
-  height: 10%;
-  margin-bottom: 2%;
-  margin-top: 1%;
+  height: 46px;
+  margin-top: 6px;
+  padding: 0 14px;
   border-radius: 10px;
+  border: 1px solid transparent;
   color: #FFB4AA;
   background-color: #0B0C10;
-  border: none;
+  font-family: inherit;
+  font-size: 1em;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+.campos input:focus,
+.campos select:focus {
+  border-color: #E50914;
 }
 .campos ::placeholder {
-  display: flex;
   color: #FFB4AA;
+  opacity: 0.6;
+}
+.campos select option {
+  background-color: #0B0C10;
+  color: #FFB4AA;
+}
+
+/* Linhas com dois campos lado a lado (rua + número, cidade + estado) */
+.linha {
+  display: flex;
+  gap: 12px;
+}
+.coluna.grande {
+  flex: 3;
+  min-width: 0;
+}
+.coluna.pequena {
+  flex: 1;
+  min-width: 90px;
 }
 
 .barraForca {
   width: 100%;
   height: 6px;
+  margin-top: 10px;
   background-color: #2F3035;
   border-radius: 4px;
-  margin-bottom: 2%;
   overflow: hidden;
 }
 .preenchimento {
@@ -111,8 +172,10 @@ body {
   transition: width 0.3s ease, background-color 0.3s ease;
 }
 
+/*-----------------------BOTÃO---------------------------*/
 .botao {
   width: 90%;
+  margin-top: 30px;
 }
 .botao button {
   width: 100%;
@@ -121,7 +184,10 @@ body {
   color: #FFDAD5;
   border: none;
   border-radius: 10px;
+  font-family: inherit;
+  font-size: 1em;
   font-weight: bold;
+  cursor: pointer;
 }
 .botao button:hover {
   background-color: #91091b;
@@ -130,8 +196,8 @@ body {
 .login {
   display: flex;
   justify-content: center;
+  margin-top: 15px;
   color: #FFB4AA;
-  margin-top: 2%;
   font-weight: 200;
 }
 .login a {
@@ -140,68 +206,30 @@ body {
   font-weight: bold;
 }
 
-
-@media (max-width: 1024px) {
-  .corpo1 {
-    height: auto;
-    padding: 40px 0;
-  }
-  .plano {
-    width: 25%;
-    height: auto;
-    padding: 8px 16px;
-  }
-  .sub {
-    width: 60%;
-  }
-  .campos {
-    width: 90%;
-    height: auto;
-  }
-  .campos input {
-    height: auto;
-    padding: 12px 0;
-    margin-bottom: 5%;
-  }
-}
-
-
+/*-----------------------RESPONSIVO----------------------*/
 @media (max-width: 600px) {
   .corpo1 {
-    padding: 80px 0;
+    padding: 10px 16px 40px;
   }
   .voltar a {
-    margin-top: 15px;
     margin-left: 15px;
   }
-  .sub {
-    margin-bottom: 10%;
-  }
   .plano {
-    width: auto;
-    max-width: 90%;
+    max-width: 100%;
     padding: 6px 14px;
     font-size: 0.9em;
-    white-space: nowrap;
   }
   .titulo {
-    height: auto;
     font-size: 1.2em;
-    text-align: center;
-    width: 90%;
-    margin-top: 20px;
   }
   .sub {
-    width: 90%;
     font-size: 1em;
   }
-  .campos {
-    width: 90%;
+  .campos input,
+  .campos select {
+    font-size: 16px; /* evita zoom automático no iOS */
   }
-  .campos input {
-    font-size: 16px;
-  }
-  .botao {
-    width: 90%;
+  .coluna.pequena {
+    min-width: 80px;
   }
 }
