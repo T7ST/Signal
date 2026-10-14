@@ -1,15 +1,20 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Signal - Dashboard</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&family=Montserrat:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&family=Montserrat:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+    rel="stylesheet" />
   <link rel="stylesheet" href="./css/dash.css" />
 </head>
+
 <body>
   <header class="topbar">
     <div class="topbar__inner">
@@ -48,7 +53,8 @@
           <span class="kpi__unit">min</span>
           <span class="delta"><span class="material-symbols-outlined">trending_up</span>+20 min</span>
         </div>
-        <svg class="chart" id="chart-time" viewBox="0 0 320 170" role="img" aria-label="Evolução da duração média assistida"></svg>
+        <svg class="chart" id="chart-time" viewBox="0 0 320 170" role="img"
+          aria-label="Evolução da duração média assistida"></svg>
       </section>
 
       <!-- Dashboard 2: gênero mais assistido -->
@@ -64,27 +70,12 @@
           <span class="kpi__value">Ficção Científica</span>
           <span class="delta"><span class="material-symbols-outlined">trending_up</span>34%</span>
         </div>
-        <svg class="chart" id="chart-genre" viewBox="0 0 320 170" role="img" aria-label="Evolução da participação por gênero"></svg>
+        <svg class="chart" id="chart-genre" viewBox="0 0 320 170" role="img"
+          aria-label="Evolução da participação por gênero"></svg>
         <div class="legend label-sm" id="legend-genre"></div>
       </section>
     </div>
 
-    <!-- Dashboard 3: diretor mais frequente -->
-    <section class="card">
-      <div class="card__head">
-        <div>
-          <h2 class="card__title">Diretor Preferido (Filmes)</h2>
-          <p class="card__sub">Quantas vezes o diretor aparece na base</p>
-        </div>
-        <div class="icon-box"><span class="material-symbols-outlined">movie_creation</span></div>
-      </div>
-      <div class="kpi">
-        <span class="kpi__value" id="kpi-diretor">-</span>
-        <span class="delta" id="kpi-diretor-qtd"></span>
-      </div>
-      <div class="bars" id="bars-diretores"></div>
-      <p class="card__sub bars__note">Títulos sem diretor informado não entram na contagem.</p>
-    </section>
 
     <!-- Recomendação -->
     <section class="card reco">
@@ -124,10 +115,12 @@
 
   <nav class="bottom-nav" aria-label="Navegação principal">
     <div class="bottom-nav__inner">
-      <a class="nav-item label-sm is-active" href="#" aria-current="page"><span class="material-symbols-outlined">bar_chart</span>Dashboard</a>
-      <a class="nav-item label-sm" href="./upload.html"><span class="material-symbols-outlined">cloud_upload</span>Upload XLS</a>
-      <a class="nav-item label-sm" href="./pagamento.html"><span class="material-symbols-outlined">workspace_premium</span>Assinatura</a>
-      <a class="nav-item label-sm" href="./perfil.html"><span class="material-symbols-outlined">manage_accounts</span>Perfil</a>
+      <a class="nav-item label-sm is-active" href="#" aria-current="page"><span
+          class="material-symbols-outlined">bar_chart</span>Dashboard</a>
+      <a class="nav-item label-sm" href="./upload.html"><span
+          class="material-symbols-outlined">cloud_upload</span>Upload XLS</a>
+      <a class="nav-item label-sm" href="./perfil.html"><span
+          class="material-symbols-outlined">manage_accounts</span>Perfil</a>
     </div>
   </nav>
 
@@ -207,4 +200,5 @@
       .join("");
   </script>
 </body>
+
 </html>
