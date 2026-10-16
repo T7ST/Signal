@@ -13,6 +13,97 @@
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
     rel="stylesheet" />
   <link rel="stylesheet" href="./css/dash.css" />
+
+  <!-- Estilos do botão Personalizar (pode mover para o dash.css depois) -->
+  <style>
+    .page-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .custom {
+      position: relative;
+      flex-shrink: 0;
+    }
+    .custom__btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 40px;
+      padding: 0 14px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      background: var(--container);
+      color: var(--text);
+      font: 600 12px/16px var(--label);
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .custom__btn:hover,
+    .custom__btn[aria-expanded="true"] {
+      background: var(--high);
+      border-color: rgba(229, 9, 20, 0.5);
+    }
+    .custom__btn .material-symbols-outlined {
+      font-size: 18px;
+      color: var(--primary);
+    }
+    .custom__panel {
+      position: absolute;
+      top: 48px;
+      right: 0;
+      z-index: 30;
+      width: 260px;
+      padding: 14px;
+      background: var(--container);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+    }
+    .custom__panel[hidden] {
+      display: none;
+    }
+    .custom__title {
+      font: 600 15px/20px var(--headline);
+      margin-bottom: 2px;
+    }
+    .custom__sub {
+      font-size: 12px;
+      color: var(--text-variant);
+      margin-bottom: 12px;
+    }
+    .custom__group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .custom__opt {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 12px 8px;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      background: var(--low);
+      color: var(--muted);
+      font: 600 12px/16px var(--label);
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
+    }
+    .custom__opt .material-symbols-outlined {
+      font-size: 24px;
+    }
+    .custom__opt:hover {
+      color: var(--text);
+    }
+    .custom__opt[aria-pressed="true"] {
+      color: var(--primary);
+      border-color: rgba(229, 9, 20, 0.6);
+      background: rgba(229, 9, 20, 0.12);
+    }
+  </style>
 </head>
 
 <body>
@@ -33,11 +124,32 @@
   </header>
 
   <main class="content">
-    <div>
-      <h1 class="page-title">Visão Geral</h1>
-      <p class="page-sub" id="periodo">Audiência dos últimos 6 meses • Dados de exemplo</p>
-    </div>
+    <div class="page-head">
+      <div>
+        <h1 class="page-title">Visão Geral</h1>
+        <p class="page-sub" id="periodo">Audiência dos últimos 6 meses • Dados de exemplo</p>
+      </div>
 
+      <!-- Botão de personalização -->
+      <div class="custom">
+        <button class="custom__btn" id="btnPersonalizar" type="button" aria-expanded="false"
+          aria-controls="painelPersonalizar">
+          <span class="material-symbols-outlined">tune</span>Personalizar
+        </button>
+        <div class="custom__panel" id="painelPersonalizar" hidden>
+          <h2 class="custom__title">Personalizar dashboard</h2>
+          <p class="custom__sub">Escolha como ver os gráficos</p>
+          <div class="custom__group">
+            <button class="custom__opt" type="button" data-tipo="linhas" aria-pressed="true">
+              <span class="material-symbols-outlined">show_chart</span>Linhas
+            </button>
+            <button class="custom__opt" type="button" data-tipo="barras" aria-pressed="false">
+              <span class="material-symbols-outlined">bar_chart</span>Barras
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <section class="kpis" aria-label="Indicadores principais">
       <div class="kpi-card kpis__wide">
@@ -95,9 +207,9 @@
           <div class="icon-box"><span class="material-symbols-outlined">schedule</span></div>
         </div>
         <div class="kpi">
-          <span class="kpi__value">118</span>
-          <span class="kpi__unit">min</span>
-          <span class="delta"><span class="material-symbols-outlined">trending_up</span>+20 min</span>
+          <span class="kpi__value" id="tempo-valor">—</span>
+          <span class="kpi__unit">min em média (6 meses)</span>
+          <span class="delta" id="tempo-delta"></span>
         </div>
         <svg class="chart" id="chart-time" viewBox="0 0 320 170" role="img"
           aria-label="Evolução da duração média assistida"></svg>
@@ -113,8 +225,8 @@
           <div class="icon-box"><span class="material-symbols-outlined">theaters</span></div>
         </div>
         <div class="kpi">
-          <span class="kpi__value">Ficção Científica</span>
-          <span class="delta"><span class="material-symbols-outlined">trending_up</span>34%</span>
+          <span class="kpi__value" id="genero-nome">—</span>
+          <span class="delta" id="genero-pct"></span>
         </div>
         <svg class="chart" id="chart-genre" viewBox="0 0 320 170" role="img"
           aria-label="Evolução da participação por gênero"></svg>
@@ -122,21 +234,20 @@
       </section>
     </div>
 
-
     <section class="card reco">
       <span class="reco__tag label-sm"><i></i>Recomendação de Investimento</span>
-      <h2 class="reco__title">Invista em <b>Ficção Científica</b> de <b>110–120 min</b></h2>
+      <h2 class="reco__title">Invista em <b id="reco-genero">—</b> de <b id="reco-faixa">—</b></h2>
 
       <div class="reco__grid">
         <div class="reco__box">
           <span class="label-sm">Gênero</span>
-          <strong>Sci-Fi</strong>
-          <small>+13 p.p. em 6 meses</small>
+          <strong id="reco-gen-nome">—</strong>
+          <small id="reco-gen-nota"></small>
         </div>
         <div class="reco__box">
           <span class="label-sm">Duração ideal</span>
-          <strong>118 min</strong>
-          <small>+20 min desde abril</small>
+          <strong id="reco-dur">—</strong>
+          <small id="reco-dur-nota"></small>
         </div>
       </div>
 
@@ -150,8 +261,6 @@
         <div class="meter__row label-sm"><span>Confiança da recomendação</span><span>87%</span></div>
         <div class="meter__bar"><span></span></div>
       </div>
-
-     
     </section>
   </main>
 
@@ -167,9 +276,10 @@
   </nav>
 
   <script>
+    const $ = (id) => document.getElementById(id);
 
+    
     const MESES_BASE = ["Abr", "Mai", "Jun", "Jul", "Ago", "Set"];
-    const COR = { "Ficção Científica": "#ff2e4d", "Ação": "#f5c66b", "Drama": "#b9c8de" };
 
     const baseGeneros = [
       { nome: "Ficção Científica", dados: [21, 24, 27, 30, 32, 34] },
@@ -183,15 +293,15 @@
     ];
     const baseDuracao = [98, 101, 105, 109, 114, 118];
 
-
+    
     const meses = MESES_BASE.slice(-6);
     const todos = baseGeneros.map((g) => ({ ...g, dados: g.dados.slice(-6) }));
     const duracao = baseDuracao.slice(-6);
 
-    document.getElementById("periodo").textContent =
+    $("periodo").textContent =
       `Audiência de ${meses[0]} a ${meses[meses.length - 1]} • Últimos 6 meses • Dados de exemplo`;
 
-
+  
     const soma = (a) => a.reduce((s, v) => s + v, 0);
 
     const stats = todos.map((g) => {
@@ -204,7 +314,6 @@
         cresc: ini > 0 ? ((fim - ini) / ini) * 100 : 0,
       };
     });
-
 
     const maxAtual = Math.max(...stats.map((s) => s.atual));
     const minC = Math.min(...stats.map((s) => s.cresc));
@@ -221,22 +330,24 @@
     const emAlta = [...stats].sort((a, b) => b.atual - a.atual)[0];
     const maisCresceu = [...stats].sort((a, b) => b.cresc - a.cresc)[0];
     const duracaoMedia = soma(duracao) / duracao.length;
-
+    const ultimaDuracao = duracao[duracao.length - 1];
 
     const sinal = (v) => (v > 0 ? "+" : "");
     const fmt = (v) => v.toLocaleString("pt-BR", { maximumFractionDigits: 0 });
 
-    document.getElementById("kpi-duracao").innerHTML = `${fmt(duracaoMedia)}<small>min</small>`;
-    document.getElementById("kpi-duracao-nota").textContent =
-      `Média de ${meses[0]} a ${meses[meses.length - 1]} • último mês: ${duracao[duracao.length - 1]} min`;
+    
+    $("kpi-duracao").innerHTML = `${fmt(duracaoMedia)}<small>min</small>`;
+    $("kpi-duracao-nota").textContent =
+      `Média de ${meses[0]} a ${meses[meses.length - 1]} • último mês: ${ultimaDuracao} min`;
 
-    document.getElementById("kpi-alta").textContent = emAlta.nome;
-    document.getElementById("kpi-alta-nota").textContent = `${emAlta.atual}% das visualizações em ${meses[meses.length - 1]}`;
+    $("kpi-alta").textContent = emAlta.nome;
+    $("kpi-alta-nota").textContent = `${emAlta.atual}% das visualizações em ${meses[meses.length - 1]}`;
 
-    document.getElementById("kpi-cresceu").textContent = `${sinal(maisCresceu.cresc)}${fmt(maisCresceu.cresc)}%`;
-    document.getElementById("kpi-cresceu-nota").textContent =
+    $("kpi-cresceu").textContent = `${sinal(maisCresceu.cresc)}${fmt(maisCresceu.cresc)}%`;
+    $("kpi-cresceu-nota").textContent =
       `${maisCresceu.nome} • ${sinal(maisCresceu.pp)}${maisCresceu.pp} p.p. em 6 meses`;
 
+   
     function rankHTML(lista, classeVar) {
       return lista
         .map(
@@ -252,12 +363,29 @@
         )
         .join("");
     }
-    document.getElementById("rank-melhores").innerHTML = rankHTML(melhores, "up");
-    document.getElementById("rank-piores").innerHTML = rankHTML(piores, "down");
+    $("rank-melhores").innerHTML = rankHTML(melhores, "up");
+    $("rank-piores").innerHTML = rankHTML(piores, "down");
 
+    const dTempo = ultimaDuracao - duracao[0];
+    $("tempo-valor").textContent = fmt(duracaoMedia);
+    $("tempo-delta").innerHTML =
+      `<span class="material-symbols-outlined">${dTempo >= 0 ? "trending_up" : "trending_down"}</span>${sinal(dTempo)}${dTempo} min`;
 
+    $("genero-nome").textContent = emAlta.nome;
+    $("genero-pct").innerHTML =
+      `<span class="material-symbols-outlined">trending_up</span>${emAlta.atual}%`;
+
+    const melhor = melhores[0];
+    const faixaIni = Math.floor(ultimaDuracao / 10) * 10;
+    $("reco-genero").textContent = melhor.nome;
+    $("reco-faixa").textContent = `${faixaIni}–${faixaIni + 10} min`;
+    $("reco-gen-nome").textContent = melhor.nome;
+    $("reco-gen-nota").textContent = `${sinal(melhor.pp)}${melhor.pp} p.p. em 6 meses`;
+    $("reco-dur").textContent = `${ultimaDuracao} min`;
+    $("reco-dur-nota").textContent = `tendência atual • média 6 meses: ${fmt(duracaoMedia)} min`;
+
+  
     const tempo = [{ nome: "Duração média (min)", cor: "#ff2e4d", area: true, dados: duracao }];
-
     const PALETA = ["#ff2e4d", "#f5c66b", "#b9c8de", "#7bd3a8", "#a78bfa", "#5eb5ff"];
 
     
@@ -266,18 +394,27 @@
       .slice(0, 6)
       .map((g, i) => ({ ...g, cor: PALETA[i] }));
 
-    function desenhar(id, series, min, max, sufixo) {
-      const svg = document.getElementById(id);
-      
+    let tipoGrafico = "linhas"; 
+    try {
+      const salvo = localStorage.getItem("dashTipoGrafico");
+      if (salvo === "linhas" || salvo === "barras") tipoGrafico = salvo;
+    } catch (e) {  }
+
+    function desenhar(id, series, min, max, sufixo, tipo, media) {
+      const svg = $(id);
       const W = Math.max(280, Math.round(svg.getBoundingClientRect().width));
       const H = W > 600 ? 260 : 170;
       svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
 
-      const L = 34, R = W - 10, T = 10, B = H - 25;
-      const x = (i) => L + (i * (R - L)) / (meses.length - 1);
+      const L = 34, R = W - 10, T = 14, B = H - 25;
       const y = (v) => B - ((v - min) / (max - min)) * (B - T);
+      const largGrupo = (R - L) / meses.length;
+      const xLinha = (i) => L + (i * (R - L)) / (meses.length - 1);
+      const xCentro = (i) => L + largGrupo * (i + 0.5);
+      const x = tipo === "barras" ? xCentro : xLinha;
       let html = "";
 
+     
       for (let g = 0; g <= 3; g++) {
         const v = min + ((max - min) * g) / 3, yy = y(v);
         html += `<line class="grid" x1="${L}" x2="${R}" y1="${yy}" y2="${yy}"/>`;
@@ -285,41 +422,96 @@
       }
       meses.forEach((m, i) => (html += `<text x="${x(i)}" y="${H - 6}" text-anchor="middle">${m}</text>`));
 
-      series.forEach((s) => {
-        const pts = s.dados.map((v, i) => `${x(i)},${y(v)}`);
-        if (s.area) {
-          html += `<defs><linearGradient id="g${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${s.cor}" stop-opacity=".35"/><stop offset="1" stop-color="${s.cor}" stop-opacity="0"/></linearGradient></defs>`;
-          html += `<polygon points="${x(0)},${B} ${pts.join(" ")} ${x(s.dados.length - 1)},${B}" fill="url(#g${id})"/>`;
-        }
-        html += `<polyline class="line" stroke="${s.cor}" points="${pts.join(" ")}"/>`;
-        s.dados.forEach((v, i) => {
-          html += `<circle cx="${x(i)}" cy="${y(v)}" r="${i === s.dados.length - 1 ? 4 : 2.5}" fill="${s.cor}"><title>${s.nome}: ${v}${sufixo}</title></circle>`;
+      if (tipo === "barras") {
+        const miolo = largGrupo * 0.78;
+        const largBarra = Math.min(miolo / series.length, 40);
+        const unico = series.length === 1;
+
+        series.forEach((s, k) => {
+          s.dados.forEach((v, i) => {
+            const bx = xCentro(i) - (largBarra * series.length) / 2 + k * largBarra;
+            const by = y(v);
+            const ultimo = i === s.dados.length - 1;
+            const opac = unico && !ultimo ? 0.55 : 1; 
+            html += `<rect x="${bx + 1}" y="${by}" width="${Math.max(largBarra - 2, 1)}" height="${Math.max(B - by, 0)}" rx="2" fill="${s.cor}" opacity="${opac}"><title>${s.nome} (${meses[i]}): ${v}${sufixo}</title></rect>`;
+            if (unico) {
+              html += `<text x="${xCentro(i)}" y="${by - 4}" text-anchor="middle">${v}${sufixo}</text>`;
+            }
+          });
         });
-      });
+      } else {
+        series.forEach((s) => {
+          const pts = s.dados.map((v, i) => `${xLinha(i)},${y(v)}`);
+          if (s.area) {
+            html += `<defs><linearGradient id="g${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${s.cor}" stop-opacity=".35"/><stop offset="1" stop-color="${s.cor}" stop-opacity="0"/></linearGradient></defs>`;
+            html += `<polygon points="${xLinha(0)},${B} ${pts.join(" ")} ${xLinha(s.dados.length - 1)},${B}" fill="url(#g${id})"/>`;
+          }
+          html += `<polyline class="line" stroke="${s.cor}" points="${pts.join(" ")}"/>`;
+          s.dados.forEach((v, i) => {
+            html += `<circle cx="${xLinha(i)}" cy="${y(v)}" r="${i === s.dados.length - 1 ? 4 : 2.5}" fill="${s.cor}"><title>${s.nome}: ${v}${sufixo}</title></circle>`;
+          });
+        });
+      }
+      
+      if (media != null) {
+        const ym = y(media);
+        html += `<line x1="${L}" x2="${R}" y1="${ym}" y2="${ym}" stroke="#f5c66b" stroke-width="1.5" stroke-dasharray="4 4"/>`;
+        html += `<text x="${L + 3}" y="${ym - 4}" style="fill:#f5c66b">média ${fmt(media)}</text>`;
+      }
       svg.innerHTML = html;
     }
 
     function renderCharts() {
-      const topo = Math.ceil(Math.max(...generos.flatMap((g) => g.dados)) / 6) * 6;
-      desenhar("chart-time", tempo, 90, 120, "");
-      desenhar("chart-genre", generos, 0, topo, "%");
-    }
-    renderCharts();
-    window.addEventListener("resize", renderCharts);
+      const barras = tipoGrafico === "barras";
+      const topoGen = Math.ceil(Math.max(...generos.flatMap((g) => g.dados)) / 6) * 6;
+      const topoTempo = Math.ceil(Math.max(...duracao) / 30) * 30;
 
-    document.getElementById("legend-genre").innerHTML = generos
+      
+      desenhar("chart-time", tempo, barras ? 0 : 90, barras ? topoTempo : 120, "", tipoGrafico, duracaoMedia);
+      desenhar("chart-genre", generos, 0, topoGen, "%", tipoGrafico);
+    }
+
+    $("legend-genre").innerHTML = generos
       .map((g) => `<span><i style="background:${g.cor}"></i>${g.nome}</span>`)
       .join("");
 
-    const dTempo = duracao[duracao.length - 1] - duracao[0];
-    document.getElementById("tempo-valor").textContent = duracao[duracao.length - 1];
-    document.getElementById("tempo-delta").innerHTML =
-      `<span class="material-symbols-outlined">${dTempo >= 0 ? "trending_up" : "trending_down"}</span>${sinal(dTempo)}${dTempo} min`;
+    
+    const btnPers = $("btnPersonalizar");
+    const painel = $("painelPersonalizar");
+    const opcoes = document.querySelectorAll(".custom__opt");
 
-    document.getElementById("genero-nome").textContent = emAlta.nome;
-    document.getElementById("genero-pct").innerHTML =
-      `<span class="material-symbols-outlined">trending_up</span>${emAlta.atual}%`;
-  
+    function marcarOpcoes() {
+      opcoes.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.tipo === tipoGrafico)));
+    }
+
+    function definirTipo(tipo) {
+      tipoGrafico = tipo;
+      try { localStorage.setItem("dashTipoGrafico", tipo); } catch (e) { }
+      marcarOpcoes();
+      renderCharts();
+    }
+
+    function abrirPainel(abrir) {
+      painel.hidden = !abrir;
+      btnPers.setAttribute("aria-expanded", String(abrir));
+    }
+
+    btnPers.addEventListener("click", (e) => {
+      e.stopPropagation();
+      abrirPainel(painel.hidden);
+    });
+    opcoes.forEach((b) => b.addEventListener("click", () => definirTipo(b.dataset.tipo)));
+    document.addEventListener("click", (e) => {
+      if (!painel.hidden && !painel.contains(e.target)) abrirPainel(false);
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") abrirPainel(false);
+    });
+
+    
+    marcarOpcoes();
+    renderCharts();
+    window.addEventListener("resize", renderCharts);
   </script>
 </body>
 
