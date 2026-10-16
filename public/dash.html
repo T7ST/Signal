@@ -35,7 +35,53 @@
   <main class="content">
     <div>
       <h1 class="page-title">Visão Geral</h1>
-      <p class="page-sub">Audiência de Abr a Set/2026 • Dados de exemplo</p>
+      <p class="page-sub" id="periodo">Audiência dos últimos 6 meses • Dados de exemplo</p>
+    </div>
+
+
+    <section class="kpis" aria-label="Indicadores principais">
+      <div class="kpi-card kpis__wide">
+        <span class="kpi-card__label label-sm"><span class="material-symbols-outlined">schedule</span>Duração
+          média</span>
+        <span class="kpi-card__value" id="kpi-duracao">—</span>
+        <span class="kpi-card__note" id="kpi-duracao-nota"></span>
+      </div>
+      <div class="kpi-card kpi-card--accent">
+        <span class="kpi-card__label label-sm"><span class="material-symbols-outlined">local_fire_department</span>Em
+          alta</span>
+        <span class="kpi-card__value" id="kpi-alta">—</span>
+        <span class="kpi-card__note" id="kpi-alta-nota"></span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-card__label label-sm"><span class="material-symbols-outlined">trending_up</span>Maior
+          crescimento</span>
+        <span class="kpi-card__value" id="kpi-cresceu">—</span>
+        <span class="kpi-card__note" id="kpi-cresceu-nota"></span>
+      </div>
+    </section>
+
+    <div class="ranks">
+      <section class="card rank rank--best">
+        <div class="rank__head">
+          <div>
+            <h2 class="card__title">3 Melhores para Investir</h2>
+            <p class="card__sub">Pontuação por participação e crescimento</p>
+          </div>
+          <div class="icon-box"><span class="material-symbols-outlined">thumb_up</span></div>
+        </div>
+        <ol class="rank__list" id="rank-melhores"></ol>
+      </section>
+
+      <section class="card rank rank--worst">
+        <div class="rank__head">
+          <div>
+            <h2 class="card__title">3 Menos Indicados</h2>
+            <p class="card__sub">Baixa participação e crescimento fraco</p>
+          </div>
+          <div class="icon-box"><span class="material-symbols-outlined">thumb_down</span></div>
+        </div>
+        <ol class="rank__list" id="rank-piores"></ol>
+      </section>
     </div>
 
     <div class="charts">
@@ -77,7 +123,6 @@
     </div>
 
 
-    <!-- Recomendação -->
     <section class="card reco">
       <span class="reco__tag label-sm"><i></i>Recomendação de Investimento</span>
       <h2 class="reco__title">Invista em <b>Ficção Científica</b> de <b>110–120 min</b></h2>
@@ -106,10 +151,7 @@
         <div class="meter__bar"><span></span></div>
       </div>
 
-      <button class="btn" type="button">
-        <span class="material-symbols-outlined">add_circle</span>
-        Ver títulos sugeridos
-      </button>
+     
     </section>
   </main>
 
@@ -125,19 +167,113 @@
   </nav>
 
   <script>
-    const meses = ["Abr", "Mai", "Jun", "Jul", "Ago", "Set"];
 
-    // Dados de exemplo: troque pelos valores reais (ex.: vindos do XLS)
-    const tempo = [{ nome: "Duração média (min)", cor: "#ff2e4d", area: true, dados: [98, 101, 105, 109, 114, 118] }];
-    const generos = [
-      { nome: "Ficção Científica", cor: "#ff2e4d", dados: [21, 24, 27, 30, 32, 34] },
-      { nome: "Ação", cor: "#f5c66b", dados: [30, 29, 29, 28, 27, 27] },
-      { nome: "Drama", cor: "#b9c8de", dados: [24, 23, 22, 22, 21, 20] },
+    const MESES_BASE = ["Abr", "Mai", "Jun", "Jul", "Ago", "Set"];
+    const COR = { "Ficção Científica": "#ff2e4d", "Ação": "#f5c66b", "Drama": "#b9c8de" };
+
+    const baseGeneros = [
+      { nome: "Ficção Científica", dados: [21, 24, 27, 30, 32, 34] },
+      { nome: "Ação", dados: [30, 29, 29, 28, 27, 27] },
+      { nome: "Drama", dados: [24, 23, 22, 22, 21, 20] },
+      { nome: "Comédia", dados: [9, 8, 8, 7, 7, 6] },
+      { nome: "Terror", dados: [6, 6, 5, 5, 5, 5] },
+      { nome: "Romance", dados: [5, 5, 5, 4, 4, 4] },
+      { nome: "Documentário", dados: [3, 3, 2, 2, 2, 2] },
+      { nome: "Animação", dados: [2, 2, 2, 2, 2, 2] },
     ];
+    const baseDuracao = [98, 101, 105, 109, 114, 118];
+
+
+    const meses = MESES_BASE.slice(-6);
+    const todos = baseGeneros.map((g) => ({ ...g, dados: g.dados.slice(-6) }));
+    const duracao = baseDuracao.slice(-6);
+
+    document.getElementById("periodo").textContent =
+      `Audiência de ${meses[0]} a ${meses[meses.length - 1]} • Últimos 6 meses • Dados de exemplo`;
+
+
+    const soma = (a) => a.reduce((s, v) => s + v, 0);
+
+    const stats = todos.map((g) => {
+      const ini = g.dados[0];
+      const fim = g.dados[g.dados.length - 1];
+      return {
+        nome: g.nome,
+        atual: fim,
+        pp: fim - ini,
+        cresc: ini > 0 ? ((fim - ini) / ini) * 100 : 0,
+      };
+    });
+
+
+    const maxAtual = Math.max(...stats.map((s) => s.atual));
+    const minC = Math.min(...stats.map((s) => s.cresc));
+    const maxC = Math.max(...stats.map((s) => s.cresc));
+    const norm = (v, a, b) => (b === a ? 0 : (v - a) / (b - a));
+    stats.forEach((s) => {
+      s.score = Math.round(100 * (0.5 * (s.atual / maxAtual) + 0.5 * norm(s.cresc, minC, maxC)));
+    });
+
+    const porScore = [...stats].sort((a, b) => b.score - a.score);
+    const melhores = porScore.slice(0, 3);
+    const piores = porScore.slice(-3).reverse();
+
+    const emAlta = [...stats].sort((a, b) => b.atual - a.atual)[0];
+    const maisCresceu = [...stats].sort((a, b) => b.cresc - a.cresc)[0];
+    const duracaoMedia = soma(duracao) / duracao.length;
+
+
+    const sinal = (v) => (v > 0 ? "+" : "");
+    const fmt = (v) => v.toLocaleString("pt-BR", { maximumFractionDigits: 0 });
+
+    document.getElementById("kpi-duracao").innerHTML = `${fmt(duracaoMedia)}<small>min</small>`;
+    document.getElementById("kpi-duracao-nota").textContent =
+      `Média de ${meses[0]} a ${meses[meses.length - 1]} • último mês: ${duracao[duracao.length - 1]} min`;
+
+    document.getElementById("kpi-alta").textContent = emAlta.nome;
+    document.getElementById("kpi-alta-nota").textContent = `${emAlta.atual}% das visualizações em ${meses[meses.length - 1]}`;
+
+    document.getElementById("kpi-cresceu").textContent = `${sinal(maisCresceu.cresc)}${fmt(maisCresceu.cresc)}%`;
+    document.getElementById("kpi-cresceu-nota").textContent =
+      `${maisCresceu.nome} • ${sinal(maisCresceu.pp)}${maisCresceu.pp} p.p. em 6 meses`;
+
+    function rankHTML(lista, classeVar) {
+      return lista
+        .map(
+          (s, i) => `
+        <li class="rank__item">
+          <span class="rank__pos">${i + 1}</span>
+          <span class="rank__name">${s.nome}</span>
+          <span class="rank__meta">${s.score} pts
+            <small class="${classeVar}">${sinal(s.cresc)}${fmt(s.cresc)}% • ${s.atual}% share</small>
+          </span>
+          <span class="rank__bar"><span style="width:${s.score}%"></span></span>
+        </li>`
+        )
+        .join("");
+    }
+    document.getElementById("rank-melhores").innerHTML = rankHTML(melhores, "up");
+    document.getElementById("rank-piores").innerHTML = rankHTML(piores, "down");
+
+
+    const tempo = [{ nome: "Duração média (min)", cor: "#ff2e4d", area: true, dados: duracao }];
+
+    const PALETA = ["#ff2e4d", "#f5c66b", "#b9c8de", "#7bd3a8", "#a78bfa", "#5eb5ff"];
+
+    
+    const generos = [...todos]
+      .sort((a, b) => b.dados[b.dados.length - 1] - a.dados[a.dados.length - 1])
+      .slice(0, 6)
+      .map((g, i) => ({ ...g, cor: PALETA[i] }));
 
     function desenhar(id, series, min, max, sufixo) {
       const svg = document.getElementById(id);
-      const L = 30, R = 312, T = 10, B = 145;
+      
+      const W = Math.max(280, Math.round(svg.getBoundingClientRect().width));
+      const H = W > 600 ? 260 : 170;
+      svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+
+      const L = 34, R = W - 10, T = 10, B = H - 25;
       const x = (i) => L + (i * (R - L)) / (meses.length - 1);
       const y = (v) => B - ((v - min) / (max - min)) * (B - T);
       let html = "";
@@ -147,9 +283,9 @@
         html += `<line class="grid" x1="${L}" x2="${R}" y1="${yy}" y2="${yy}"/>`;
         html += `<text x="0" y="${yy + 3}">${Math.round(v)}${sufixo}</text>`;
       }
-      meses.forEach((m, i) => (html += `<text x="${x(i)}" y="164" text-anchor="middle">${m}</text>`));
+      meses.forEach((m, i) => (html += `<text x="${x(i)}" y="${H - 6}" text-anchor="middle">${m}</text>`));
 
-      series.forEach((s, k) => {
+      series.forEach((s) => {
         const pts = s.dados.map((v, i) => `${x(i)},${y(v)}`);
         if (s.area) {
           html += `<defs><linearGradient id="g${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${s.cor}" stop-opacity=".35"/><stop offset="1" stop-color="${s.cor}" stop-opacity="0"/></linearGradient></defs>`;
@@ -163,41 +299,27 @@
       svg.innerHTML = html;
     }
 
-    desenhar("chart-time", tempo, 90, 120, "");
-    desenhar("chart-genre", generos, 15, 35, "%");
+    function renderCharts() {
+      const topo = Math.ceil(Math.max(...generos.flatMap((g) => g.dados)) / 6) * 6;
+      desenhar("chart-time", tempo, 90, 120, "");
+      desenhar("chart-genre", generos, 0, topo, "%");
+    }
+    renderCharts();
+    window.addEventListener("resize", renderCharts);
 
     document.getElementById("legend-genre").innerHTML = generos
       .map((g) => `<span><i style="background:${g.cor}"></i>${g.nome}</span>`)
       .join("");
 
-    // Diretores: dados de exemplo (nº de filmes na base). Troque pelos valores reais do CSV.
-    const diretores = [
-      { nome: "Rajiv Chilaka", qtd: 19 },
-      { nome: "Raúl Campos", qtd: 18 },
-      { nome: "Jan Suter", qtd: 18 },
-      { nome: "Marcus Raboy", qtd: 16 },
-      { nome: "Suhas Kadav", qtd: 16 },
-      { nome: "Jay Karas", qtd: 14 },
-      { nome: "Cathy Garcia-Molina", qtd: 13 },
-      { nome: "Jay Chapman", qtd: 12 },
-      { nome: "Youssef Chahine", qtd: 12 },
-      { nome: "Martin Scorsese", qtd: 12 },
-    ].sort((a, b) => b.qtd - a.qtd);
+    const dTempo = duracao[duracao.length - 1] - duracao[0];
+    document.getElementById("tempo-valor").textContent = duracao[duracao.length - 1];
+    document.getElementById("tempo-delta").innerHTML =
+      `<span class="material-symbols-outlined">${dTempo >= 0 ? "trending_up" : "trending_down"}</span>${sinal(dTempo)}${dTempo} min`;
 
-    const maxQtd = diretores[0].qtd;
-    document.getElementById("kpi-diretor").textContent = diretores[0].nome;
-    document.getElementById("kpi-diretor-qtd").textContent = `${diretores[0].qtd} filmes`;
-    document.getElementById("bars-diretores").innerHTML = diretores
-      .map(
-        (d, i) => `
-        <div class="bars__row${i === 0 ? " is-top" : ""}">
-          <span class="bars__rank">${i + 1}</span>
-          <span class="bars__name">${d.nome}</span>
-          <span class="bars__track"><span style="width:${(d.qtd / maxQtd) * 100}%"></span></span>
-          <span class="bars__qtd">${d.qtd}</span>
-        </div>`
-      )
-      .join("");
+    document.getElementById("genero-nome").textContent = emAlta.nome;
+    document.getElementById("genero-pct").innerHTML =
+      `<span class="material-symbols-outlined">trending_up</span>${emAlta.atual}%`;
+  
   </script>
 </body>
 
