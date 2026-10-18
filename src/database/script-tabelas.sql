@@ -26,7 +26,7 @@ CREATE TABLE usuario (
     data_cadastro DATETIME DEFAULT CURRENT_TIMESTAMP
     empresa_idempresa INT NOT NULL,
     planos_idplanos INT,
-    assinatura_idassinatura INT NOT NULL,
+    assinatura_idassinatura INT,
     FOREIGN KEY (empresa_idempresa) REFERENCES empresa(idempresa),
     FOREIGN KEY (planos_idplanos) REFERENCES planos(idplanos),
     FOREIGN KEY (assinatura_idassinatura) REFERENCES assinatura(idassinatura)
