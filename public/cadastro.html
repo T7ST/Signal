@@ -57,7 +57,7 @@
             <input type="text" id="input_empresa" placeholder="Ex: Rostova Filmes Ltda">
 
             <label for="input_cnpj">CNPJ <span id="mensagemcnpj"></span></label>
-            <input type="text" id="input_cnpj" oninput="mascaraCnpj()" maxlength="18" inputmode="numeric"
+            <input type="text" id="input_cnpj" oninput="mascaraCnpj()" onblur="buscarPorCnpj()" maxlength="18" inputmode="numeric"
                 placeholder="00.000.000/0000-00">
 
             <h2 class="secao">Endereço da empresa</h2>
@@ -146,26 +146,8 @@
                  .replace(/\.(\d{3})(\d)/, '.$1/$2')
                  .replace(/(\d{4})(\d)/, '$1-$2');
             input_cnpj.value = v;
-        }
 
-        function cnpjValido(cnpj) {
-            cnpj = cnpj.replace(/\D/g, '');
-            if (cnpj.length !== 14 || /^(\d)\1+$/.test(cnpj)) return false;
 
-            const calcula = (base) => {
-                let soma = 0;
-                let peso = base.length - 7;
-                for (let i = 0; i < base.length; i++) {
-                    soma += Number(base[i]) * peso--;
-                    if (peso < 2) peso = 9;
-                }
-                const resto = soma % 11;
-                return resto < 2 ? 0 : 11 - resto;
-            };
-
-            const d1 = calcula(cnpj.slice(0, 12));
-            const d2 = calcula(cnpj.slice(0, 12) + d1);
-            return cnpj.endsWith(`${d1}${d2}`);
         }
 
       
@@ -175,29 +157,35 @@
             return valido;
         }
 
+        let fkEmpresa;
+
+        async function buscarPorCnpj() {
+            const cnpj = input_cnpj.value.replace(/\D/g, '');
+            if (cnpj.length !== 14) return;
+
+            const empresa = await fetch(`/empresa/${cnpj}`).then((res) => res.json());
+            if (empresa) {
+                fkEmpresa = empresa.idempresa;
+                input_empresa.value = empresa.nome;
+                input_rua.value = empresa.rua;
+                input_numero.value = empresa.numero;
+                input_cidade.value = empresa.cidade;
+                input_estado.value = empresa.estado;
+            }
+        }
+
         function cadastro() {
             const nome = input_nome.value.trim();
             const email = input_email.value.trim();
             const senha = input_senha.value;
             const confirmacao = input_senhaConfirmacao.value;
-            const empresa = input_empresa.value.trim();
-            const cnpj = input_cnpj.value;
-            const rua = input_rua.value.trim();
-            const numero = input_numero.value.trim();
-            const cidade = input_cidade.value.trim();
-            const estado = input_estado.value;
+           
 
             const resultados = [
                 checar(nome.length >= 3, 'mensagemnome', 'Insira um nome válido'),
                 checar(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email), 'mensagememail', 'Insira um email válido'),
                 checar(senhaForte, 'mensagemsenha', 'Necessita de uma senha forte (barrinha verde)'),
                 checar(senha === confirmacao && confirmacao !== '', 'mensagemconfirm', 'As senhas não coincidem'),
-                checar(empresa.length >= 2, 'mensagemempresa', 'Insira o nome da empresa'),
-                checar(cnpjValido(cnpj), 'mensagemcnpj', 'CNPJ inválido'),
-                checar(rua.length >= 3, 'mensagemrua', 'Insira a rua'),
-                checar(numero.length >= 1, 'mensagemnumero', 'Insira o número'),
-                checar(cidade.length >= 2, 'mensagemcidade', 'Insira a cidade'),
-                checar(estado !== '', 'mensagemestado', 'Escolha o estado')
             ];
 
             if (!resultados.every(Boolean)) return;
@@ -206,15 +194,11 @@
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    nomeServer: nome,
-                    emailServer: email,
-                    senhaServer: senha,
-                    empresaServer: empresa,
-                    cnpjServer: cnpj.replace(/\D/g, ''),
-                    ruaServer: rua,
-                    numeroServer: numero,
-                    cidadeServer: cidade,
-                    estadoServer: estado
+                    nome,
+                    email,
+                    senha,
+                    fkEmpresa: empresa,
+                    fkPlano: plano == "mensal" ? 1 : 2
                 }),
             })
                 .then(function (resposta) {

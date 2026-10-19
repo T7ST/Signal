@@ -3,7 +3,8 @@ USE signal_db;
 
 CREATE TABLE empresa (
     idempresa INT AUTO_INCREMENT PRIMARY KEY,
-    cnpj VARCHAR(45)
+    nome VARCHAR(45),
+    cnpj VARCHAR(45) UNIQUE
 );
 
 CREATE TABLE endereco (
@@ -80,3 +81,8 @@ CREATE TABLE historico_log (
     FOREIGN KEY (fk_usuario) REFERENCES usuario(id_usuario)
 ) ;
 
+------ INSERTS ------
+
+INSERT INTO planos (titulo, preco) VALUES 
+    ('Plano Mensal', 'R$ 49,90/mês'), 
+    ('Plano Anual', 'R$ 499,90/ano');

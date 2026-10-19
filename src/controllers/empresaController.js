@@ -24,6 +24,23 @@ function cadastrar(req, res) {
     });
 }
 
+function listarPorCnpj(req, res) {
+  empresaModel
+    .listarPorCnpj(req.params.cnpj)
+    .then(function (resultado) {
+      res.json(resultado);
+    })
+    .catch(function (erro) {
+      console.log(erro);
+      console.log(
+        "\nHouve um erro ao realizar a consulta! Erro: ",
+        erro.sqlMessage,
+      );
+      res.status(500).json(erro.sqlMessage);
+    });
+}
+
 module.exports = {
   cadastrar,
+  listarPorCnpj,
 };
