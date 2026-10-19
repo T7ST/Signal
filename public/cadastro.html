@@ -165,12 +165,12 @@
 
             const empresa = await fetch(`/empresa/${cnpj}`).then((res) => res.json());
             if (empresa) {
-                fkEmpresa = empresa.idempresa;
-                input_empresa.value = empresa.nome;
-                input_rua.value = empresa.rua;
-                input_numero.value = empresa.numero;
-                input_cidade.value = empresa.cidade;
-                input_estado.value = empresa.estado;
+                fkEmpresa = empresa[0].idempresa;
+                input_empresa.value = empresa[0].nome;
+                input_rua.value = empresa[0].rua;
+                input_numero.value = empresa[0].numero;
+                input_cidade.value = empresa[0].cidade;
+                input_estado.value = empresa[0].estado;
             }
         }
 
@@ -197,7 +197,7 @@
                     nome,
                     email,
                     senha,
-                    fkEmpresa: empresa,
+                    fkEmpresa,
                     fkPlano: plano == "mensal" ? 1 : 2
                 }),
             })

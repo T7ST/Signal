@@ -86,3 +86,13 @@ CREATE TABLE historico_log (
 INSERT INTO planos (titulo, preco) VALUES 
     ('Plano Mensal', 'R$ 49,90/mês'), 
     ('Plano Anual', 'R$ 499,90/ano');
+
+INSERT INTO empresa (nome, cnpj) VALUES 
+    ('Empresa Teste', '12345678901234'),
+    ('Empresa Teste 2', '12345678901235'),
+    ('Empresa Teste 3', '12345678901236');
+
+INSERT INTO endereco (rua, numero, cidade, estado, empresa_idempresa) VALUES 
+    ('Rua A', '123', 'Cidade A', 'SP', 1),
+    ('Rua B', '456', 'Cidade B', 'SP', 2),
+    ('Rua C', '789', 'Cidade C', 'SP', 3);
