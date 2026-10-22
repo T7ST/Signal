@@ -111,7 +111,7 @@
     <div class="topbar__inner">
       <div class="brand">
         <img class="brand__logo" alt="Logo Signal"
-          src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgEbefr3SijfX6Agn2GElTheOc8BDXJlgNQ3oh5wNkOAiRPoCFa6dSsvEJwmrlJrQAo7jUJOQdpgeWAtZPV0Gw8leEHhASB2Ln7Fy5HdJI_AkVzhIC6EeGqiw4r4blY4Q9TRhG2zop4zD_CbGVKONhKI34j_1YxRlmZKzs86_EEjk01AyFUpkxvCtExlEhSpLaf5N3LgzhwYqcK-F4716fPUVJ9_8iLncXFpcPlNDCl76ggFwE2B_jQA" />
+          src= "./img/logo.png">
         <div>
           <span class="brand__name">Signal</span>
           <span class="brand__page label-sm">Dashboard</span>
@@ -149,6 +149,45 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- ===== GRÁFICOS (agora logo abaixo do botão Personalizar) ===== -->
+    <div class="charts">
+      <!-- Dashboard 1: tempo de filme mais assistido -->
+      <section class="card">
+        <div class="card__head">
+          <div>
+            <h2 class="card__title">Tempo de Filme Mais Assistido</h2>
+            <p class="card__sub">Duração média dos filmes concluídos</p>
+          </div>
+          <div class="icon-box"><span class="material-symbols-outlined">schedule</span></div>
+        </div>
+        <div class="kpi">
+          <span class="kpi__value" id="tempo-valor">—</span>
+          <span class="kpi__unit">min em média (6 meses)</span>
+          <span class="delta" id="tempo-delta"></span>
+        </div>
+        <svg class="chart" id="chart-time" viewBox="0 0 320 170" role="img"
+          aria-label="Evolução da duração média assistida"></svg>
+      </section>
+
+      <!-- Dashboard 2: gênero mais assistido -->
+      <section class="card">
+        <div class="card__head">
+          <div>
+            <h2 class="card__title">Gênero Mais Assistido</h2>
+            <p class="card__sub">Participação nas visualizações (%)</p>
+          </div>
+          <div class="icon-box"><span class="material-symbols-outlined">theaters</span></div>
+        </div>
+        <div class="kpi">
+          <span class="kpi__value" id="genero-nome">—</span>
+          <span class="delta" id="genero-pct"></span>
+        </div>
+        <svg class="chart" id="chart-genre" viewBox="0 0 320 170" role="img"
+          aria-label="Evolução da participação por gênero"></svg>
+        <div class="legend label-sm" id="legend-genre"></div>
+      </section>
     </div>
 
     <section class="kpis" aria-label="Indicadores principais">
@@ -196,44 +235,6 @@
       </section>
     </div>
 
-    <div class="charts">
-      <!-- Dashboard 1: tempo de filme mais assistido -->
-      <section class="card">
-        <div class="card__head">
-          <div>
-            <h2 class="card__title">Tempo de Filme Mais Assistido</h2>
-            <p class="card__sub">Duração média dos filmes concluídos</p>
-          </div>
-          <div class="icon-box"><span class="material-symbols-outlined">schedule</span></div>
-        </div>
-        <div class="kpi">
-          <span class="kpi__value" id="tempo-valor">—</span>
-          <span class="kpi__unit">min em média (6 meses)</span>
-          <span class="delta" id="tempo-delta"></span>
-        </div>
-        <svg class="chart" id="chart-time" viewBox="0 0 320 170" role="img"
-          aria-label="Evolução da duração média assistida"></svg>
-      </section>
-
-      <!-- Dashboard 2: gênero mais assistido -->
-      <section class="card">
-        <div class="card__head">
-          <div>
-            <h2 class="card__title">Gênero Mais Assistido</h2>
-            <p class="card__sub">Participação nas visualizações (%)</p>
-          </div>
-          <div class="icon-box"><span class="material-symbols-outlined">theaters</span></div>
-        </div>
-        <div class="kpi">
-          <span class="kpi__value" id="genero-nome">—</span>
-          <span class="delta" id="genero-pct"></span>
-        </div>
-        <svg class="chart" id="chart-genre" viewBox="0 0 320 170" role="img"
-          aria-label="Evolução da participação por gênero"></svg>
-        <div class="legend label-sm" id="legend-genre"></div>
-      </section>
-    </div>
-
     <section class="card reco">
       <span class="reco__tag label-sm"><i></i>Recomendação de Investimento</span>
       <h2 class="reco__title">Invista em <b id="reco-genero">—</b> de <b id="reco-faixa">—</b></h2>
@@ -268,8 +269,7 @@
     <div class="bottom-nav__inner">
       <a class="nav-item label-sm is-active" href="#" aria-current="page"><span
           class="material-symbols-outlined">bar_chart</span>Dashboard</a>
-      <a class="nav-item label-sm" href="./upload.html"><span
-          class="material-symbols-outlined">cloud_upload</span>Upload XLS</a>
+
       <a class="nav-item label-sm" href="./perfil.html"><span
           class="material-symbols-outlined">manage_accounts</span>Perfil</a>
     </div>
@@ -278,7 +278,7 @@
   <script>
     const $ = (id) => document.getElementById(id);
 
-    
+
     const MESES_BASE = ["Abr", "Mai", "Jun", "Jul", "Ago", "Set"];
 
     const baseGeneros = [
@@ -293,7 +293,7 @@
     ];
     const baseDuracao = [98, 101, 105, 109, 114, 118];
 
-    
+
     const meses = MESES_BASE.slice(-6);
     const todos = baseGeneros.map((g) => ({ ...g, dados: g.dados.slice(-6) }));
     const duracao = baseDuracao.slice(-6);
@@ -301,7 +301,7 @@
     $("periodo").textContent =
       `Audiência de ${meses[0]} a ${meses[meses.length - 1]} • Últimos 6 meses • Dados de exemplo`;
 
-  
+
     const soma = (a) => a.reduce((s, v) => s + v, 0);
 
     const stats = todos.map((g) => {
@@ -335,7 +335,7 @@
     const sinal = (v) => (v > 0 ? "+" : "");
     const fmt = (v) => v.toLocaleString("pt-BR", { maximumFractionDigits: 0 });
 
-    
+
     $("kpi-duracao").innerHTML = `${fmt(duracaoMedia)}<small>min</small>`;
     $("kpi-duracao-nota").textContent =
       `Média de ${meses[0]} a ${meses[meses.length - 1]} • último mês: ${ultimaDuracao} min`;
@@ -347,7 +347,7 @@
     $("kpi-cresceu-nota").textContent =
       `${maisCresceu.nome} • ${sinal(maisCresceu.pp)}${maisCresceu.pp} p.p. em 6 meses`;
 
-   
+
     function rankHTML(lista, classeVar) {
       return lista
         .map(
@@ -384,21 +384,21 @@
     $("reco-dur").textContent = `${ultimaDuracao} min`;
     $("reco-dur-nota").textContent = `tendência atual • média 6 meses: ${fmt(duracaoMedia)} min`;
 
-  
+
     const tempo = [{ nome: "Duração média (min)", cor: "#ff2e4d", area: true, dados: duracao }];
     const PALETA = ["#ff2e4d", "#f5c66b", "#b9c8de", "#7bd3a8", "#a78bfa", "#5eb5ff"];
 
-    
+
     const generos = [...todos]
       .sort((a, b) => b.dados[b.dados.length - 1] - a.dados[a.dados.length - 1])
       .slice(0, 6)
       .map((g, i) => ({ ...g, cor: PALETA[i] }));
 
-    let tipoGrafico = "linhas"; 
+    let tipoGrafico = "linhas";
     try {
       const salvo = localStorage.getItem("dashTipoGrafico");
       if (salvo === "linhas" || salvo === "barras") tipoGrafico = salvo;
-    } catch (e) {  }
+    } catch (e) { }
 
     function desenhar(id, series, min, max, sufixo, tipo, media) {
       const svg = $(id);
@@ -414,7 +414,7 @@
       const x = tipo === "barras" ? xCentro : xLinha;
       let html = "";
 
-     
+
       for (let g = 0; g <= 3; g++) {
         const v = min + ((max - min) * g) / 3, yy = y(v);
         html += `<line class="grid" x1="${L}" x2="${R}" y1="${yy}" y2="${yy}"/>`;
@@ -432,7 +432,7 @@
             const bx = xCentro(i) - (largBarra * series.length) / 2 + k * largBarra;
             const by = y(v);
             const ultimo = i === s.dados.length - 1;
-            const opac = unico && !ultimo ? 0.55 : 1; 
+            const opac = unico && !ultimo ? 0.55 : 1;
             html += `<rect x="${bx + 1}" y="${by}" width="${Math.max(largBarra - 2, 1)}" height="${Math.max(B - by, 0)}" rx="2" fill="${s.cor}" opacity="${opac}"><title>${s.nome} (${meses[i]}): ${v}${sufixo}</title></rect>`;
             if (unico) {
               html += `<text x="${xCentro(i)}" y="${by - 4}" text-anchor="middle">${v}${sufixo}</text>`;
@@ -452,7 +452,7 @@
           });
         });
       }
-      
+
       if (media != null) {
         const ym = y(media);
         html += `<line x1="${L}" x2="${R}" y1="${ym}" y2="${ym}" stroke="#f5c66b" stroke-width="1.5" stroke-dasharray="4 4"/>`;
@@ -466,7 +466,7 @@
       const topoGen = Math.ceil(Math.max(...generos.flatMap((g) => g.dados)) / 6) * 6;
       const topoTempo = Math.ceil(Math.max(...duracao) / 30) * 30;
 
-      
+
       desenhar("chart-time", tempo, barras ? 0 : 90, barras ? topoTempo : 120, "", tipoGrafico, duracaoMedia);
       desenhar("chart-genre", generos, 0, topoGen, "%", tipoGrafico);
     }
@@ -475,7 +475,7 @@
       .map((g) => `<span><i style="background:${g.cor}"></i>${g.nome}</span>`)
       .join("");
 
-    
+
     const btnPers = $("btnPersonalizar");
     const painel = $("painelPersonalizar");
     const opcoes = document.querySelectorAll(".custom__opt");
@@ -508,7 +508,7 @@
       if (e.key === "Escape") abrirPainel(false);
     });
 
-    
+
     marcarOpcoes();
     renderCharts();
     window.addEventListener("resize", renderCharts);

@@ -161,7 +161,7 @@ body {
   background-color: #121212;
   align-items: center;
   flex-direction: column;
-  height: 70vh;
+  height: 30vh;
 }
 .tituloc3 {
   display: flex;
@@ -171,20 +171,20 @@ body {
 }
 .separacao {
   display: flex;
-  height: 80%;
+  height: 100%;
   width: 90%;
 }
 .lado1 {
   display: flex;
   width: 50%;
-  height: 90%;
+  height: 100%;
   flex-direction: column;
   align-items: center;
 }
 .lado2 {
   display: flex;
   width: 50%;
-  height: 90%;
+  height: 100%;
   flex-direction: column;
   align-items: center;
 }
@@ -193,7 +193,7 @@ body {
   background-color: #1c1b1b;
   border: 1px solid #303030;
   width: 90%;
-  height: 40%;
+  height: 90%;
   gap: 10%;
   flex-direction: column;
   align-items: start;

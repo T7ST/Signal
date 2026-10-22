@@ -42,10 +42,12 @@ body {
   width: 100%;
 }
 .titulo img {
-  display: flex;
-  height: 60%;
-  width: 7%;
-  margin-bottom: 1%;
+  display: block;
+  width: 100%;
+  max-width: 72px;  
+  height: auto;
+  margin: 0 auto 8px;
+  object-fit: contain;
 }
 .sub {
   display: flex;
@@ -114,4 +116,10 @@ body {
   text-decoration: none;
   color: #FF8A7C;
   font-weight: bold;
+}
+
+@media (min-width: 768px) {
+  .pagina {
+    justify-content: center;
+  }
 }
