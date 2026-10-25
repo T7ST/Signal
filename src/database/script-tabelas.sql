@@ -1,85 +1,95 @@
 CREATE DATABASE signal_db;
 USE signal_db;
 
-CREATE TABLE empresa (
-    idempresa INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(45),
-    cnpj VARCHAR(45) UNIQUE
-);
-
-CREATE TABLE endereco (
-    idendereco INT AUTO_INCREMENT PRIMARY KEY,
-    rua VARCHAR(45),
-    numero VARCHAR(45),
-    cidade VARCHAR(45),
-    estado VARCHAR(45),
-    empresa_idempresa INT NOT NULL,
-    FOREIGN KEY (empresa_idempresa) REFERENCES empresa(idempresa)
-);
-
-CREATE TABLE planos (
-    idplanos INT AUTO_INCREMENT PRIMARY KEY,
-    titulo VARCHAR(45),
-    preco VARCHAR(45)
-);
-
-CREATE TABLE assinatura (
-    idassinatura INT AUTO_INCREMENT PRIMARY KEY,
-    data_inicio DATETIME DEFAULT current_timestamp,
-    data_fim DATE,
-    status VARCHAR(45)
+create table empresa (
+	idEmpresa int primary key auto_increment,
+    cnpj char(18) not null,
+    nome varchar(100) not null
+    );
+create table endereco (
+	idEndereco int auto_increment,
+    fkEmpresa int not null,
+    rua varchar(50),
+    numero varchar(10),
+    cidade varchar(50),
+    estado char(2),
+    constraint pkcomposta primary key (idEndereco, fkEmpresa),
+    constraint fkEmpresacocons foreign key (fkEmpresa) references empresa(idEmpresa)
 );
 
 
+    
+create table planos (
+	idPlanos int primary key auto_increment,
+    titulo varchar(10),
+    preco decimal(5,2)
+    );
+    create table assinatura (
+	idAssinatUra int auto_increment,
+    data_inicio date,
+    data_fim date,
+    status_assinatura varchar(10),
+    fkIdUsuario int,
+    fkUsuario_idAssinatura int, 
+    fkIdPlanos int, 
+    fkUsuario_idEmpresa int,
+    primary key (idAssinatura, fkIdUsuario, fkUsuario_idAssinatura, fkIdPlanos, fkUsuario_idEmpresa)
+);
 CREATE TABLE usuario (
-    id_usuario INT AUTO_INCREMENT PRIMARY KEY,
+    idUsuario INT AUTO_INCREMENT ,
     nome VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     senha VARCHAR(255) NOT NULL,
     data_cadastro DATETIME DEFAULT CURRENT_TIMESTAMP,
-    empresa_idempresa INT NOT NULL,
-    planos_idplanos INT,
-    assinatura_idassinatura INT,
-    FOREIGN KEY (empresa_idempresa) REFERENCES empresa(idempresa),
-    FOREIGN KEY (planos_idplanos) REFERENCES planos(idplanos),
-    FOREIGN KEY (assinatura_idassinatura) REFERENCES assinatura(idassinatura)
-);
-
-
-CREATE TABLE transacoes (
-    idtransacoes INT AUTO_INCREMENT PRIMARY KEY,
-    data VARCHAR(45),
-    status VARCHAR(45),
-    metodoPagamento VARCHAR(45),
-    assinatura_idassinatura INT NOT NULL,
-    FOREIGN KEY (assinatura_idassinatura) REFERENCES assinatura(idassinatura)
-);
-
-CREATE TABLE importacao_planilha (
-    id_importacao INT AUTO_INCREMENT PRIMARY KEY,
-    data_uso DATETIME DEFAULT CURRENT_TIMESTAMP,
-    status_importacao VARCHAR(50) NOT NULL,
-    fk_usuario INT NOT NULL
-);
-
-CREATE TABLE recomendacao (
-    id_recomendacao INT AUTO_INCREMENT PRIMARY KEY,
-    fk_usuario INT NOT NULL,
-    genero VARCHAR(45) NOT NULL,
-    duracao INT,
-    data_geracao DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (fk_usuario) REFERENCES usuario(id_usuario)   
+    fkEmpresa Int not null,
+    fkAssinatura int not null,
+    constraint pkcomposta2 primary key (idUsuario, fkEmpresa),
+   constraint fkEmpresacons foreign key (fkEmpresa) references empresa(idEmpresa),
+   constraint fkAssinaturacons2 foreign key (fkAssinatura) references assinatura(idAssinatura)
 ) ;
 
-CREATE TABLE historico_log (
-    id_log INT AUTO_INCREMENT PRIMARY KEY,
-    nivel_log VARCHAR(20) NOT NULL,
-    mensagem TEXT NOT NULL,
-    origem VARCHAR(100),
-    data_hora DATETIME DEFAULT CURRENT_TIMESTAMP,
-    fk_usuario INT NOT NULL,
-    FOREIGN KEY (fk_usuario) REFERENCES usuario(id_usuario)
-) ;
+
+create table transacoes (
+	idTransacoes int,
+    fkAssinatura int,
+     fkIdUsuario int,
+    fkUsuario_idAssinatura int, 
+    fkIdPlanos int, 
+    fkUsuario_idEmpresa int,
+    constraint pkcomposta3 primary key (idTransacoes, fkAssinatura,  fkIdUsuario, fkUsuario_idAssinatura, fkIdPlanos, fkUsuario_idEmpresa),
+    data_transacao date,
+    status_transacao varchar(10),
+    metodo_pagamento varchar(10)
+    );
+
+create table recomendacao (
+	idRecomendacao int primary key auto_increment,
+    fkUsuario int,
+    constraint fkUsuariocons foreign key (fkUsuario) references usuario(idUsuario),
+    genero varchar(20),
+    duracao int,
+    data_geracao datetime
+    );
+    
+create table historico_log (
+	idLog int primary key auto_increment,
+    nivel_log varchar(20),
+    mensagem text,
+    origem varchar(100),
+    data_hora datetime,
+    fkUsuario int,
+    constraint fkUsuariocons2 foreign key (fkUsuario) references usuario(idUsuario)
+    );
+
+create table importacao_planilha (
+	idImportacao int primary key auto_increment,
+    fkUsuario int,
+    constraint fkUsuariocons3 foreign key (fkUsuario) references usuario(idUsuario),
+    dataa datetime,
+    status_importacao varchar(10)
+    );
+    
+    
 
 ------ INSERTS ------
 
