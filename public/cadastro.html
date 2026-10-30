@@ -278,7 +278,23 @@
             console.log("resposta: ", resposta);
             if (resposta.ok) {
               setTimeout(() => {
-                window.location = `pagamento.html?plano=${plano}`;
+                fetch("/assinatura/registrar", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    dataInicio: new Date(),
+                    dataFim: null,
+                    statusAssinatura: "Pendente",
+                    email,
+                    plano: plano == "mensal" ? 1 : 2,
+                  }),
+                })
+                  .then(function (res) {
+                    window.location = `pagamento.html?plano=${plano}`;
+                  })
+                  .catch(function (err) {
+                    console.log(`#ERRO: ${err}`);
+                  });
               }, 2000);
             } else {
               throw "Houve um erro ao tentar realizar o cadastro!";
