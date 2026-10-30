@@ -1,221 +1,293 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Cadastro</title>
 
-    <link rel="stylesheet" href="./css/cadastro.css">
+    <link rel="stylesheet" href="./css/cadastro.css" />
     <script src="./js/sessao.js"></script>
     <script src="./js/alerta.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap"
-        rel="stylesheet">
-</head>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
 
-<body>
+  <body>
     <div class="voltar">
-        <a href="./index.html">↩</a>
+      <a href="./index.html">↩</a>
     </div>
 
     <div class="corpo1">
-        <div class="plano">
-            <span>🔴</span>
-            <span id="nomePlano"></span>
-        </div>
-        <div class="titulo">
-            <h1>Complete seu Cadastro</h1>
-        </div>
-        <div class="sub">
-            Configure suas credenciais para explorar métricas de bilheteria e streaming
-        </div>
+      <div class="plano">
+        <span>🔴</span>
+        <span id="nomePlano"></span>
+      </div>
+      <div class="titulo">
+        <h1>Complete seu Cadastro</h1>
+      </div>
+      <div class="sub">
+        Configure suas credenciais para explorar métricas de bilheteria e
+        streaming
+      </div>
 
-        <div class="campos">
-            <h2 class="secao">Dados de acesso</h2>
+      <div class="campos">
+        <h2 class="secao">Dados de acesso</h2>
 
-            <label for="input_nome">NOME COMPLETO <span id="mensagemnome"></span></label>
-            <input type="text" id="input_nome" placeholder="Ex: Elena Rostova">
+        <label for="input_nome"
+          >NOME COMPLETO <span id="mensagemnome"></span
+        ></label>
+        <input type="text" id="input_nome" placeholder="Ex: Elena Rostova" />
 
-            <label for="input_email">EMAIL PROFISSIONAL <span id="mensagememail"></span></label>
-            <input type="email" id="input_email" placeholder="✉ nome@estudio.com">
+        <label for="input_email"
+          >EMAIL PROFISSIONAL <span id="mensagememail"></span
+        ></label>
+        <input type="email" id="input_email" placeholder="✉ nome@estudio.com" />
 
-            <label for="input_senha">SENHA DE ACESSO <span id="mensagemsenha"></span></label>
-            <input type="password" oninput="validacao()" id="input_senha"
-                placeholder="🔒︎ Mín. 8 caracteres, com maiúscula, minúscula e número">
-            <div class="barraForca">
-                <div class="preenchimento" id="preenchimento"></div>
-            </div>
-
-            <label for="input_senhaConfirmacao">CONFIRMAÇÃO DA SENHA <span id="mensagemconfirm"></span></label>
-            <input type="password" id="input_senhaConfirmacao" placeholder="🔒︎ Repita sua senha">
-
-            <h2 class="secao">Dados da empresa</h2>
-
-            <label for="input_empresa">NOME DA EMPRESA <span id="mensagemempresa"></span></label>
-            <input type="text" id="input_empresa" placeholder="Ex: Rostova Filmes Ltda">
-
-            <label for="input_cnpj">CNPJ <span id="mensagemcnpj"></span></label>
-            <input type="text" id="input_cnpj" oninput="mascaraCnpj()" onblur="buscarPorCnpj()" maxlength="18" inputmode="numeric"
-                placeholder="00.000.000/0000-00">
-
-            <h2 class="secao">Endereço da empresa</h2>
-
-            <div class="linha">
-                <div class="coluna grande">
-                    <label for="input_rua">RUA <span id="mensagemrua"></span></label>
-                    <input type="text" id="input_rua" placeholder="Ex: Av. Paulista">
-                </div>
-                <div class="coluna pequena">
-                    <label for="input_numero">NÚMERO <span id="mensagemnumero"></span></label>
-                    <input type="text" id="input_numero" inputmode="numeric" placeholder="1000">
-                </div>
-            </div>
-
-            <div class="linha">
-                <div class="coluna grande">
-                    <label for="input_cidade">CIDADE <span id="mensagemcidade"></span></label>
-                    <input type="text" id="input_cidade" placeholder="Ex: São Paulo">
-                </div>
-                <div class="coluna pequena">
-                    <label for="input_estado">ESTADO <span id="mensagemestado"></span></label>
-                    <select id="input_estado">
-                        <option value="">UF</option>
-                        <option>AC</option><option>AL</option><option>AP</option><option>AM</option>
-                        <option>BA</option><option>CE</option><option>DF</option><option>ES</option>
-                        <option>GO</option><option>MA</option><option>MT</option><option>MS</option>
-                        <option>MG</option><option>PA</option><option>PB</option><option>PR</option>
-                        <option>PE</option><option>PI</option><option>RJ</option><option>RN</option>
-                        <option>RS</option><option>RO</option><option>RR</option><option>SC</option>
-                        <option>SP</option><option>SE</option><option>TO</option>
-                    </select>
-                </div>
-            </div>
+        <label for="input_senha"
+          >SENHA DE ACESSO <span id="mensagemsenha"></span
+        ></label>
+        <input
+          type="password"
+          oninput="validacao()"
+          id="input_senha"
+          placeholder="🔒︎ Mín. 8 caracteres, com maiúscula, minúscula e número"
+        />
+        <div class="barraForca">
+          <div class="preenchimento" id="preenchimento"></div>
         </div>
 
-        <div class="botao">
-            <div class="proximo">
-                <button onclick="cadastro()">Próximo ➝</button>
-            </div>
-            <div class="login">
-                <span>Já possui uma conta? <a href="./login.html">Entrar</a></span>
-            </div>
+        <label for="input_senhaConfirmacao"
+          >CONFIRMAÇÃO DA SENHA <span id="mensagemconfirm"></span
+        ></label>
+        <input
+          type="password"
+          id="input_senhaConfirmacao"
+          placeholder="🔒︎ Repita sua senha"
+        />
+
+        <h2 class="secao">Dados da empresa</h2>
+
+        <label for="input_empresa"
+          >NOME DA EMPRESA <span id="mensagemempresa"></span
+        ></label>
+        <input
+          type="text"
+          id="input_empresa"
+          placeholder="Ex: Rostova Filmes Ltda"
+        />
+
+        <label for="input_cnpj">CNPJ <span id="mensagemcnpj"></span></label>
+        <input
+          type="text"
+          id="input_cnpj"
+          oninput="mascaraCnpj()"
+          onblur="buscarPorCnpj()"
+          maxlength="18"
+          inputmode="numeric"
+          placeholder="00.000.000/0000-00"
+        />
+
+        <h2 class="secao">Endereço da empresa</h2>
+
+        <div class="linha">
+          <div class="coluna grande">
+            <label for="input_rua">RUA <span id="mensagemrua"></span></label>
+            <input type="text" id="input_rua" placeholder="Ex: Av. Paulista" />
+          </div>
+          <div class="coluna pequena">
+            <label for="input_numero"
+              >NÚMERO <span id="mensagemnumero"></span
+            ></label>
+            <input
+              type="text"
+              id="input_numero"
+              inputmode="numeric"
+              placeholder="1000"
+            />
+          </div>
         </div>
+
+        <div class="linha">
+          <div class="coluna grande">
+            <label for="input_cidade"
+              >CIDADE <span id="mensagemcidade"></span
+            ></label>
+            <input type="text" id="input_cidade" placeholder="Ex: São Paulo" />
+          </div>
+          <div class="coluna pequena">
+            <label for="input_estado"
+              >ESTADO <span id="mensagemestado"></span
+            ></label>
+            <select id="input_estado">
+              <option value="">UF</option>
+              <option>AC</option>
+              <option>AL</option>
+              <option>AP</option>
+              <option>AM</option>
+              <option>BA</option>
+              <option>CE</option>
+              <option>DF</option>
+              <option>ES</option>
+              <option>GO</option>
+              <option>MA</option>
+              <option>MT</option>
+              <option>MS</option>
+              <option>MG</option>
+              <option>PA</option>
+              <option>PB</option>
+              <option>PR</option>
+              <option>PE</option>
+              <option>PI</option>
+              <option>RJ</option>
+              <option>RN</option>
+              <option>RS</option>
+              <option>RO</option>
+              <option>RR</option>
+              <option>SC</option>
+              <option>SP</option>
+              <option>SE</option>
+              <option>TO</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="botao">
+        <div class="proximo">
+          <button onclick="cadastro()">Próximo ➝</button>
+        </div>
+        <div class="login">
+          <span>Já possui uma conta? <a href="./login.html">Entrar</a></span>
+        </div>
+      </div>
     </div>
 
     <script>
-        let senhaForte = false;
+      let senhaForte = false;
 
-      
-        const params = new URLSearchParams(window.location.search);
-        const planoDaURL = params.get('plano');
-        const planoSalvo = localStorage.getItem('planoEscolhido');
-        const plano = planoDaURL || planoSalvo || 'padrao';
-        if (planoDaURL) localStorage.setItem('planoEscolhido', planoDaURL);
+      const params = new URLSearchParams(window.location.search);
+      const planoDaURL = params.get("plano");
+      const planoSalvo = localStorage.getItem("planoEscolhido");
+      const plano = planoDaURL || planoSalvo || "padrao";
+      if (planoDaURL) localStorage.setItem("planoEscolhido", planoDaURL);
 
-        const planos = {
-            mensal: { nome: 'Plano Mensal', preco: 'R$ 49,90/mês' },
-            anual: { nome: 'Plano Anual', preco: 'R$ 499,90/ano' },
-            padrao: { nome: 'Plano não selecionado', preco: '' }
-        };
-        const infoPlano = planos[plano] || planos.padrao;
-        document.getElementById('nomePlano').textContent = infoPlano.nome;
+      const planos = {
+        mensal: { nome: "Plano Mensal", preco: "R$ 49,90/mês" },
+        anual: { nome: "Plano Anual", preco: "R$ 499,90/ano" },
+        padrao: { nome: "Plano não selecionado", preco: "" },
+      };
+      const infoPlano = planos[plano] || planos.padrao;
+      document.getElementById("nomePlano").textContent = infoPlano.nome;
 
-        function validacao() {
-            const senha = input_senha.value;
-            let pontos = 0;
+      function validacao() {
+        const senha = input_senha.value;
+        let pontos = 0;
 
-            if (senha !== senha.toLowerCase()) pontos++;     
-            if (senha !== senha.toUpperCase()) pontos++;      
-            if (/[0-9]/.test(senha)) pontos++;                
-            if (senha.length >= 8) pontos++;                  
-            senhaForte = pontos === 4;
-            preenchimento.style.width = (pontos / 4) * 100 + '%';
+        if (senha !== senha.toLowerCase()) pontos++;
+        if (senha !== senha.toUpperCase()) pontos++;
+        if (/[0-9]/.test(senha)) pontos++;
+        if (senha.length >= 8) pontos++;
+        senhaForte = pontos === 4;
+        preenchimento.style.width = (pontos / 4) * 100 + "%";
 
-            if (pontos === 4) preenchimento.style.backgroundColor = 'green';
-            else if (pontos >= 2) preenchimento.style.backgroundColor = 'darkorange';
-            else if (pontos === 1) preenchimento.style.backgroundColor = 'orange';
-            else preenchimento.style.backgroundColor = 'red';
+        if (pontos === 4) preenchimento.style.backgroundColor = "green";
+        else if (pontos >= 2)
+          preenchimento.style.backgroundColor = "darkorange";
+        else if (pontos === 1) preenchimento.style.backgroundColor = "orange";
+        else preenchimento.style.backgroundColor = "red";
+      }
+
+      function mascaraCnpj() {
+        let v = input_cnpj.value.replace(/\D/g, "").slice(0, 14);
+        v = v
+          .replace(/^(\d{2})(\d)/, "$1.$2")
+          .replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
+          .replace(/\.(\d{3})(\d)/, ".$1/$2")
+          .replace(/(\d{4})(\d)/, "$1-$2");
+        input_cnpj.value = v;
+      }
+
+      function checar(valido, idMensagem, texto) {
+        document.getElementById(idMensagem).innerHTML = valido
+          ? ""
+          : `<span style="color: red">*${texto}</span>`;
+        return valido;
+      }
+
+      let fkEmpresa;
+
+      async function buscarPorCnpj() {
+        const cnpj = input_cnpj.value.replace(/\D/g, "");
+        if (cnpj.length !== 14) return;
+
+        const empresa = await fetch(`/empresa/${cnpj}`).then((res) =>
+          res.json(),
+        );
+        if (empresa) {
+          fkEmpresa = empresa[0].idempresa;
+          input_empresa.value = empresa[0].nome;
+          input_rua.value = empresa[0].rua;
+          input_numero.value = empresa[0].numero;
+          input_cidade.value = empresa[0].cidade;
+          input_estado.value = empresa[0].estado;
         }
+      }
 
-        function mascaraCnpj() {
-            let v = input_cnpj.value.replace(/\D/g, '').slice(0, 14);
-            v = v.replace(/^(\d{2})(\d)/, '$1.$2')
-                 .replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3')
-                 .replace(/\.(\d{3})(\d)/, '.$1/$2')
-                 .replace(/(\d{4})(\d)/, '$1-$2');
-            input_cnpj.value = v;
+      function cadastro() {
+        const nome = input_nome.value.trim();
+        const email = input_email.value.trim();
+        const senha = input_senha.value;
+        const confirmacao = input_senhaConfirmacao.value;
 
+        const resultados = [
+          checar(nome.length >= 3, "mensagemnome", "Insira um nome válido"),
+          checar(
+            /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email),
+            "mensagememail",
+            "Insira um email válido",
+          ),
+          checar(
+            senhaForte,
+            "mensagemsenha",
+            "Necessita de uma senha forte (barrinha verde)",
+          ),
+          checar(
+            senha === confirmacao && confirmacao !== "",
+            "mensagemconfirm",
+            "As senhas não coincidem",
+          ),
+        ];
 
-        }
+        if (!resultados.every(Boolean)) return;
 
-      
-        function checar(valido, idMensagem, texto) {
-            document.getElementById(idMensagem).innerHTML =
-                valido ? '' : `<span style="color: red">*${texto}</span>`;
-            return valido;
-        }
-
-        let fkEmpresa;
-
-        async function buscarPorCnpj() {
-            const cnpj = input_cnpj.value.replace(/\D/g, '');
-            if (cnpj.length !== 14) return;
-
-            const empresa = await fetch(`/empresa/${cnpj}`).then((res) => res.json());
-            if (empresa) {
-                fkEmpresa = empresa[0].idempresa;
-                input_empresa.value = empresa[0].nome;
-                input_rua.value = empresa[0].rua;
-                input_numero.value = empresa[0].numero;
-                input_cidade.value = empresa[0].cidade;
-                input_estado.value = empresa[0].estado;
+        fetch("/usuarios/cadastrar", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            nome,
+            email,
+            senha,
+            fkEmpresa,
+          }),
+        })
+          .then(function (resposta) {
+            console.log("resposta: ", resposta);
+            if (resposta.ok) {
+              setTimeout(() => {
+                window.location = `pagamento.html?plano=${plano}`;
+              }, 2000);
+            } else {
+              throw "Houve um erro ao tentar realizar o cadastro!";
             }
-        }
-
-        function cadastro() {
-            const nome = input_nome.value.trim();
-            const email = input_email.value.trim();
-            const senha = input_senha.value;
-            const confirmacao = input_senhaConfirmacao.value;
-           
-
-            const resultados = [
-                checar(nome.length >= 3, 'mensagemnome', 'Insira um nome válido'),
-                checar(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email), 'mensagememail', 'Insira um email válido'),
-                checar(senhaForte, 'mensagemsenha', 'Necessita de uma senha forte (barrinha verde)'),
-                checar(senha === confirmacao && confirmacao !== '', 'mensagemconfirm', 'As senhas não coincidem'),
-            ];
-
-            if (!resultados.every(Boolean)) return;
-
-            fetch("/usuarios/cadastrar", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    nome,
-                    email,
-                    senha,
-                    fkEmpresa,
-                    fkPlano: plano == "mensal" ? 1 : 2
-                }),
-            })
-                .then(function (resposta) {
-                    console.log("resposta: ", resposta);
-                    if (resposta.ok) {
-                        setTimeout(() => {
-                            window.location = "pagamento.html";
-                        }, 2000);
-                    } else {
-                        throw "Houve um erro ao tentar realizar o cadastro!";
-                    }
-                })
-                .catch(function (erro) {
-                    console.log(`#ERRO: ${erro}`);
-                });
-        }
+          })
+          .catch(function (erro) {
+            console.log(`#ERRO: ${erro}`);
+          });
+      }
     </script>
-</body>
-
+  </body>
 </html>
