@@ -10,13 +10,19 @@ function registrar(dataInicio, dataFim, statusAssinatura, email, plano) {
     plano,
   );
 
-  var fkUsuario = database.executar(
-    `SELECT idUsuario from usuario WHERE email = ${email}`,
-  );
+  var dataInicioFormatada = dataInicio
+    ? dataInicio.replace("T", " ").substring(0, 19)
+    : null;
+
+  var formatDataFim = dataFim
+    ? `'${dataFim.replace("T", " ").substring(0, 19)}'`
+    : "NULL";
 
   var instrucaoSql = `
-        INSERT INTO historico_log (dataInicio, dataFim, statusAssinatura, fkUsuario, fkPlano) VALUES ('${dataInicio}', '${dataFim}', '${statusAssinatura}', ${fkUsuario}, ${plano});
-    `;
+    INSERT INTO assinatura (dataInicio, dataFim, statusAssinatura, fkUsuario, fkPlano) 
+    VALUES ('${dataInicioFormatada}', ${formatDataFim}, '${statusAssinatura}', (SELECT idUsuario FROM usuario WHERE email = '${email}'), ${plano});
+  `;
+
   console.log("Executando a instrução SQL: \n" + instrucaoSql);
   return database.executar(instrucaoSql);
 }

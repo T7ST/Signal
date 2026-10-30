@@ -42,8 +42,8 @@ create table plano (
 
 create table assinatura (
 	idAssinatura int auto_increment,
-    dataInicio date,
-    dataFim date,
+    dataInicio datetime,
+    dataFim datetime,
     statusAssinatura varchar(10),
     dataRegistro datetime default CURRENT_TIMESTAMP,
 

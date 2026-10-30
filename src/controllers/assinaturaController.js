@@ -4,15 +4,13 @@ function registrar(req, res) {
   const { dataInicio, dataFim, statusAssinatura, email, plano } = req.body;
 
   if (dataInicio == undefined) {
-    res.status(400).send("dataInicio é obrigatório.");
-  } else if (dataFim == undefined) {
-    res.status(400).send("dataFim é obrigatório.");
-  } else if (status == undefined) {
-    res.status(400).send("status é obrigatório.");
+    return res.status(400).send("dataInicio é obrigatório.");
+  } else if (statusAssinatura == undefined) {
+    return res.status(400).send("status é obrigatório.");
   } else if (email == undefined) {
-    res.status(400).send("email é obrigatório.");
+    return res.status(400).send("email é obrigatório.");
   } else if (plano == undefined) {
-    res.status(400).send("plano é obrigatório.");
+    return res.status(400).send("plano é obrigatório.");
   }
 
   assinaturaModel

@@ -17,7 +17,7 @@ function cadastrar(nome, cnpj) {
 function listarPorCnpj(cnpj) {
   var instrucaoSql = `
         SELECT * FROM empresa 
-        JOIN endereco ON empresa.idempresa = endereco.empresa_idempresa 
+        JOIN endereco ON empresa.idEmpresa = endereco.fkEmpresa 
         WHERE cnpj = '${cnpj}';
     `;
   console.log("Executando a instrução SQL: \n" + instrucaoSql);
