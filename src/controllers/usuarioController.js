@@ -38,7 +38,7 @@ function autenticar(req, res) {
 function cadastrar(req, res) {
   // Crie uma variável que vá recuperar os valores do arquivo cadastro.html
 
-  const { nome, email, senha, fkEmpresa, fkPlano } = req.body;
+  const { nome, email, senha, fkEmpresa } = req.body;
 
   // Faça as validações dos valores
   if (nome == undefined) {
@@ -49,12 +49,10 @@ function cadastrar(req, res) {
     res.status(400).send("Sua senha está undefined!");
   } else if (fkEmpresa == undefined) {
     res.status(400).send("fkEmpresa é obrigatório.");
-  } else if (fkPlano == undefined) {
-    res.status(400).send("fkPlano é obrigatório.");
   } else {
     // Passe os valores como parâmetro e vá para o arquivo usuarioModel.js
     usuarioModel
-      .cadastrar(nome, email, senha, fkEmpresa, fkPlano)
+      .cadastrar(nome, email, senha, fkEmpresa)
       .then(function (resultado) {
         res.json(resultado);
       })
