@@ -22,6 +22,7 @@ var enderecoRouter = require("./src/routes/endereco");
 var logRouter = require("./src/routes/log");
 var recomendacaoRouter = require("./src/routes/recomendacao");
 var assinaturaRouter = require("./src/routes/assinatura");
+var transacaoRouter = require("./src/routes/transacao");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -36,6 +37,7 @@ app.use("/endereco", enderecoRouter);
 app.use("/log", logRouter);
 app.use("/recomendacao", recomendacaoRouter);
 app.use("/assinatura", assinaturaRouter);
+app.use("/transacao", transacaoRouter);
 
 app.listen(PORTA_APP, function () {
   console.log(`

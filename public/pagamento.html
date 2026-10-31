@@ -1,344 +1,394 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Signal - Pagamento</title>
 
-    <link rel="stylesheet" href="./css/pagamento.css">
+    <link rel="stylesheet" href="./css/pagamento.css" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap"
-        rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
 
-
-
-</head>
-
-<body>
+  <body>
     <div class="cabecalho">
-        <div class="foto">
-            <img src="./img/logo.png" alt="">
-        </div>
-        <div class="titulo">
-            <h3>Signal</h3>
-            <span>ASSINATURA PAGAMENTO</span>
-        </div>
+      <div class="foto">
+        <img src="./img/logo.png" alt="" />
+      </div>
+      <div class="titulo">
+        <h3>Signal</h3>
+        <span>ASSINATURA PAGAMENTO</span>
+      </div>
     </div>
 
     <div class="corpo">
-        <div class="t2">
-            <span>1 </span> <span>Pagamento Seguro</span>
+      <div class="t2"><span>1 </span> <span>Pagamento Seguro</span></div>
+
+      <div class="plano">
+        <div class="t3">
+          <span>Signal Pro <span id="nomePlano"></span></span>
+        </div>
+        <div class="sub">
+          <span>Acesso executivo para estúdios e analistas independentes</span>
+        </div>
+        <div class="preco">
+          <span>TOTAL PAGAMENTO</span> <br />
+          <span id="precoPlano"></span>
+        </div>
+      </div>
+
+      <div class="formas">
+        <div class="t4">
+          <span>FORMAS DE PAGAMENTO</span>
+        </div>
+        <div class="opcao">
+          <div class="o1" onclick="selecionarFormaPagamento('cartao')">
+            <div class="cartao">
+              <img src="./img/cartao.png" alt="" />
+            </div>
+            <div class="desc">
+              <span>Cartão</span>
+            </div>
+          </div>
+
+          <div class="o2" onclick="selecionarFormaPagamento('pix')">
+            <div class="cartao">
+              <img src="./img/qr.png" alt="" />
+            </div>
+            <div class="desc">
+              <span>Pix</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="campos" id="camposCartao">
+        <span>Número do Cartão <span id="mensagemnumero"></span> </span>
+        <input
+          type="text"
+          id="input_numero"
+          placeholder="0000 0000 0000 0000"
+          inputmode="numeric"
+          autocomplete="off"
+        />
+        <span>Nome impresso no Cartão <span id="mensagemnome"></span> </span>
+        <input
+          type="text"
+          id="input_nome"
+          placeholder="COMO IMPRESSO NO CARTÃO"
+          autocomplete="off"
+        />
+        <div class="campo2">
+          <div class="p1">
+            <span>Validade <span id="mensagemvalidade"></span> </span> <br />
+            <input
+              type="text"
+              id="input_validade"
+              placeholder="MM/AA"
+              inputmode="numeric"
+              autocomplete="off"
+            />
+          </div>
+          <div class="p2">
+            <span>CVV <span id="mensagemCVV"></span> </span> <br />
+            <input
+              type="text"
+              id="input_CVV"
+              placeholder="123"
+              inputmode="numeric"
+              autocomplete="off"
+            />
+          </div>
         </div>
 
-        <div class="plano">
-            <div class="t3">
-                <span>Signal Pro <span id="nomePlano"></span></span>
-            </div>
-            <div class="sub">
-                <span>Acesso executivo para estúdios e analistas independentes</span>
-            </div>
-            <div class="preco">
-                <span>TOTAL PAGAMENTO</span> <br>
-                <span id="precoPlano"></span>
-            </div>
+        <div id="blocoParcelamento">
+          <span>Parcelamento</span> <br />
+          <select id="input_parcelamento">
+            <option value="12">12x de 41,66 sem acréscimo</option>
+            <option value="6">6x de 83,32 sem acréscimo</option>
+            <option value="1">À vista R$ 499,90</option>
+          </select>
         </div>
+      </div>
 
-        <div class="formas">
-            <div class="t4">
-                <span>FORMAS DE PAGAMENTO</span>
-            </div>
-            <div class="opcao">
-                <div class="o1" onclick="selecionarFormaPagamento('cartao')">
-                    <div class="cartao">
-                        <img src="./img/cartao.png" alt="">
-                    </div>
-                    <div class="desc">
-                        <span>Cartão</span>
-                    </div>
-                </div>
-
-                <div class="o2" onclick="selecionarFormaPagamento('pix')">
-                    <div class="cartao">
-                        <img src="./img/qr.png" alt="">
-                    </div>
-                    <div class="desc">
-                        <span>Pix</span>
-                    </div>
-                </div>
-            </div>
+      <div class="campos" id="camposPix" style="display: none">
+        <div style="text-align: center">
+          <span>Escaneie o QR Code para pagar via Pix</span> <br /><br />
+          <img
+            id="qrCodePix"
+            src=""
+            alt="QR Code Pix"
+            style="width: 200px; height: 200px"
+          />
+          <br /><br />
+          <span
+            id="mensagemPix"
+            style="font-size: 0.9em; color: #ababab"
+          ></span>
         </div>
+      </div>
 
-
-
-        <div class="campos" id="camposCartao">
-            <span>Número do Cartão <span id="mensagemnumero"></span> </span>
-            <input type="text" id="input_numero" placeholder="0000 0000 0000 0000" inputmode="numeric"
-                autocomplete="off">
-            <span>Nome impresso no Cartão <span id="mensagemnome"></span> </span>
-            <input type="text" id="input_nome" placeholder="COMO IMPRESSO NO CARTÃO" autocomplete="off">
-            <div class="campo2">
-                <div class="p1">
-                    <span>Validade <span id="mensagemvalidade"></span> </span> <br>
-                    <input type="text" id="input_validade" placeholder="MM/AA" inputmode="numeric" autocomplete="off">
-                </div>
-                <div class="p2">
-                    <span>CVV <span id="mensagemCVV"></span> </span> <br>
-                    <input type="text" id="input_CVV" placeholder="123" inputmode="numeric" autocomplete="off">
-                </div>
-            </div>
-
-            <div id="blocoParcelamento">
-                <span>Parcelamento</span> <br>
-                <select id="input_parcelamento">
-                    <option value="12">12x de 41,66 sem acréscimo</option>
-                    <option value="6">6x de 83,32 sem acréscimo</option>
-                    <option value="1">À vista R$ 499,90</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="campos" id="camposPix" style="display: none;">
-            <div style="text-align: center;">
-                <span>Escaneie o QR Code para pagar via Pix</span> <br><br>
-                <img id="qrCodePix" src="" alt="QR Code Pix" style="width: 200px; height: 200px;">
-                <br><br>
-                <span id="mensagemPix" style="font-size: 0.9em; color: #ababab;"></span>
-            </div>
-        </div>
-
-        <div class="botao">
-            <button id="btnConfirmar" onclick="confirmar()">CONFIRMAR PAGAMENTO E CRIAR CONTA</button>
-        </div>
+      <div class="botao">
+        <button id="btnConfirmar" onclick="confirmar()">
+          CONFIRMAR PAGAMENTO E CRIAR CONTA
+        </button>
+      </div>
     </div>
 
     <!-- Processando / Sucesso -->
     <div class="overlay" id="overlay" hidden>
-        <div class="overlay__box">
-            <div id="estadoCarregando">
-                <div class="spinner"></div>
-                <strong id="textoCarregando">Processando pagamento...</strong>
-                <p>Não feche esta janela</p>
-            </div>
-            <div id="estadoSucesso" hidden>
-                <div class="check">✓</div>
-                <h2 style="margin:0">Pagamento aprovado</h2>
-                <p id="resumoSucesso"></p>
-                <div class="protocolo" id="protocolo"></div>
-                <button onclick="irParaDashboard()">Acessar o Dashboard</button>
-            </div>
+      <div class="overlay__box">
+        <div id="estadoCarregando">
+          <div class="spinner"></div>
+          <strong id="textoCarregando">Processando pagamento...</strong>
+          <p>Não feche esta janela</p>
         </div>
+        <div id="estadoSucesso" hidden>
+          <div class="check">✓</div>
+          <h2 style="margin: 0">Pagamento aprovado</h2>
+          <p id="resumoSucesso"></p>
+          <div class="protocolo" id="protocolo"></div>
+          <button onclick="irParaDashboard()">Acessar o Dashboard</button>
+        </div>
+      </div>
     </div>
 
     <script>
-        const PAGINA_DESTINO = 'dash.html';
+      const PAGINA_DESTINO = "dash.html";
 
-        const $ = (id) => document.getElementById(id);
+      const $ = (id) => document.getElementById(id);
 
+      const params = new URLSearchParams(window.location.search);
+      const planoDaURL = params.get("plano");
+      const planoSalvo = localStorage.getItem("planoEscolhido");
+      const plano = planoDaURL || planoSalvo || "padrao";
+      if (planoDaURL) localStorage.setItem("planoEscolhido", planoDaURL);
 
-        const params = new URLSearchParams(window.location.search);
-        const planoDaURL = params.get('plano');
-        const planoSalvo = localStorage.getItem('planoEscolhido');
-        const plano = planoDaURL || planoSalvo || 'padrao';
-        if (planoDaURL) localStorage.setItem('planoEscolhido', planoDaURL);
+      const planos = {
+        mensal: { nome: "Mensal", preco: "R$ 49,90/mês" },
+        anual: { nome: "Anual", preco: "R$ 499,90/ano" },
+        padrao: { nome: "Plano não selecionado", preco: "" },
+      };
+      const infoPlano = planos[plano] || planos.padrao;
+      document.getElementById("nomePlano").textContent = infoPlano.nome;
+      document.getElementById("precoPlano").textContent = infoPlano.preco;
 
-        const planos = {
-            mensal: { nome: 'Mensal', preco: 'R$ 49,90/mês' },
-            anual: { nome: 'Anual', preco: 'R$ 499,90/ano' },
-            padrao: { nome: 'Plano não selecionado', preco: '' }
-        };
-        const infoPlano = planos[plano] || planos.padrao;
-        document.getElementById('nomePlano').textContent = infoPlano.nome;
-        document.getElementById('precoPlano').textContent = infoPlano.preco;
+      if (plano !== "anual") {
+        document.getElementById("blocoParcelamento").style.display = "none";
+      }
 
-        if (plano !== 'anual') {
-            document.getElementById('blocoParcelamento').style.display = 'none';
+      let formaAtual = "cartao";
+      const btnConfirmar = document.getElementById("btnConfirmar");
+
+      function selecionarFormaPagamento(forma) {
+        formaAtual = forma;
+        const camposCartao = document.getElementById("camposCartao");
+        const camposPix = document.getElementById("camposPix");
+        const o1 = document.querySelector(".o1");
+        const o2 = document.querySelector(".o2");
+
+        if (forma === "cartao") {
+          camposCartao.style.display = "flex";
+          camposPix.style.display = "none";
+          o1.classList.add("selecionado");
+          o2.classList.remove("selecionado");
+          btnConfirmar.textContent = "CONFIRMAR PAGAMENTO E CRIAR CONTA";
+        } else {
+          camposCartao.style.display = "none";
+          camposPix.style.display = "block";
+          o2.classList.add("selecionado");
+          o1.classList.remove("selecionado");
+          document.getElementById("qrCodePix").src =
+            "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=signal-pagamento-demonstracao";
+          document.getElementById("mensagemPix").textContent =
+            "Código expira em 15 minutos";
+          btnConfirmar.textContent = "JÁ PAGUEI: CONFIRMAR E CRIAR CONTA";
+        }
+      }
+      selecionarFormaPagamento("cartao");
+
+      function somenteNumeros(texto) {
+        let resultado = "";
+        for (let i = 0; i < texto.length; i++) {
+          const letra = texto[i];
+          if (letra >= "0" && letra <= "9") {
+            resultado += letra;
+          }
+        }
+        return resultado;
+      }
+
+      function somenteLetras(texto) {
+        let resultado = "";
+        for (const letra of texto) {
+          if (letra === " " || letra.toLowerCase() !== letra.toUpperCase()) {
+            resultado += letra;
+          }
+        }
+        return resultado;
+      }
+
+      $("input_numero").addEventListener("input", (e) => {
+        const numeros = somenteNumeros(e.target.value).slice(0, 16);
+        let formatado = "";
+        for (let i = 0; i < numeros.length; i++) {
+          if (i > 0 && i % 4 === 0) {
+            formatado += " ";
+          }
+          formatado += numeros[i];
+        }
+        e.target.value = formatado;
+      });
+
+      $("input_validade").addEventListener("input", (e) => {
+        const numeros = somenteNumeros(e.target.value).slice(0, 4);
+        if (numeros.length > 2) {
+          e.target.value = numeros.slice(0, 2) + "/" + numeros.slice(2);
+        } else {
+          e.target.value = numeros;
+        }
+      });
+
+      $("input_CVV").addEventListener("input", (e) => {
+        e.target.value = somenteNumeros(e.target.value).slice(0, 4);
+      });
+
+      $("input_nome").addEventListener("input", (e) => {
+        e.target.value = somenteLetras(e.target.value).toUpperCase();
+      });
+
+      function erro(campoId, msgId, texto) {
+        $(campoId).classList.add("invalido");
+        $(msgId).textContent = "• " + texto;
+        return false;
+      }
+      function limparErros() {
+        ["input_numero", "input_nome", "input_validade", "input_CVV"].forEach(
+          (id) => $(id).classList.remove("invalido"),
+        );
+        [
+          "mensagemnumero",
+          "mensagemnome",
+          "mensagemvalidade",
+          "mensagemCVV",
+        ].forEach((id) => ($(id).textContent = ""));
+      }
+
+      function validarCartao() {
+        limparErros();
+        let ok = true;
+
+        const numero = somenteNumeros($("input_numero").value);
+        if (numero.length !== 16)
+          ok = erro("input_numero", "mensagemnumero", "informe 16 dígitos");
+
+        const nome = $("input_nome").value.trim();
+        if (nome.length < 5 || !nome.includes(" "))
+          ok = erro("input_nome", "mensagemnome", "informe nome e sobrenome");
+
+        const val = $("input_validade").value;
+        const partes = val.split("/");
+        const mes = Number(partes[0]);
+        const ano = 2000 + Number(partes[1]);
+
+        if (val.length !== 5 || partes.length !== 2) {
+          ok = erro("input_validade", "mensagemvalidade", "use MM/AA");
+        } else if (mes < 1 || mes > 12) {
+          ok = erro("input_validade", "mensagemvalidade", "mês inválido");
+        } else {
+          const hoje = new Date();
+          const vencido =
+            ano < hoje.getFullYear() ||
+            (ano === hoje.getFullYear() && mes < hoje.getMonth() + 1);
+          if (vencido)
+            ok = erro("input_validade", "mensagemvalidade", "cartão vencido");
         }
 
+        const cvv = $("input_CVV").value;
+        if (cvv.length < 3)
+          ok = erro("input_CVV", "mensagemCVV", "3 ou 4 dígitos");
 
-        let formaAtual = 'cartao';
-        const btnConfirmar = document.getElementById('btnConfirmar');
+        return ok;
+      }
 
-        function selecionarFormaPagamento(forma) {
-            formaAtual = forma;
-            const camposCartao = document.getElementById('camposCartao');
-            const camposPix = document.getElementById('camposPix');
-            const o1 = document.querySelector('.o1');
-            const o2 = document.querySelector('.o2');
+      let processando = false;
 
-            if (forma === 'cartao') {
-                camposCartao.style.display = 'flex';
-                camposPix.style.display = 'none';
-                o1.classList.add('selecionado');
-                o2.classList.remove('selecionado');
-                btnConfirmar.textContent = 'CONFIRMAR PAGAMENTO E CRIAR CONTA';
-            } else {
-                camposCartao.style.display = 'none';
-                camposPix.style.display = 'block';
-                o2.classList.add('selecionado');
-                o1.classList.remove('selecionado');
-                document.getElementById('qrCodePix').src =
-                    'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=signal-pagamento-demonstracao';
-                document.getElementById('mensagemPix').textContent = 'Código expira em 15 minutos';
-                btnConfirmar.textContent = 'JÁ PAGUEI: CONFIRMAR E CRIAR CONTA';
-            }
+      function confirmar() {
+        if (processando) return;
+
+        if (plano === "padrao") {
+          alert("Nenhum plano selecionado. Volte e escolha Mensal ou Anual.");
+          return;
         }
-        selecionarFormaPagamento('cartao');
+        if (formaAtual === "cartao" && !validarCartao()) return;
 
+        processando = true;
+        btnConfirmar.disabled = true;
+        $("overlay").hidden = false;
+        $("estadoCarregando").hidden = false;
+        $("estadoSucesso").hidden = true;
+        $("textoCarregando").textContent =
+          formaAtual === "pix"
+            ? "Confirmando pagamento Pix..."
+            : "Processando pagamento...";
 
-        function somenteNumeros(texto) {
-            let resultado = '';
-            for (let i = 0; i < texto.length; i++) {
-                const letra = texto[i];
-                if (letra >= '0' && letra <= '9') {
-                    resultado += letra;
-                }
-            }
-            return resultado;
-        }
+        setTimeout(finalizar, 2500);
+      }
 
+      function finalizar() {
+        const protocolo =
+          "SIG-" + Math.floor(10000000 + Math.random() * 90000000);
+        const ultimos4 = somenteNumeros($("input_numero").value).slice(-4);
 
-        function somenteLetras(texto) {
-            let resultado = '';
-            for (const letra of texto) {
+        fetch("/transacao/registrar", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            fkAssinatura: localStorage.getItem("assinaturaInsertId"),
+            protocolo,
+            metodoPagamento: formaAtual,
+            statusTransacao: "Finalizada",
+            dataPagamento: new Date(),
+          }),
+        })
+          .then(function (res) {
+            window.location = `pagamento.html?plano=${plano}`;
+          })
+          .catch(function (err) {
+            console.log(`#ERRO: ${err}`);
+          });
 
-                if (letra === ' ' || letra.toLowerCase() !== letra.toUpperCase()) {
-                    resultado += letra;
-                }
-            }
-            return resultado;
-        }
+        localStorage.setItem(
+          "assinatura",
+          JSON.stringify({
+            plano,
+            forma: formaAtual,
+            cartaoFinal: formaAtual === "cartao" ? ultimos4 : null,
+            protocolo,
+            data: new Date().toISOString(),
+            ativa: true,
+          }),
+        );
+        localStorage.setItem("contaCriada", "true");
 
+        const forma = formaAtual === "pix" ? "Pix" : `cartão final ${ultimos4}`;
+        $("resumoSucesso").textContent =
+          `Signal Pro ${infoPlano.nome} • ${infoPlano.preco} • ${forma}`;
+        $("protocolo").textContent = "Protocolo: " + protocolo;
 
-        $('input_numero').addEventListener('input', (e) => {
-            const numeros = somenteNumeros(e.target.value).slice(0, 16);
-            let formatado = '';
-            for (let i = 0; i < numeros.length; i++) {
-                if (i > 0 && i % 4 === 0) {
-                    formatado += ' ';
-                }
-                formatado += numeros[i];
-            }
-            e.target.value = formatado;
-        });
+        $("estadoCarregando").hidden = true;
+        $("estadoSucesso").hidden = false;
+        processando = false;
+      }
 
-
-        $('input_validade').addEventListener('input', (e) => {
-            const numeros = somenteNumeros(e.target.value).slice(0, 4);
-            if (numeros.length > 2) {
-                e.target.value = numeros.slice(0, 2) + '/' + numeros.slice(2);
-            } else {
-                e.target.value = numeros;
-            }
-        });
-
-
-        $('input_CVV').addEventListener('input', (e) => {
-            e.target.value = somenteNumeros(e.target.value).slice(0, 4);
-        });
-
-
-        $('input_nome').addEventListener('input', (e) => {
-            e.target.value = somenteLetras(e.target.value).toUpperCase();
-        });
-
-
-        function erro(campoId, msgId, texto) {
-            $(campoId).classList.add('invalido');
-            $(msgId).textContent = '• ' + texto;
-            return false;
-        }
-        function limparErros() {
-            ['input_numero', 'input_nome', 'input_validade', 'input_CVV'].forEach((id) => $(id).classList.remove('invalido'));
-            ['mensagemnumero', 'mensagemnome', 'mensagemvalidade', 'mensagemCVV'].forEach((id) => ($(id).textContent = ''));
-        }
-
-        function validarCartao() {
-            limparErros();
-            let ok = true;
-
-            const numero = somenteNumeros($('input_numero').value);
-            if (numero.length !== 16) ok = erro('input_numero', 'mensagemnumero', 'informe 16 dígitos');
-
-            const nome = $('input_nome').value.trim();
-            if (nome.length < 5 || !nome.includes(' ')) ok = erro('input_nome', 'mensagemnome', 'informe nome e sobrenome');
-
-            const val = $('input_validade').value;
-            const partes = val.split('/');
-            const mes = Number(partes[0]);
-            const ano = 2000 + Number(partes[1]);
-
-            if (val.length !== 5 || partes.length !== 2) {
-                ok = erro('input_validade', 'mensagemvalidade', 'use MM/AA');
-            } else if (mes < 1 || mes > 12) {
-                ok = erro('input_validade', 'mensagemvalidade', 'mês inválido');
-            } else {
-                const hoje = new Date();
-                const vencido = ano < hoje.getFullYear() ||
-                    (ano === hoje.getFullYear() && mes < hoje.getMonth() + 1);
-                if (vencido) ok = erro('input_validade', 'mensagemvalidade', 'cartão vencido');
-            }
-
-            const cvv = $('input_CVV').value;
-            if (cvv.length < 3) ok = erro('input_CVV', 'mensagemCVV', '3 ou 4 dígitos');
-
-            return ok;
-        }
-
-
-        let processando = false;
-
-        function confirmar() {
-            if (processando) return;
-
-            if (plano === 'padrao') {
-                alert('Nenhum plano selecionado. Volte e escolha Mensal ou Anual.');
-                return;
-            }
-            if (formaAtual === 'cartao' && !validarCartao()) return;
-
-            processando = true;
-            btnConfirmar.disabled = true;
-            $('overlay').hidden = false;
-            $('estadoCarregando').hidden = false;
-            $('estadoSucesso').hidden = true;
-            $('textoCarregando').textContent =
-                formaAtual === 'pix' ? 'Confirmando pagamento Pix...' : 'Processando pagamento...';
-
-
-            setTimeout(finalizar, 2500);
-        }
-
-        function finalizar() {
-            const protocolo = 'SIG-' + Math.floor(10000000 + Math.random() * 90000000);
-            const ultimos4 = somenteNumeros($('input_numero').value).slice(-4);
-
-
-            localStorage.setItem('assinatura', JSON.stringify({
-                plano,
-                forma: formaAtual,
-                cartaoFinal: formaAtual === 'cartao' ? ultimos4 : null,
-                protocolo,
-                data: new Date().toISOString(),
-                ativa: true
-            }));
-            localStorage.setItem('contaCriada', 'true');
-
-            const forma = formaAtual === 'pix' ? 'Pix' : `cartão final ${ultimos4}`;
-            $('resumoSucesso').textContent = `Signal Pro ${infoPlano.nome} • ${infoPlano.preco} • ${forma}`;
-            $('protocolo').textContent = 'Protocolo: ' + protocolo;
-
-            $('estadoCarregando').hidden = true;
-            $('estadoSucesso').hidden = false;
-            processando = false;
-        }
-
-        function irParaDashboard() {
-            window.location.href = "login.html";
-        }
+      function irParaDashboard() {
+        window.location.href = "login.html";
+      }
     </script>
-</body>
-
+  </body>
 </html>

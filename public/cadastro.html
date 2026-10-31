@@ -290,7 +290,11 @@
                   }),
                 })
                   .then(function (res) {
-                    window.location = `pagamento.html?plano=${plano}`;
+                    res.json().then((json) => {
+                      localStorage.setItem("assinaturaInsertId", json.insertId);
+
+                      window.location = `pagamento.html?plano=${plano}`;
+                    });
                   })
                   .catch(function (err) {
                     console.log(`#ERRO: ${err}`);
