@@ -22,7 +22,7 @@ function registrar(
 
   var instrucaoSql = `
     INSERT INTO transacao (fkAssinatura, protocolo, metodoPagamento, statusTransacao, dataPagamento) 
-    VALUES (${fkAssinatura}, ${protocolo}, '${metodoPagamento}', '${statusTransacao}', ${formatDataPagamento});
+    VALUES (${fkAssinatura}, '${protocolo}', '${metodoPagamento}', '${statusTransacao}', ${formatDataPagamento});
   `;
 
   console.log("Executando a instrução SQL: \n" + instrucaoSql);
