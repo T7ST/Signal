@@ -353,11 +353,21 @@
             protocolo,
             metodoPagamento: formaAtual,
             statusTransacao: "Finalizada",
-            dataPagamento: new Date(),
+            dataPagamento: new Date().toLocaleString("sv-SE", {
+              timeZone: "America/Sao_Paulo",
+            }),
           }),
         })
           .then(function (res) {
-            window.location = `pagamento.html?plano=${plano}`;
+            fetch("/assinatura/ativar", {
+              method: "PATCH",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                id: localStorage.getItem("assinaturaInsertId"),
+              }),
+            }).then(function (res) {
+              window.location = `pagamento.html?plano=${plano}`;
+            });
           })
           .catch(function (err) {
             console.log(`#ERRO: ${err}`);
@@ -370,7 +380,9 @@
             forma: formaAtual,
             cartaoFinal: formaAtual === "cartao" ? ultimos4 : null,
             protocolo,
-            data: new Date().toISOString(),
+            data: new Date().toLocaleString("sv-SE", {
+              timeZone: "America/Sao_Paulo",
+            }),
             ativa: true,
           }),
         );

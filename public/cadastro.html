@@ -282,7 +282,9 @@
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
                   body: JSON.stringify({
-                    dataInicio: new Date(),
+                    dataInicio: new Date().toLocaleString("sv-SE", {
+                      timeZone: "America/Sao_Paulo",
+                    }),
                     dataFim: null,
                     statusAssinatura: "Pendente",
                     email,

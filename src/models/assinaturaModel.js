@@ -27,6 +27,21 @@ function registrar(dataInicio, dataFim, statusAssinatura, email, plano) {
   return database.executar(instrucaoSql);
 }
 
+function ativar(id) {
+  console.log(
+    "ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function registrar():",
+    id,
+  );
+
+  var instrucaoSql = `
+    UPDATE assinatura SET statusAssinatura = 'Ativo' WHERE idAssinatura = ${id};
+  `;
+
+  console.log("Executando a instrução SQL: \n" + instrucaoSql);
+  return database.executar(instrucaoSql);
+}
+
 module.exports = {
   registrar,
+  ativar,
 };

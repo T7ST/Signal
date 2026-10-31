@@ -8,4 +8,8 @@ router.post("/registrar", function (req, res) {
   assinaturaController.registrar(req, res);
 });
 
+router.patch("/ativar", function (req, res) {
+  assinaturaController.ativar(req, res);
+});
+
 module.exports = router;
