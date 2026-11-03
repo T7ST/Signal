@@ -4,7 +4,7 @@ USE signal_db;
 
 create table empresa (
 	idEmpresa int primary key auto_increment,
-    cnpj char(18) not null,
+    cnpj char(18) not null UNIQUE,
     nome varchar(100) not null
 );
     
@@ -22,7 +22,7 @@ create table endereco (
 );  
 
 CREATE TABLE usuario (
-    idUsuario INT AUTO_INCREMENT,
+    idUsuario INT UNIQUE AUTO_INCREMENT,
     nome VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     senha VARCHAR(255) NOT NULL,
@@ -41,7 +41,7 @@ create table plano (
 );
 
 create table assinatura (
-	idAssinatura int auto_increment,
+	idAssinatura int UNIQUE auto_increment,
     dataInicio datetime,
     dataFim datetime,
     statusAssinatura varchar(10),
@@ -57,7 +57,7 @@ create table assinatura (
 
 create table transacao (
 	idTransacao int auto_increment,
-    protocolo VARCHAR(20) NOT NULL
+    protocolo VARCHAR(20) NOT NULL UNIQUE,
     metodoPagamento varchar(20) NOT NULL,
     statusTransacao varchar(20) NOT NULL,
     dataPagamento datetime,
