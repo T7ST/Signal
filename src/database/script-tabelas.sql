@@ -57,7 +57,7 @@ create table assinatura (
 
 create table transacao (
 	idTransacao int auto_increment,
-    protocolo VARCHAR(20) NOT NULL
+    protocolo VARCHAR(20) NOT NULL,
     metodoPagamento varchar(20) NOT NULL,
     statusTransacao varchar(20) NOT NULL,
     dataPagamento datetime,
