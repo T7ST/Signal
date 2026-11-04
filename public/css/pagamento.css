@@ -20,7 +20,24 @@ body {
   font-style: normal;
 }
 /* =========================================== */
-
+.voltar {
+  display: flex;
+  background-color: #121316;
+}
+.voltar a {
+  margin-top: 20px;
+  margin-left: 3%;
+  background-color: #E50914;
+  color: #FFDAD5;
+  text-decoration: none;
+  padding: 10px 20px;
+  font-weight: bolder;
+  border-radius: 10px;
+}
+.voltar a:hover {
+  background-color: #91091b;
+  color: #f8c4be;
+}
 .cabecalho {
   display: flex;
   align-items: center;
