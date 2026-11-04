@@ -23,6 +23,7 @@ create table endereco (
 
 CREATE TABLE usuario (
     idUsuario INT UNIQUE AUTO_INCREMENT,
+    foto VARCHAR(255) UNIQUE,
     nome VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     senha VARCHAR(255) NOT NULL,
