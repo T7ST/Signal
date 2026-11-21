@@ -23,6 +23,7 @@ var logRouter = require("./src/routes/log");
 var recomendacaoRouter = require("./src/routes/recomendacao");
 var assinaturaRouter = require("./src/routes/assinatura");
 var transacaoRouter = require("./src/routes/transacao");
+var administradorRouter = require("./src/routes/administrador");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -30,6 +31,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use(cors());
 
+app.use("/administrador", administradorRouter);
 app.use("/", indexRouter);
 app.use("/usuarios", usuarioRouter);
 app.use("/empresa", empresaRouter);

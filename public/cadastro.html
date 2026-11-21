@@ -8,7 +8,6 @@
 
   <link rel="stylesheet" href="./css/cadastro.css" />
   <script src="./js/sessao.js"></script>
-  <script src="./js/alerta.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap"
@@ -44,8 +43,7 @@
 
       <label for="input_senha">SENHA DE ACESSO <span id="mensagemsenha"></span></label>
       <span> Mín. 8 caracteres, com maiúscula, minúscula e número</span>
-      <input type="password" oninput="validacao()" id="input_senha"
-        placeholder="🔒︎ ●●●●●●●● " />
+      <input type="password" oninput="validacao()" id="input_senha" placeholder="🔒︎ ●●●●●●●● " />
       <div class="barraForca">
         <div class="preenchimento" id="preenchimento"></div>
       </div>
@@ -124,12 +122,83 @@
         <span>Já possui uma conta? <a href="./login.html">Entrar</a></span>
       </div>
       <div class="login">
-        <span> <a href="./administrador.html">Acesso Administrador</a></span>
+        <span> <a href="./administrador.html" id="linkAdmin">Acesso Administrador</a></span>
+      </div>
+      <div id="modalSenha" class="modal">
+        <div class="modal-conteudo">
+          <h3>Acesso Administrador</h3>
+          <input type="password" id="campoSenha" placeholder="Digite a senha" />
+          <p id="erroSenha" class="erro"></p>
+          <div class="botoes">
+            <button id="btnEntrar">Entrar</button>
+            <button id="btnCancelar">Cancelar</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
   <script>
+
+    const linkAdmin = document.getElementById("linkAdmin");
+    const modal = document.getElementById("modalSenha");
+    const campoSenha = document.getElementById("campoSenha");
+    const erroSenha = document.getElementById("erroSenha");
+    const btnEntrar = document.getElementById("btnEntrar");
+    const btnCancelar = document.getElementById("btnCancelar");
+
+    function validarSenha() {
+      fetch("/administrador/autenticar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ senha: campoSenha.value }),
+      })
+        .then(function (resposta) {
+          if (resposta.ok) {
+            window.location.href = "./administrador.html";
+          } else {
+            erroSenha.textContent = "Senha incorreta!";
+            campoSenha.value = "";
+            campoSenha.focus();
+          }
+        })
+        .catch(function (erro) {
+          console.log(`#ERRO: ${erro}`);
+          erroSenha.textContent = "Erro ao conectar com o servidor.";
+        });
+    }
+
+    function abrirModal() {
+      modal.classList.add("aberto");
+      campoSenha.value = "";
+      erroSenha.textContent = "";
+      campoSenha.focus();
+    }
+
+    function fecharModal() {
+      modal.classList.remove("aberto");
+    }
+
+    linkAdmin.addEventListener("click", function (e) {
+      e.preventDefault();
+      abrirModal();
+    });
+
+    btnEntrar.addEventListener("click", validarSenha);
+    btnCancelar.addEventListener("click", fecharModal);
+
+    campoSenha.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") validarSenha();
+      if (e.key === "Escape") fecharModal();
+    });
+
+    modal.addEventListener("click", function (e) {
+      if (e.target === modal) fecharModal();
+    });
+
+
+
+
     let senhaForte = false;
 
     const params = new URLSearchParams(window.location.search);
