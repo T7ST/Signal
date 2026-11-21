@@ -54,7 +54,26 @@ function ativar(req, res) {
     });
 }
 
+function buscar(req, res) {
+  const userId = req.params.idUsuario;
+
+  if (!userId || !/^\d+$/.test(userId)) {
+    return res.status(400).send("Id do usuário inválido!");
+  }
+
+  assinaturaModel
+    .buscarUltima(userId)
+    .then(function (resultado) {
+      return res.json(resultado);
+    })
+    .catch(function (erro) {
+      console.log("Erro ao buscar usuário:", erro);
+      return res.status(500).json(erro.sqlMessage);
+    });
+}
+
 module.exports = {
   registrar,
   ativar,
+  buscar,
 };

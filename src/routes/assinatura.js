@@ -12,4 +12,8 @@ router.patch("/ativar", function (req, res) {
   assinaturaController.ativar(req, res);
 });
 
+router.get("/:idUsuario", function (req, res) {
+  assinaturaController.buscar(req, res);
+});
+
 module.exports = router;

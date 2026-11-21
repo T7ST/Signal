@@ -88,19 +88,19 @@
             </div>
             <h2 class="card__title">Assinatura &amp; Faturamento</h2>
           </div>
-          <span class="status-pill label-sm">
+          <span class="status-pill label-sm" id="subscription-status" aria-live="polite">
             <span class="status-pill__dot"></span>
-            ATIVO
+            <span id="subscription-status-label">CARREGANDO</span>
           </span>
         </div>
 
         <div class="plan">
           <div>
             <span class="plan__label label-sm">Plano Atual</span>
-            <span class="plan__name">Signal Pro</span>
-            <span class="plan__cycle">Ciclo Anual • Renovação em Out/2025</span>
+            <span class="plan__name" id="subscription-plan">Carregando assinatura...</span>
+            <span class="plan__cycle" id="subscription-cycle"></span>
           </div>
-          <span class="plan__price label-lg">R$ 1.890/ano</span>
+          <span class="plan__price label-lg" id="subscription-price"></span>
         </div>
 
         <div class="plan-actions">
@@ -364,6 +364,10 @@
     const inputEmail = document.getElementById('user-email');
     const heroName = document.getElementById('hero-name');
     const heroAvatar = document.getElementById('hero-avatar');
+    const subscriptionStatusLabel = document.getElementById('subscription-status-label');
+    const subscriptionPlan = document.getElementById('subscription-plan');
+    const subscriptionCycle = document.getElementById('subscription-cycle');
+    const subscriptionPrice = document.getElementById('subscription-price');
 
     /* =====================================================
        DADOS PESSOAIS
@@ -391,6 +395,54 @@
         applyProfile(await api('/usuarios/me'));
       } catch (err) {
         showStatus(err.message, true);
+      }
+    })();
+
+    (async function loadSubscription() {
+      try {
+        const idUsuario = sessionStorage.getItem('ID_USUARIO');
+        if (!idUsuario) throw new Error('Não foi possível identificar o usuário.');
+
+        const resposta = await fetch('/assinatura/' + encodeURIComponent(idUsuario));
+        const dados = await resposta.json().catch(() => null);
+        if (!resposta.ok) {
+          throw new Error(typeof dados === 'string' ? dados : 'Não foi possível carregar a assinatura.');
+        }
+        if (!Array.isArray(dados)) {
+          throw new Error('A resposta de assinatura está em um formato inválido.');
+        }
+
+        const assinatura = dados[0];
+        if (!assinatura) {
+          subscriptionStatusLabel.textContent = 'SEM ASSINATURA';
+          subscriptionPlan.textContent = 'Nenhum plano contratado';
+          subscriptionCycle.textContent = 'Não há dados de faturamento disponíveis.';
+          subscriptionPrice.textContent = '—';
+          return;
+        }
+
+        const plano = assinatura.titulo || 'Plano não identificado';
+        const periodicidade = /mensal/i.test(plano) ? 'Mensal' : /anual/i.test(plano) ? 'Anual' : '';
+        const dataFim = assinatura.dataFim
+          ? new Date(assinatura.dataFim).toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' })
+          : '';
+        const preco = Number(assinatura.preco);
+
+        subscriptionStatusLabel.textContent = String(assinatura.statusAssinatura || 'INDEFINIDO').toUpperCase();
+        subscriptionPlan.textContent = plano;
+        subscriptionCycle.textContent = [
+          periodicidade ? 'Ciclo ' + periodicidade : '',
+          dataFim ? 'Renovação em ' + dataFim : ''
+        ].filter(Boolean).join(' • ');
+        subscriptionPrice.textContent = Number.isFinite(preco)
+          ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(preco)
+            + (periodicidade === 'Mensal' ? '/mês' : periodicidade === 'Anual' ? '/ano' : '')
+          : '—';
+      } catch (err) {
+        subscriptionStatusLabel.textContent = 'ERRO';
+        subscriptionPlan.textContent = 'Não foi possível carregar a assinatura';
+        subscriptionCycle.textContent = err.message;
+        subscriptionPrice.textContent = '—';
       }
     })();
 

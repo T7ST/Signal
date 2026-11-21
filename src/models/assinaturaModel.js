@@ -2,7 +2,7 @@ var database = require("../database/config");
 
 function registrar(dataInicio, dataFim, statusAssinatura, email, plano) {
   console.log(
-    "ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function registrar():",
+    "ACESSEI O ASSINATURA MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function registrar():",
     dataInicio,
     dataFim,
     statusAssinatura,
@@ -29,7 +29,7 @@ function registrar(dataInicio, dataFim, statusAssinatura, email, plano) {
 
 function ativar(id, metodo) {
   console.log(
-    "ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function registrar():",
+    "ACESSEI O ASSINATURA MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function registrar():",
     id,
     metodo,
   );
@@ -42,7 +42,24 @@ function ativar(id, metodo) {
   return database.executar(instrucaoSql);
 }
 
+function buscarUltima(idUsuario) {
+  console.log(
+    "ACESSEI O ASSINATURA MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function cadastrar():",
+    idUsuario,
+  );
+
+  var instrucaoSql = `
+    SELECT * FROM detalhesAssinatura
+    WHERE fkUsuario = ${idUsuario}
+    ORDER BY idAssinatura DESC
+    LIMIT 1;    `;
+
+  console.log("Executando a instrução SQL: \n" + instrucaoSql);
+  return database.executar(instrucaoSql);
+}
+
 module.exports = {
   registrar,
   ativar,
+  buscarUltima,
 };

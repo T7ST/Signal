@@ -112,6 +112,8 @@ create table historico_log (
     constraint fkUsuariocons2 foreign key (fkUsuario) references usuario(idUsuario)
 );
 
+-- INSERTS
+
 INSERT INTO plano (titulo, preco) VALUES
     ('Plano Mensal', 49.90),
     ('Plano Anual', 499.90);
@@ -128,3 +130,21 @@ INSERT INTO endereco (rua, numero, cidade, estado, fkEmpresa) VALUES
 
 INSERT INTO usuario (nome, email, senha, fkEmpresa) VALUES
     ('Importador de Planilhas', 'importador@signal.local', 'SEM_LOGIN', 1);
+
+-- VIEWS
+
+CREATE VIEW detalhesAssinatura AS
+SELECT
+    a.idAssinatura,
+    a.fkUsuario,
+    a.fkPlano,
+    a.dataInicio,
+    a.dataFim,
+    a.statusAssinatura,
+    a.metodoPagamento,
+    a.dataRegistro,
+    p.titulo,
+    p.preco
+FROM assinatura a
+    JOIN plano p
+        ON p.idPlano = a.fkPlano;
