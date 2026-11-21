@@ -12,4 +12,12 @@ router.post("/autenticar", function (req, res) {
     usuarioController.autenticar(req, res);
 });
 
+router.get("/:id", function (req, res) {
+    usuarioController.buscar(req, res);
+});
+
+router.put("/excluir/:id/:fkEmpresa", function (req, res) {
+    usuarioController.excluir(req, res);
+});
+
 module.exports = router;

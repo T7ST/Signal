@@ -216,6 +216,12 @@
 
       <!-- Sair -->
       <div class="logout">
+
+           <button class="btn-logout label-lg" id="excluir-conta" type="button">
+        <span class="material-symbols-outlined">delete</span>
+        <span>Excluir minha conta</span>
+    </button>
+
         <button class="btn-logout label-lg" id="logout-btn" type="button">
           <span class="material-symbols-outlined">logout</span>
           <span>Sair da Conta</span>
@@ -502,6 +508,58 @@
       avatarBtn.classList.add('is-rotating');
       setTimeout(() => avatarBtn.classList.remove('is-rotating'), 300);
     });
+
+    // Excluir conta
+document.getElementById('excluir-conta').addEventListener('click', async function () {
+
+    const confirmar = confirm(
+        "Tem certeza que deseja excluir sua conta? Essa ação desativará seu acesso ao SIGNAL."
+    );
+
+    if (!confirmar) {
+        return;
+    }
+
+    const idUsuario = sessionStorage.getItem("ID_USUARIO");
+    const fkEmpresa = sessionStorage.getItem("FK_EMPRESA");
+
+    console.log("ID enviado para exclusão:", idUsuario);
+    console.log("Empresa enviada para exclusão:", fkEmpresa);
+    
+    if (!idUsuario || !fkEmpresa) {
+        alert("Não foi possível identificar o usuário.");
+        return;
+    }
+
+    try {
+
+        const resposta = await fetch(`/usuarios/excluir/${idUsuario}/${fkEmpresa}`, {
+            method: "PUT"
+        });
+
+        const dados = await resposta.json();
+
+        if (resposta.ok) {
+
+            alert("Sua conta foi excluída com sucesso!");
+
+            logout();
+
+        } else {
+
+            alert(dados.mensagem || "Não foi possível excluir sua conta.");
+
+        }
+
+    } catch (erro) {
+
+        console.log("Erro ao excluir conta:", erro);
+        alert("Erro de comunicação com o servidor.");
+
+    }
+
+});
+
   </script>
 </body>
 
