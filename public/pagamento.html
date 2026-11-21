@@ -16,7 +16,6 @@
   </head>
 
   <body>
-
     <div class="cabecalho">
       <div class="foto">
         <img src="./img/logo.png" alt="" />
@@ -26,10 +25,9 @@
         <span>ASSINATURA PAGAMENTO</span>
       </div>
     </div>
-     <div class="voltar">
+    <div class="voltar">
       <a href="./cadastro.html">↩</a>
     </div>
-
 
     <div class="corpo">
       <div class="t2"><span>1 </span> <span>Pagamento Seguro</span></div>
@@ -369,9 +367,10 @@
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
                 id: localStorage.getItem("assinaturaInsertId"),
+                metodo: formaAtual,
               }),
             }).then(function (res) {
-              window.location = `pagamento.html?plano=${plano}`;
+              window.location = "./login.html";
             });
           })
           .catch(function (err) {

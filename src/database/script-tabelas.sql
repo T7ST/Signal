@@ -46,6 +46,7 @@ create table assinatura (
     dataInicio datetime,
     dataFim datetime,
     statusAssinatura varchar(10),
+    metodoPagamento varchar(10),
     dataRegistro datetime default CURRENT_TIMESTAMP,
 
     fkUsuario int not null,
