@@ -42,6 +42,30 @@ function ativar(id, metodo) {
   return database.executar(instrucaoSql);
 }
 
+function cancelar(idAssinatura) {
+  var instrucaoSql = `
+    UPDATE assinatura
+    SET statusAssinatura = 'Cancelado',
+        dataFim = CURRENT_TIMESTAMP
+    WHERE idAssinatura = ${idAssinatura};
+  `;
+
+  console.log("Cancelando assinatura:", idAssinatura);
+  return database.executar(instrucaoSql);
+}
+
+function reativar(idAssinatura) {
+  var instrucaoSql = `
+    UPDATE assinatura
+    SET statusAssinatura = 'Ativo',
+        dataFim = NULL
+    WHERE idAssinatura = ${idAssinatura};
+  `;
+
+  console.log("Reativando assinatura:", idAssinatura);
+  return database.executar(instrucaoSql);
+}
+
 function buscarUltima(idUsuario) {
   console.log(
     "ACESSEI O ASSINATURA MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function cadastrar():",
@@ -61,5 +85,7 @@ function buscarUltima(idUsuario) {
 module.exports = {
   registrar,
   ativar,
+  cancelar,
+  reativar,
   buscarUltima,
 };

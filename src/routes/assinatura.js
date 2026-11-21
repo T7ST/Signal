@@ -12,6 +12,14 @@ router.patch("/ativar", function (req, res) {
   assinaturaController.ativar(req, res);
 });
 
+router.patch("/:idAssinatura/cancelar", function (req, res) {
+  assinaturaController.cancelar(req, res);
+});
+
+router.patch("/:idAssinatura/reativar", function (req, res) {
+  assinaturaController.reativar(req, res);
+});
+
 router.get("/:idUsuario", function (req, res) {
   assinaturaController.buscar(req, res);
 });

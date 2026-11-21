@@ -54,6 +54,52 @@ function ativar(req, res) {
     });
 }
 
+function cancelar(req, res) {
+  const { idAssinatura } = req.params;
+  const assinaturaId = Number(idAssinatura);
+
+  if (!/^\d+$/.test(idAssinatura) || !Number.isSafeInteger(assinaturaId) || assinaturaId <= 0) {
+    return res.status(400).json({ mensagem: "Id da assinatura inválido." });
+  }
+
+  assinaturaModel
+    .cancelar(assinaturaId)
+    .then(function (resultado) {
+      if (resultado.affectedRows === 0) {
+        return res.status(404).json({ mensagem: "Assinatura não encontrada." });
+      }
+
+      return res.json({ mensagem: "Assinatura cancelada com sucesso." });
+    })
+    .catch(function (erro) {
+      console.log("Erro ao cancelar assinatura:", erro);
+      return res.status(500).json({ mensagem: "Não foi possível cancelar a assinatura." });
+    });
+}
+
+function reativar(req, res) {
+  const { idAssinatura } = req.params;
+  const assinaturaId = Number(idAssinatura);
+
+  if (!/^\d+$/.test(idAssinatura) || !Number.isSafeInteger(assinaturaId) || assinaturaId <= 0) {
+    return res.status(400).json({ mensagem: "Id da assinatura inválido." });
+  }
+
+  assinaturaModel
+    .reativar(assinaturaId)
+    .then(function (resultado) {
+      if (resultado.affectedRows === 0) {
+        return res.status(404).json({ mensagem: "Assinatura não encontrada ou já ativa." });
+      }
+
+      return res.json({ mensagem: "Assinatura reativada com sucesso." });
+    })
+    .catch(function (erro) {
+      console.log("Erro ao reativar assinatura:", erro);
+      return res.status(500).json({ mensagem: "Não foi possível reativar a assinatura." });
+    });
+}
+
 function buscar(req, res) {
   const userId = req.params.idUsuario;
 
@@ -75,5 +121,7 @@ function buscar(req, res) {
 module.exports = {
   registrar,
   ativar,
+  cancelar,
+  reativar,
   buscar,
 };

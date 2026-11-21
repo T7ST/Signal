@@ -562,6 +562,10 @@ img {
   transition: background 0.2s;
 }
 
+.plan-action[hidden] {
+  display: none;
+}
+
 .plan-action:hover {
   background: var(--surface-bright);
 }

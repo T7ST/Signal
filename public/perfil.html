@@ -112,10 +112,13 @@
             <span class="material-symbols-outlined">receipt_long</span>
             Ver Faturas
           </button>
-          <!-- Botão vermelho com "X" no lugar do ícone de configuração -->
-          <button class="plan-action plan-action--danger label-sm" id="cancel-plan-btn" type="button">
+          <button class="plan-action plan-action--danger label-sm" id="cancel-plan-btn" type="button" hidden>
             <span class="material-symbols-outlined">close</span>
-            Cancelar Plano
+            Cancelar Assinatura
+          </button>
+          <button class="plan-action label-sm" id="reactivate-plan-btn" type="button" hidden>
+            <span class="material-symbols-outlined">autorenew</span>
+            Reativar Assinatura
           </button>
         </div>
       </section>
@@ -273,11 +276,11 @@
     </form>
   </dialog>
 
-  <!-- ================= MODAL: CANCELAR PLANO ================= -->
-  <dialog class="modal" id="cancel-modal" aria-labelledby="cancel-modal-title">
+  <!-- ================= MODAL: CANCELAR ASSINATURA ================= -->
+  <dialog class="modal" id="cancel-modal" aria-labelledby="subscription-action-title">
     <div class="modal__form form">
-      <h2 class="modal__title" id="cancel-modal-title">Cancelar plano?</h2>
-      <p class="modal__hint">Seu plano Signal Pro será cancelado e você sairá da conta agora.</p>
+      <h2 class="modal__title" id="subscription-action-title">Cancelar assinatura?</h2>
+      <p class="modal__hint" id="subscription-action-hint">A assinatura será marcada como cancelada e a data de fim será atualizada. Você continuará na sua conta.</p>
 
       <p class="modal__error" id="cancel-error" role="alert"></p>
 
@@ -285,7 +288,7 @@
         <button class="btn-ghost label-lg" id="cancel-keep" type="button">Manter plano</button>
         <button class="btn-primary label-lg" id="cancel-confirm" type="button">
           <span class="material-symbols-outlined">close</span>
-          <span>Cancelar e sair</span>
+          <span>Cancelar assinatura</span>
         </button>
       </div>
     </div>
@@ -383,6 +386,8 @@
     const subscriptionPlan = document.getElementById('subscription-plan');
     const subscriptionCycle = document.getElementById('subscription-cycle');
     const subscriptionPrice = document.getElementById('subscription-price');
+    const cancelPlanButton = document.getElementById('cancel-plan-btn');
+    const reactivatePlanButton = document.getElementById('reactivate-plan-btn');
     let idAssinaturaAtual = null;
 
     /* =====================================================
@@ -443,23 +448,29 @@
         const dataFim = assinatura.dataFim
           ? new Date(assinatura.dataFim).toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' })
           : '';
+        const assinaturaAtiva = String(assinatura.statusAssinatura || '').toLowerCase() === 'ativo';
+
         const preco = Number(assinatura.preco);
 
         subscriptionStatusLabel.textContent = String(assinatura.statusAssinatura || 'INDEFINIDO').toUpperCase();
         subscriptionPlan.textContent = plano;
         subscriptionCycle.textContent = [
           periodicidade ? 'Ciclo ' + periodicidade : '',
-          dataFim ? 'Renovação em ' + dataFim : ''
+          dataFim ? (assinaturaAtiva ? 'Renovação em ' : 'Encerrada em ') + dataFim : ''
         ].filter(Boolean).join(' • ');
         subscriptionPrice.textContent = Number.isFinite(preco)
           ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(preco)
             + (periodicidade === 'Mensal' ? '/mês' : periodicidade === 'Anual' ? '/ano' : '')
           : '—';
+        cancelPlanButton.hidden = !assinaturaAtiva;
+        reactivatePlanButton.hidden = assinaturaAtiva;
       } catch (err) {
         subscriptionStatusLabel.textContent = 'ERRO';
         subscriptionPlan.textContent = 'Não foi possível carregar a assinatura';
         subscriptionCycle.textContent = err.message;
         subscriptionPrice.textContent = '—';
+        cancelPlanButton.hidden = true;
+        reactivatePlanButton.hidden = true;
       }
     })();
 
@@ -645,8 +656,31 @@
     const cancelModal = document.getElementById('cancel-modal');
     const cancelError = document.getElementById('cancel-error');
     const cancelConfirm = document.getElementById('cancel-confirm');
+    const cancelKeepLabel = document.getElementById('cancel-keep');
+    const cancelConfirmIcon = cancelConfirm.querySelector('.material-symbols-outlined');
+    const cancelModalTitle = document.getElementById('subscription-action-title');
+    const cancelModalHint = document.getElementById('subscription-action-hint');
+    const cancelConfirmLabel = cancelConfirm.querySelector('span:last-child');
+    let subscriptionAction = 'cancelar';
 
     document.getElementById('cancel-plan-btn').addEventListener('click', () => {
+      subscriptionAction = 'cancelar';
+      cancelModalTitle.textContent = 'Cancelar assinatura?';
+      cancelModalHint.textContent = 'A assinatura será marcada como cancelada e a data de fim será atualizada. Você continuará na sua conta.';
+      cancelKeepLabel.textContent = 'Manter assinatura';
+      cancelConfirmIcon.textContent = 'close';
+      cancelConfirmLabel.textContent = 'Cancelar assinatura';
+      cancelError.textContent = '';
+      cancelModal.showModal();
+    });
+
+    reactivatePlanButton.addEventListener('click', () => {
+      subscriptionAction = 'reativar';
+      cancelModalTitle.textContent = 'Reativar assinatura?';
+      cancelModalHint.textContent = 'A assinatura voltará a ficar ativa e a data de fim será removida.';
+      cancelKeepLabel.textContent = 'Voltar';
+      cancelConfirmIcon.textContent = 'autorenew';
+      cancelConfirmLabel.textContent = 'Reativar assinatura';
       cancelError.textContent = '';
       cancelModal.showModal();
     });
@@ -657,10 +691,24 @@
       cancelError.textContent = '';
       cancelConfirm.disabled = true;
       try {
-        await api('/assinatura/cancelar', { method: 'POST' });
-        await logout('plano-cancelado');
+        if (!idAssinaturaAtual) {
+          throw new Error('Não foi possível identificar a assinatura deste usuário.');
+        }
+
+        const response = await fetch('/assinatura/' + encodeURIComponent(idAssinaturaAtual) + '/' + subscriptionAction, {
+          method: 'PATCH'
+        });
+        const resultado = await response.json().catch(() => null);
+        if (!response.ok) {
+          throw new Error(resultado && resultado.mensagem
+            ? resultado.mensagem
+            : 'Não foi possível ' + subscriptionAction + ' a assinatura.');
+        }
+
+        window.location.reload();
       } catch (err) {
         cancelError.textContent = err.message;
+      } finally {
         cancelConfirm.disabled = false;
       }
     });
