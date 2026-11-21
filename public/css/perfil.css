@@ -1022,6 +1022,61 @@ img {
   gap: var(--gutter-sm);
 }
 
+.invoices-modal {
+  width: min(92vw, 560px);
+  max-height: 85vh;
+  overflow: auto;
+}
+
+.invoice-list {
+  display: grid;
+  gap: var(--gutter-sm);
+  max-height: 48vh;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.invoice,
+.invoice-list__message {
+  padding: var(--gutter-md);
+  border-radius: var(--radius-md);
+  background: var(--surface-low);
+}
+
+.invoice__heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--gutter-sm);
+}
+
+.invoice__protocol {
+  overflow-wrap: anywhere;
+}
+
+.invoice__amount {
+  display: block;
+  margin-top: 6px;
+  color: var(--primary);
+}
+
+.invoice__status,
+.invoice__details,
+.invoice-list__message {
+  color: var(--on-surface-variant);
+  font-size: 12px;
+}
+
+.invoice__status {
+  flex-shrink: 0;
+}
+
+.invoice__details {
+  margin-top: 4px;
+}
+
 .btn-ghost {
   padding: 10px 16px;
   border-radius: var(--radius-md);

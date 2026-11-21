@@ -9,8 +9,9 @@ function registrar(req, res) {
     dataPagamento,
   } = req.body;
 
-  if (fkAssinatura == undefined) {
-    return res.status(400).send("fkAssinatura é obrigatório.");
+  const assinaturaId = Number(fkAssinatura);
+  if (!Number.isSafeInteger(assinaturaId) || assinaturaId <= 0) {
+    return res.status(400).send("fkAssinatura inválido.");
   } else if (protocolo == undefined) {
     return res.status(400).send("protocolo é obrigatório.");
   } else if (metodoPagamento == undefined) {
@@ -21,7 +22,7 @@ function registrar(req, res) {
 
   transacaoModel
     .registrar(
-      fkAssinatura,
+      assinaturaId,
       protocolo,
       metodoPagamento,
       statusTransacao,
@@ -40,6 +41,26 @@ function registrar(req, res) {
     });
 }
 
+function buscarPorAssinatura(req, res) {
+  const { idAssinatura } = req.params;
+  const assinaturaId = Number(idAssinatura);
+
+  if (!/^\d+$/.test(idAssinatura) || !Number.isSafeInteger(assinaturaId) || assinaturaId <= 0) {
+    return res.status(400).json({ mensagem: "Id da assinatura inválido." });
+  }
+
+  transacaoModel
+    .buscarPorAssinatura(assinaturaId)
+    .then(function (resultado) {
+      res.json(resultado);
+    })
+    .catch(function (erro) {
+      console.log("Erro ao buscar transações da assinatura:", erro);
+      res.status(500).json({ mensagem: "Não foi possível buscar as transações." });
+    });
+}
+
 module.exports = {
   registrar,
+  buscarPorAssinatura,
 };

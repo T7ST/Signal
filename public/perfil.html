@@ -108,7 +108,7 @@
             <span class="material-symbols-outlined">credit_card</span>
             Trocar Pagamento
           </button>
-          <button class="plan-action label-sm" type="button">
+          <button class="plan-action label-sm" id="view-invoices-btn" type="button">
             <span class="material-symbols-outlined">receipt_long</span>
             Ver Faturas
           </button>
@@ -291,6 +291,21 @@
     </div>
   </dialog>
 
+  <!-- ================= MODAL: FATURAS ================= -->
+  <dialog class="modal invoices-modal" id="invoices-modal" aria-labelledby="invoices-modal-title">
+    <div class="modal__form form">
+      <h2 class="modal__title" id="invoices-modal-title">Transações da assinatura</h2>
+      <p class="modal__hint">Histórico de pagamentos registrados para este plano.</p>
+      <p class="modal__error" id="invoices-error" role="alert"></p>
+      <ul class="invoice-list" id="invoice-list" aria-live="polite">
+        <li class="invoice-list__message">Carregando transações...</li>
+      </ul>
+      <div class="modal__actions">
+        <button class="btn-ghost label-lg" id="invoices-close" type="button">Fechar</button>
+      </div>
+    </div>
+  </dialog>
+
   <!-- ================= NAVEGAÇÃO INFERIOR ================= -->
   <nav class="bottom-nav" aria-label="Navegação principal">
     <div class="bottom-nav__inner">
@@ -368,6 +383,7 @@
     const subscriptionPlan = document.getElementById('subscription-plan');
     const subscriptionCycle = document.getElementById('subscription-cycle');
     const subscriptionPrice = document.getElementById('subscription-price');
+    let idAssinaturaAtual = null;
 
     /* =====================================================
        DADOS PESSOAIS
@@ -421,6 +437,7 @@
           return;
         }
 
+        idAssinaturaAtual = assinatura.idAssinatura;
         const plano = assinatura.titulo || 'Plano não identificado';
         const periodicidade = /mensal/i.test(plano) ? 'Mensal' : /anual/i.test(plano) ? 'Anual' : '';
         const dataFim = assinatura.dataFim
@@ -445,6 +462,99 @@
         subscriptionPrice.textContent = '—';
       }
     })();
+
+    const invoicesModal = document.getElementById('invoices-modal');
+    const invoiceList = document.getElementById('invoice-list');
+    const invoicesError = document.getElementById('invoices-error');
+
+    function formatInvoiceDate(value) {
+      if (!value) return 'Data não informada';
+      const date = new Date(value);
+      return Number.isNaN(date.getTime())
+        ? 'Data não informada'
+        : date.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
+    }
+
+    function renderInvoices(transactions) {
+      invoiceList.replaceChildren();
+      if (transactions.length === 0) {
+        const emptyMessage = document.createElement('li');
+        emptyMessage.className = 'invoice-list__message';
+        emptyMessage.textContent = 'Nenhuma transação registrada para esta assinatura.';
+        invoiceList.appendChild(emptyMessage);
+        return;
+      }
+
+      transactions.forEach((transaction) => {
+        const item = document.createElement('li');
+        item.className = 'invoice';
+
+        const heading = document.createElement('div');
+        heading.className = 'invoice__heading';
+
+        const protocol = document.createElement('strong');
+        protocol.className = 'invoice__protocol';
+        protocol.textContent = transaction.protocolo || 'Transação sem protocolo';
+
+        const status = document.createElement('span');
+        status.className = 'invoice__status';
+        status.textContent = transaction.statusTransacao || 'Status não informado';
+
+        const amount = document.createElement('strong');
+        amount.className = 'invoice__amount';
+        const value = Number(transaction.valor);
+        amount.textContent = Number.isFinite(value)
+          ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value)
+          : 'Valor indisponível';
+
+        const details = document.createElement('p');
+        details.className = 'invoice__details';
+        const method = {
+          cartao: 'Cartão',
+          pix: 'Pix'
+        }[String(transaction.metodoPagamento || '').toLowerCase()] || transaction.metodoPagamento || 'Método não informado';
+        const date = formatInvoiceDate(transaction.dataPagamento || transaction.dataRegistro);
+        details.textContent = method + ' • ' + date;
+
+        heading.append(protocol, status);
+        item.append(heading, amount, details);
+        invoiceList.appendChild(item);
+      });
+    }
+
+    document.getElementById('view-invoices-btn').addEventListener('click', async () => {
+      invoicesError.textContent = '';
+      invoiceList.replaceChildren();
+      const loadingMessage = document.createElement('li');
+      loadingMessage.className = 'invoice-list__message';
+      loadingMessage.textContent = 'Carregando transações...';
+      invoiceList.appendChild(loadingMessage);
+      invoicesModal.showModal();
+
+      try {
+        if (!idAssinaturaAtual) {
+          throw new Error('Não foi possível identificar a assinatura deste usuário.');
+        }
+
+        const response = await fetch('/transacao/assinatura/' + encodeURIComponent(idAssinaturaAtual));
+        const transactions = await response.json().catch(() => null);
+        if (!response.ok) {
+          throw new Error(transactions && transactions.mensagem
+            ? transactions.mensagem
+            : 'Não foi possível carregar as transações.');
+        }
+        if (!Array.isArray(transactions)) {
+          throw new Error('A resposta de transações está em um formato inválido.');
+        }
+
+        renderInvoices(transactions);
+      } catch (err) {
+        invoiceList.replaceChildren();
+        invoicesError.textContent = err.message;
+      }
+    });
+
+    document.getElementById('invoices-close').addEventListener('click', () => invoicesModal.close());
 
     // Salva no banco e só então atualiza a tela
     form.addEventListener('submit', async (event) => {
