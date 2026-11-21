@@ -100,6 +100,48 @@ function reativar(req, res) {
     });
 }
 
+function alterarPlano(req, res) {
+  const assinaturaId = Number(req.params.idAssinatura);
+  const rawPlanoId = req.body.idPlano;
+  const planoId = Number(rawPlanoId);
+  const idPlanoValido =
+    (typeof rawPlanoId === "number" && Number.isSafeInteger(rawPlanoId)) ||
+    (typeof rawPlanoId === "string" && /^\d+$/.test(rawPlanoId));
+
+  if (!/^\d+$/.test(req.params.idAssinatura) || !Number.isSafeInteger(assinaturaId) || assinaturaId <= 0) {
+    return res.status(400).json({ mensagem: "Id da assinatura inválido." });
+  }
+  if (!idPlanoValido || !Number.isSafeInteger(planoId) || planoId <= 0) {
+    return res.status(400).json({ mensagem: "Id do plano inválido." });
+  }
+
+  assinaturaModel
+    .alterarPlano(assinaturaId, planoId)
+    .then(function (resultado) {
+      if (resultado.affectedRows === 0) {
+        return res.status(404).json({ mensagem: "Assinatura ou plano não encontrado." });
+      }
+
+      return res.json({ mensagem: "Plano da assinatura atualizado com sucesso." });
+    })
+    .catch(function (erro) {
+      console.log("Erro ao alterar plano da assinatura:", erro);
+      return res.status(500).json({ mensagem: "Não foi possível alterar o plano da assinatura." });
+    });
+}
+
+function listarPlanos(req, res) {
+  assinaturaModel
+    .listarPlanos()
+    .then(function (resultado) {
+      res.json(resultado);
+    })
+    .catch(function (erro) {
+      console.log("Erro ao buscar planos:", erro);
+      res.status(500).json({ mensagem: "Não foi possível carregar os planos." });
+    });
+}
+
 function buscar(req, res) {
   const userId = req.params.idUsuario;
 
@@ -123,5 +165,7 @@ module.exports = {
   ativar,
   cancelar,
   reativar,
+  alterarPlano,
+  listarPlanos,
   buscar,
 };

@@ -104,9 +104,9 @@
         </div>
 
         <div class="plan-actions">
-          <button class="plan-action label-sm" type="button">
-            <span class="material-symbols-outlined">credit_card</span>
-            Trocar Pagamento
+          <button class="plan-action label-sm" id="change-plan-btn" type="button" disabled>
+            <span class="material-symbols-outlined">swap_horiz</span>
+            Trocar Plano
           </button>
           <button class="plan-action label-sm" id="view-invoices-btn" type="button">
             <span class="material-symbols-outlined">receipt_long</span>
@@ -294,6 +294,31 @@
     </div>
   </dialog>
 
+  <!-- ================= MODAL: TROCAR PLANO ================= -->
+  <dialog class="modal" id="change-plan-modal" aria-labelledby="change-plan-title">
+    <div class="modal__form form">
+      <h2 class="modal__title" id="change-plan-title">Trocar plano</h2>
+      <p class="modal__hint">Selecione o novo plano para esta assinatura.</p>
+      <div class="field">
+        <label class="field__label label-md" for="change-plan-select">Plano</label>
+        <div class="field__control">
+          <span class="material-symbols-outlined">workspace_premium</span>
+          <select class="field__input" id="change-plan-select" disabled>
+            <option value="">Carregando planos...</option>
+          </select>
+        </div>
+      </div>
+      <p class="modal__error" id="change-plan-error" role="alert"></p>
+      <div class="modal__actions">
+        <button class="btn-ghost label-lg" id="change-plan-close" type="button">Voltar</button>
+        <button class="btn-primary label-lg" id="change-plan-submit" type="button" disabled>
+          <span class="material-symbols-outlined">check</span>
+          <span>Salvar plano</span>
+        </button>
+      </div>
+    </div>
+  </dialog>
+
   <!-- ================= MODAL: FATURAS ================= -->
   <dialog class="modal invoices-modal" id="invoices-modal" aria-labelledby="invoices-modal-title">
     <div class="modal__form form">
@@ -389,6 +414,9 @@
     const cancelPlanButton = document.getElementById('cancel-plan-btn');
     const reactivatePlanButton = document.getElementById('reactivate-plan-btn');
     let idAssinaturaAtual = null;
+    let idPlanoAtual = null;
+    let planosDisponiveis = [];
+    const changePlanButton = document.getElementById('change-plan-btn');
 
     /* =====================================================
        DADOS PESSOAIS
@@ -443,6 +471,8 @@
         }
 
         idAssinaturaAtual = assinatura.idAssinatura;
+        idPlanoAtual = Number(assinatura.fkPlano);
+        changePlanButton.disabled = false;
         const plano = assinatura.titulo || 'Plano não identificado';
         const periodicidade = /mensal/i.test(plano) ? 'Mensal' : /anual/i.test(plano) ? 'Anual' : '';
         const dataFim = assinatura.dataFim
@@ -471,8 +501,99 @@
         subscriptionPrice.textContent = '—';
         cancelPlanButton.hidden = true;
         reactivatePlanButton.hidden = true;
+        changePlanButton.disabled = true;
       }
     })();
+
+    const changePlanModal = document.getElementById('change-plan-modal');
+    const changePlanSelect = document.getElementById('change-plan-select');
+    const changePlanError = document.getElementById('change-plan-error');
+    const changePlanSubmit = document.getElementById('change-plan-submit');
+
+    changePlanSelect.addEventListener('change', () => {
+      changePlanSubmit.disabled = !changePlanSelect.value || Number(changePlanSelect.value) === idPlanoAtual;
+    });
+
+    changePlanButton.addEventListener('click', async () => {
+      changePlanError.textContent = '';
+      changePlanSelect.replaceChildren();
+      const loadingOption = document.createElement('option');
+      loadingOption.value = '';
+      loadingOption.textContent = 'Carregando planos...';
+      changePlanSelect.appendChild(loadingOption);
+      changePlanSelect.disabled = true;
+      changePlanSubmit.disabled = true;
+      changePlanModal.showModal();
+
+      try {
+        const response = await fetch('/assinatura/planos');
+        const plans = await response.json().catch(() => null);
+        if (!response.ok) {
+          throw new Error(plans && plans.mensagem ? plans.mensagem : 'Não foi possível carregar os planos.');
+        }
+        if (!Array.isArray(plans)) {
+          throw new Error('A resposta de planos está em um formato inválido.');
+        }
+
+        planosDisponiveis = plans;
+        changePlanSelect.replaceChildren();
+        planosDisponiveis.forEach((plan) => {
+          const option = document.createElement('option');
+          option.value = plan.idPlano;
+          const price = Number(plan.preco);
+          const formattedPrice = Number.isFinite(price)
+            ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(price)
+            : 'Preço indisponível';
+          option.textContent = (plan.titulo || 'Plano') + ' • ' + formattedPrice;
+          changePlanSelect.appendChild(option);
+        });
+
+        if (!planosDisponiveis.length) {
+          throw new Error('Não há planos disponíveis para seleção.');
+        }
+
+        changePlanSelect.value = String(idPlanoAtual);
+        if (!changePlanSelect.value) {
+          changePlanSelect.selectedIndex = 0;
+        }
+        changePlanSelect.disabled = false;
+        changePlanSubmit.disabled = Number(changePlanSelect.value) === idPlanoAtual;
+      } catch (err) {
+        changePlanSelect.replaceChildren();
+        changePlanError.textContent = err.message;
+      }
+    });
+
+    document.getElementById('change-plan-close').addEventListener('click', () => changePlanModal.close());
+
+    changePlanSubmit.addEventListener('click', async () => {
+      changePlanError.textContent = '';
+      changePlanSubmit.disabled = true;
+
+      try {
+        if (!idAssinaturaAtual || !changePlanSelect.value) {
+          throw new Error('Selecione um plano para continuar.');
+        }
+        if (Number(changePlanSelect.value) === idPlanoAtual) {
+          throw new Error('Selecione um plano diferente do atual.');
+        }
+
+        const response = await fetch('/assinatura/' + encodeURIComponent(idAssinaturaAtual) + '/plano', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ idPlano: Number(changePlanSelect.value) })
+        });
+        const result = await response.json().catch(() => null);
+        if (!response.ok) {
+          throw new Error(result && result.mensagem ? result.mensagem : 'Não foi possível trocar o plano.');
+        }
+
+        window.location.reload();
+      } catch (err) {
+        changePlanError.textContent = err.message;
+        changePlanSubmit.disabled = false;
+      }
+    });
 
     const invoicesModal = document.getElementById('invoices-modal');
     const invoiceList = document.getElementById('invoice-list');

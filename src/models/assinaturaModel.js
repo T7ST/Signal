@@ -66,6 +66,28 @@ function reativar(idAssinatura) {
   return database.executar(instrucaoSql);
 }
 
+function alterarPlano(idAssinatura, idPlano) {
+  var instrucaoSql = `
+    UPDATE assinatura
+    SET fkPlano = ${idPlano}
+    WHERE idAssinatura = ${idAssinatura}
+      AND EXISTS (SELECT 1 FROM plano WHERE idPlano = ${idPlano});
+  `;
+
+  console.log("Alterando plano da assinatura:", idAssinatura, idPlano);
+  return database.executar(instrucaoSql);
+}
+
+function listarPlanos() {
+  var instrucaoSql = `
+    SELECT idPlano, titulo, preco
+    FROM plano
+    ORDER BY idPlano;
+  `;
+
+  return database.executar(instrucaoSql);
+}
+
 function buscarUltima(idUsuario) {
   console.log(
     "ACESSEI O ASSINATURA MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function cadastrar():",
@@ -87,5 +109,7 @@ module.exports = {
   ativar,
   cancelar,
   reativar,
+  alterarPlano,
+  listarPlanos,
   buscarUltima,
 };

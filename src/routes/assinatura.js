@@ -20,6 +20,14 @@ router.patch("/:idAssinatura/reativar", function (req, res) {
   assinaturaController.reativar(req, res);
 });
 
+router.patch("/:idAssinatura/plano", function (req, res) {
+  assinaturaController.alterarPlano(req, res);
+});
+
+router.get("/planos", function (req, res) {
+  assinaturaController.listarPlanos(req, res);
+});
+
 router.get("/:idUsuario", function (req, res) {
   assinaturaController.buscar(req, res);
 });
