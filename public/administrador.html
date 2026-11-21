@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/administrador.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="voltar">
+        <a href="./cadastro.html">↩</a>
+    </div>
+
+    <div class="corpo1">
+        <div class="plano">
+            <span>🔴</span>
+            <span>Acesso Privado</span>
+        </div>
+        <div class="titulo">
+            <h1>Cadastre Empresas</h1>
+        </div>
+        <div class="sub">
+            Configure empresas parceiras para acessarem a aplicação
+        </div>
+
+        <div class="campos">
+            <h2 class="secao">DADOS DA EMPRESA</h2>
+
+            <label for="input_nome">RAZÃO SOCIAL <span id="mensagemnome"></span></label>
+            <input type="text" id="input_nome" placeholder="LTDA / S.A" />
+            <label for="input_cnpj">CNPJ <span id="mensagemcnpj"></span></label>
+            <input type="text" id="input_cnpj" oninput="mascaraCnpj()" onblur="buscarPorCnpj()" maxlength="18"
+                inputmode="numeric" placeholder="00.000.000/0000-00" />
+            <h2 class="secao">ENDEREÇO DA EMPRESA</h2>
+
+            <div class="linha">
+                <div class="coluna pequena">
+                    <label for="input_numero">CEP <span id="mensagemnumero"></span></label>
+                    <input type="text" id="input_numero" inputmode="numeric" placeholder="00000-00" maxlength="8" />
+                </div>
+                <div class="coluna grande">
+                    <label for="input_rua">LOGRADOURO <span id="mensagemrua"></span></label>
+                    <input type="text" id="input_rua" placeholder="Ex: Av. Paulista" />
+                </div>
+                <div class="coluna pequena">
+                    <label for="input_numero">NÚMERO <span id="mensagemnumero"></span></label>
+                    <input type="text" id="input_numero" inputmode="numeric" placeholder="1000" />
+                </div>
+
+                <div class="coluna pequena">
+                    <label for="input_estado">ESTADO <span id="mensagemestado"></span></label>
+                    <select id="input_estado">
+                        <option value="">UF</option>
+                        <option>AC</option>
+                        <option>AL</option>
+                        <option>AP</option>
+                        <option>AM</option>
+                        <option>BA</option>
+                        <option>CE</option>
+                        <option>DF</option>
+                        <option>ES</option>
+                        <option>GO</option>
+                        <option>MA</option>
+                        <option>MT</option>
+                        <option>MS</option>
+                        <option>MG</option>
+                        <option>PA</option>
+                        <option>PB</option>
+                        <option>PR</option>
+                        <option>PE</option>
+                        <option>PI</option>
+                        <option>RJ</option>
+                        <option>RN</option>
+                        <option>RS</option>
+                        <option>RO</option>
+                        <option>RR</option>
+                        <option>SC</option>
+                        <option>SP</option>
+                        <option>SE</option>
+                        <option>TO</option>
+                    </select>
+                </div>
+            </div>
+            <div class="botao">
+                <div class="proximo">
+                    <button onclick="cadastro()">Cadastrar</button>
+                </div>
+            </div>
+</body>
+
+</html>
