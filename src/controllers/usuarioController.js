@@ -1,96 +1,120 @@
 var usuarioModel = require("../models/usuarioModel");
 
 function autenticar(req, res) {
-  var email = req.body.emailServer;
-  var senha = req.body.senhaServer;
+    var email = req.body.emailServer;
+    var senha = req.body.senhaServer;
 
-  if (email == undefined) {
-    res.status(400).send("Seu email está undefined!");
-  } else if (senha == undefined) {
-    res.status(400).send("Sua senha está indefinida!");
-  } else {
+    if (email == undefined) {
+        return res.status(400).send("Seu email está undefined!");
+    }
+
+    if (senha == undefined) {
+        return res.status(400).send("Sua senha está indefinida!");
+    }
+
     usuarioModel
-      .autenticar(email, senha)
-      .then(function (resultadoAutenticar) {
-        console.log(`\nResultados encontrados: ${resultadoAutenticar.length}`);
-        console.log(`Resultados: ${JSON.stringify(resultadoAutenticar)}`); // transforma JSON em String
+        .autenticar(email, senha)
+        .then(function (resultadoAutenticar) {
+            console.log("Resultados encontrados:", resultadoAutenticar.length);
 
-        if (resultadoAutenticar.length > 0) {
-          console.log(resultadoAutenticar);
-          return res.json(resultadoAutenticar);
-        } else if (resultadoAutenticar.length == 0) {
-          res.status(403).send("Email e/ou senha inválido(s)");
-        } else {
-          res.status(403).send("Mais de um usuário com o mesmo login e senha!");
-        }
-      })
-      .catch(function (erro) {
-        console.log(erro);
-        console.log(
-          "\nHouve um erro ao realizar o login! Erro: ",
-          erro.sqlMessage,
-        );
-        res.status(500).json(erro.sqlMessage);
-      });
-  }
+            if (resultadoAutenticar.length > 0) {
+                return res.json(resultadoAutenticar);
+            }
+
+            return res.status(403).send("Email e/ou senha inválido(s)");
+        })
+        .catch(function (erro) {
+            console.log("Erro ao realizar login:", erro);
+            return res.status(500).json(erro.sqlMessage);
+        });
 }
 
 function cadastrar(req, res) {
-  // Crie uma variável que vá recuperar os valores do arquivo cadastro.html
+    const { nome, email, senha, fkEmpresa } = req.body;
 
-  const { nome, email, senha, fkEmpresa } = req.body;
+    if (nome == undefined) {
+        return res.status(400).send("Seu nome está undefined!");
+    }
 
-  // Faça as validações dos valores
-  if (nome == undefined) {
-    res.status(400).send("Seu nome está undefined!");
-  } else if (email == undefined) {
-    res.status(400).send("Seu email está undefined!");
-  } else if (senha == undefined) {
-    res.status(400).send("Sua senha está undefined!");
-  } else if (fkEmpresa == undefined) {
-    res.status(400).send("fkEmpresa é obrigatório.");
-  } else {
-    // Passe os valores como parâmetro e vá para o arquivo usuarioModel.js
+    if (email == undefined) {
+        return res.status(400).send("Seu email está undefined!");
+    }
+
+    if (senha == undefined) {
+        return res.status(400).send("Sua senha está undefined!");
+    }
+
+    if (fkEmpresa == undefined) {
+        return res.status(400).send("fkEmpresa é obrigatório.");
+    }
+
     usuarioModel
-      .cadastrar(nome, email, senha, fkEmpresa)
-      .then(function (resultado) {
-        res.json(resultado);
-      })
-      .catch(function (erro) {
-        console.log(erro);
-        console.log(
-          "\nHouve um erro ao realizar o cadastro! Erro: ",
-          erro.sqlMessage,
-        );
-        res.status(500).json(erro.sqlMessage);
-      });
-  }
+        .cadastrar(nome, email, senha, fkEmpresa)
+        .then(function (resultado) {
+            return res.json(resultado);
+        })
+        .catch(function (erro) {
+            console.log("Erro ao realizar cadastro:", erro);
+            return res.status(500).json(erro.sqlMessage);
+        });
 }
 
 function buscar(req, res) {
-  const { id } = req.param;
+    const id = req.params.id;
 
-  if (id == undefined) {
-    res.status(400).send("Id do usuário está undefined!");
-  } else {
+    if (!id || !/^\d+$/.test(id)) {
+        return res.status(400).send("Id do usuário inválido!");
+    }
+
     usuarioModel
-      .buscarUm(id)
-      .then(function (resultado) {
-        res.json(resultado);
-      })
-      .catch(function (erro) {
-        console.log(erro);
-        console.log(
-          "\nHouve um erro ao realizar a busca! Erro: ",
-          erro.sqlMessage,
-        );
-        res.status(500).json(erro.sqlMessage);
-      });
-  }
+        .buscarUm(id)
+        .then(function (resultado) {
+            return res.json(resultado);
+        })
+        .catch(function (erro) {
+            console.log("Erro ao buscar usuário:", erro);
+            return res.status(500).json(erro.sqlMessage);
+        });
+}
+
+function excluir(req, res) {
+    const id = req.params.id;
+    const fkEmpresa = req.params.fkEmpresa;
+
+    if (
+        !id || !/^\d+$/.test(id) ||
+        !fkEmpresa || !/^\d+$/.test(fkEmpresa)
+    ) {
+        return res.status(400).json({
+            mensagem: "ID do usuário ou da empresa inválido!"
+        });
+    }
+
+    usuarioModel
+        .excluir(id, fkEmpresa)
+        .then(function (resultado) {
+            if (resultado.affectedRows > 0) {
+                return res.status(200).json({
+                    mensagem: "Usuário excluído com sucesso!"
+                });
+            }
+
+            return res.status(404).json({
+                mensagem: "Usuário não encontrado ou já excluído."
+            });
+        })
+        .catch(function (erro) {
+            console.log("Erro ao excluir usuário:", erro);
+
+            return res.status(500).json({
+                mensagem: "Erro ao tentar excluir o usuário."
+            });
+        });
 }
 
 module.exports = {
-  autenticar,
-  cadastrar,
-  buscar
+    autenticar,
+    cadastrar,
+    buscar,
+    excluir
 };

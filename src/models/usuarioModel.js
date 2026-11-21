@@ -7,7 +7,7 @@ function autenticar(email, senha) {
     senha,
   );
   var instrucaoSql = `
-        SELECT idUsuario, nome, email FROM usuario WHERE email = '${email}' AND senha = '${senha}';
+   SELECT idUsuario, fkEmpresa, nome, email FROM usuario WHERE email = '${email}' AND senha = '${senha}' AND ativo = 1;
     `;
   console.log("Executando a instrução SQL: \n" + instrucaoSql);
   return database.executar(instrucaoSql);
@@ -47,8 +47,30 @@ function buscarUm(id) {
   return database.executar(instrucaoSql);
 }
 
+function excluir(id, fkEmpresa) {
+
+    console.log(
+        "ACESSEI O USUARIO MODEL - function excluir():",
+        id,
+        fkEmpresa
+    );
+
+    var instrucaoSql = `
+        UPDATE usuario
+        SET ativo = 0
+        WHERE idUsuario = ${id}
+        AND fkEmpresa = ${fkEmpresa}
+        AND ativo = 1;
+    `;
+
+    console.log("Executando a instrução SQL: \n" + instrucaoSql);
+
+    return database.executar(instrucaoSql);
+}
+
 module.exports = {
   autenticar,
   cadastrar,
   buscarUm,
+  excluir
 };
