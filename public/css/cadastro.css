@@ -87,7 +87,6 @@ body {
   margin-bottom: 30px;
 }
 
-/*-----------------------FORMULÁRIO----------------------*/
 .campos {
   width: 90%;
   color: #F2F0F6;
@@ -141,8 +140,11 @@ body {
   background-color: #0B0C10;
   color: #FFB4AA;
 }
+.campos span {
+  font-size: small;
+  color: #f8c4be;
+}
 
-/* Linhas com dois campos lado a lado (rua + número, cidade + estado) */
 .linha {
   display: flex;
   gap: 12px;
@@ -171,8 +173,6 @@ body {
   border-radius: 4px;
   transition: width 0.3s ease, background-color 0.3s ease;
 }
-
-/*-----------------------BOTÃO---------------------------*/
 .botao {
   width: 90%;
   margin-top: 30px;
@@ -205,8 +205,6 @@ body {
   color: #FF8A7C;
   font-weight: bold;
 }
-
-/*-----------------------RESPONSIVO----------------------*/
 @media (max-width: 600px) {
   .corpo1 {
     padding: 10px 16px 40px;
@@ -227,7 +225,7 @@ body {
   }
   .campos input,
   .campos select {
-    font-size: 16px; /* evita zoom automático no iOS */
+    font-size: 16px; 
   }
   .coluna.pequena {
     min-width: 80px;
