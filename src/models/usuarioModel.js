@@ -93,10 +93,26 @@ function atualizar(id, fkEmpresa, nome, email) {
     return database.executar(instrucaoSql);
 }
 
+function atualizarSenha(id, fkEmpresa, senhaAtual, novaSenha) {
+    var instrucaoSql = `
+        UPDATE usuario
+        SET senha = '${novaSenha}'
+        WHERE idUsuario = ${id}
+        AND fkEmpresa = ${fkEmpresa}
+        AND senha = '${senhaAtual}'
+        AND ativo = 1;
+    `;
+
+    console.log("Executando a instrução SQL: \n" + instrucaoSql);
+
+    return database.executar(instrucaoSql);
+}
+
 module.exports = {
   autenticar,
   cadastrar,
   buscarUm,
   excluir,
-  atualizar
+  atualizar,
+  atualizarSenha
 };

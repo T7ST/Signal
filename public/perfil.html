@@ -489,10 +489,33 @@ if (!resposta.ok) {
 
       pwdSubmit.disabled = true;
       try {
-        await api('/usuarios/me/senha', { method: 'PUT', body: { senhaAtual, novaSenha } });
-        pwdModal.close();
+     const idUsuario = sessionStorage.getItem("ID_USUARIO");
+const fkEmpresa = sessionStorage.getItem("FK_EMPRESA");
+
+if (!idUsuario || !fkEmpresa) {
+    throw new Error("Usuário não identificado. Faça login novamente.");
+}
+
+const resposta = await fetch(`/usuarios/senha/${idUsuario}/${fkEmpresa}`, {
+    method: "PUT",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+        senhaAtual: senhaAtual,
+        novaSenha: novaSenha
+    })
+});
+
+const resultado = await resposta.json();
+
+if (!resposta.ok) {
+    throw new Error(resultado.mensagem || "Erro ao atualizar senha.");
+}
         document.getElementById('password-updated').textContent = 'Última atualização agora';
         showStatus('Senha alterada!');
+        pwdModal.close();
+        
       } catch (err) {
         pwdError.textContent = err.message;
       } finally {

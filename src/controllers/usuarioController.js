@@ -169,10 +169,58 @@ function atualizar(req, res) {
         });
 }
 
+function atualizarSenha(req, res) {
+    const id = req.params.id;
+    const fkEmpresa = req.params.fkEmpresa;
+    const { senhaAtual, novaSenha } = req.body;
+
+    if (
+        !id || !/^\d+$/.test(id) ||
+        !fkEmpresa || !/^\d+$/.test(fkEmpresa)
+    ) {
+        return res.status(400).json({
+            mensagem: "Identificação inválida."
+        });
+    }
+
+    if (!senhaAtual || !novaSenha) {
+        return res.status(400).json({
+            mensagem: "Informe a senha atual e a nova senha."
+        });
+    }
+
+    if (novaSenha.length < 8) {
+        return res.status(400).json({
+            mensagem: "A nova senha precisa ter no mínimo 8 caracteres."
+        });
+    }
+
+    usuarioModel.atualizarSenha(id, fkEmpresa, senhaAtual, novaSenha)
+        .then(function (resultado) {
+            if (resultado.affectedRows > 0) {
+                return res.json({
+                    mensagem: "Senha atualizada com sucesso!"
+                });
+            }
+
+            return res.status(400).json({
+                mensagem: "Senha atual incorreta ou usuário não encontrado."
+            });
+        })
+        .catch(function (erro) {
+            console.log("Erro ao atualizar senha:", erro);
+
+            return res.status(500).json({
+                mensagem: "Erro ao atualizar a senha."
+            });
+        });
+}
+
 module.exports = {
     autenticar,
     cadastrar,
     buscar,
     excluir,
-    atualizar
+    atualizar,
+    atualizarSenha
 };

@@ -24,4 +24,8 @@ router.put("/:id/:fkEmpresa", function (req, res) {
     usuarioController.atualizar(req, res);
 });
 
+router.put("/senha/:id/:fkEmpresa", function (req, res) {
+    usuarioController.atualizarSenha(req, res);
+});
+
 module.exports = router;
