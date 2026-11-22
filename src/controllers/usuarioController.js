@@ -61,19 +61,33 @@ function cadastrar(req, res) {
 
 function buscar(req, res) {
     const id = req.params.id;
+    const fkEmpresa = req.params.fkEmpresa;
 
-    if (!id || !/^\d+$/.test(id)) {
-        return res.status(400).send("Id do usuário inválido!");
+    if (
+        !id || !/^\d+$/.test(id) ||
+        !fkEmpresa || !/^\d+$/.test(fkEmpresa)
+    ) {
+        return res.status(400).json({
+            mensagem: "ID do usuário ou da empresa inválido!"
+        });
     }
 
-    usuarioModel
-        .buscarUm(id)
+    usuarioModel.buscarUm(id, fkEmpresa)
         .then(function (resultado) {
-            return res.json(resultado);
+            if (resultado.length > 0) {
+                return res.json(resultado[0]);
+            }
+
+            return res.status(404).json({
+                mensagem: "Usuário não encontrado."
+            });
         })
         .catch(function (erro) {
             console.log("Erro ao buscar usuário:", erro);
-            return res.status(500).json(erro.sqlMessage);
+
+            return res.status(500).json({
+                mensagem: "Erro ao buscar os dados do usuário."
+            });
         });
 }
 
@@ -112,9 +126,53 @@ function excluir(req, res) {
         });
 }
 
+function atualizar(req, res) {
+    const id = req.params.id;
+    const fkEmpresa = req.params.fkEmpresa;
+    const { nome, email } = req.body;
+
+    if (!id || !/^\d+$/.test(id) ||
+        !fkEmpresa || !/^\d+$/.test(fkEmpresa)) {
+        return res.status(400).json({
+            mensagem: "Identificação inválida."
+        });
+    }
+
+   if (
+    typeof nome !== "string" || !nome.trim() ||
+    typeof email !== "string" || !email.trim()
+) {
+    return res.status(400).json({
+        mensagem: "Nome e e-mail são obrigatórios."
+    });
+}
+    usuarioModel.atualizar(id, fkEmpresa, nome.trim(), email.trim())
+        .then(function (resultado) {
+            if (resultado.affectedRows > 0) {
+                return res.json({
+                    mensagem: "Dados atualizados com sucesso!",
+                    nome: nome.trim(),
+                    email: email.trim()
+                });
+            }
+
+            return res.status(404).json({
+                mensagem: "Usuário não encontrado."
+            });
+        })
+        .catch(function (erro) {
+            console.log("Erro ao atualizar usuário:", erro);
+
+            return res.status(500).json({
+                mensagem: "Erro ao atualizar os dados."
+            });
+        });
+}
+
 module.exports = {
     autenticar,
     cadastrar,
     buscar,
-    excluir
+    excluir,
+    atualizar
 };

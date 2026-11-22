@@ -64,7 +64,7 @@
             </button>
           </div>
 
-          <h1 class="hero__name" id="hero-name">Carlos Mendonça</h1>
+          <h1 class="hero__name" id="hero-name">Carregando...</h1>
           <p class="hero__role">Head de Aquisição &amp; Curadoria</p>
 
           <div class="badge label-sm">
@@ -134,8 +134,7 @@
             <label class="field__label label-md" for="user-name">Nome Completo</label>
             <div class="field__control">
               <span class="material-symbols-outlined">person</span>
-              <input class="field__input" id="user-name" name="nome" type="text" autocomplete="name" required
-                value="Carlos Mendonça" />
+              <input class="field__input" id="user-name" name="nome" type="text" autocomplete="name" required />
             </div>
           </div>
 
@@ -143,8 +142,7 @@
             <label class="field__label label-md" for="user-email">E-mail Corporativo</label>
             <div class="field__control">
               <span class="material-symbols-outlined">mail</span>
-              <input class="field__input" id="user-email" name="email" type="email" autocomplete="email" required
-                value="carlos@Signal.io" />
+              <input class="field__input" id="user-email" name="email" type="email" autocomplete="email" required />
             </div>
           </div>
 
@@ -377,6 +375,25 @@
       heroAvatar.alt = 'Avatar de ' + user.nome;
     }
 
+    async function buscarDadosUsuario() {
+    const idUsuario = sessionStorage.getItem("ID_USUARIO");
+    const fkEmpresa = sessionStorage.getItem("FK_EMPRESA");
+
+    if (!idUsuario || !fkEmpresa) {
+        throw new Error("Usuário não identificado. Faça login novamente.");
+    }
+
+    const resposta = await fetch(`/usuarios/${idUsuario}/${fkEmpresa}`);
+
+    const dados = await resposta.json();
+
+    if (!resposta.ok) {
+        throw new Error(dados.mensagem || "Erro ao buscar usuário.");
+    }
+
+    return dados;
+}
+
     function showStatus(message, isError = false) {
       saveStatus.textContent = message;
       saveStatus.classList.toggle('is-error', isError);
@@ -386,13 +403,14 @@
     }
 
     // Carrega os dados do banco ao abrir a página
-    (async function loadProfile() {
-      try {
-        applyProfile(await api('/usuarios/me'));
-      } catch (err) {
+   (async function loadProfile() {
+    try {
+        const usuario = await buscarDadosUsuario();
+        applyProfile(usuario);
+    } catch (err) {
         showStatus(err.message, true);
-      }
-    })();
+    }
+})();
 
     // Salva no banco e só então atualiza a tela
     form.addEventListener('submit', async (event) => {
@@ -409,7 +427,22 @@
       saveBtn.disabled = true;
       saveBtn.classList.add('is-pressed');
       try {
-        const atualizado = await api('/usuarios/me', { method: 'PUT', body: dados });
+       const idUsuario = sessionStorage.getItem("ID_USUARIO");
+const fkEmpresa = sessionStorage.getItem("FK_EMPRESA");
+
+const resposta = await fetch(`/usuarios/${idUsuario}/${fkEmpresa}`, {
+    method: "PUT",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify(dados)
+});
+
+const atualizado = await resposta.json();
+
+if (!resposta.ok) {
+    throw new Error(atualizado.mensagem || "Erro ao atualizar perfil.");
+}
         applyProfile(atualizado);
         showStatus('Modificações salvas!');
       } catch (err) {
