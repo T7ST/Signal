@@ -29,28 +29,143 @@ function registrar(req, res) {
 }
 
 function ativar(req, res) {
-  const { id } = req.body;
+  const { id, metodo } = req.body;
 
   if (id == undefined) {
     return res.status(400).send("id é obrigatório.");
   }
 
+  if (metodo == undefined) {
+    return res.status(400).send("método de pagamento é obrigatório.");
+  }
+
   assinaturaModel
-    .ativar(id)
+    .ativar(id, metodo)
     .then(function (resultado) {
       res.json(resultado);
     })
     .catch(function (erro) {
       console.log(erro);
       console.log(
-        "\nHouve um erro ao realizar o registro! Erro: ",
+        "\nHouve um erro ao realizar a ativação! Erro: ",
         erro.sqlMessage,
       );
       res.status(500).json(erro.sqlMessage);
     });
 }
 
+function cancelar(req, res) {
+  const { idAssinatura } = req.params;
+  const assinaturaId = Number(idAssinatura);
+
+  if (!/^\d+$/.test(idAssinatura) || !Number.isSafeInteger(assinaturaId) || assinaturaId <= 0) {
+    return res.status(400).json({ mensagem: "Id da assinatura inválido." });
+  }
+
+  assinaturaModel
+    .cancelar(assinaturaId)
+    .then(function (resultado) {
+      if (resultado.affectedRows === 0) {
+        return res.status(404).json({ mensagem: "Assinatura não encontrada." });
+      }
+
+      return res.json({ mensagem: "Assinatura cancelada com sucesso." });
+    })
+    .catch(function (erro) {
+      console.log("Erro ao cancelar assinatura:", erro);
+      return res.status(500).json({ mensagem: "Não foi possível cancelar a assinatura." });
+    });
+}
+
+function reativar(req, res) {
+  const { idAssinatura } = req.params;
+  const assinaturaId = Number(idAssinatura);
+
+  if (!/^\d+$/.test(idAssinatura) || !Number.isSafeInteger(assinaturaId) || assinaturaId <= 0) {
+    return res.status(400).json({ mensagem: "Id da assinatura inválido." });
+  }
+
+  assinaturaModel
+    .reativar(assinaturaId)
+    .then(function (resultado) {
+      if (resultado.affectedRows === 0) {
+        return res.status(404).json({ mensagem: "Assinatura não encontrada ou já ativa." });
+      }
+
+      return res.json({ mensagem: "Assinatura reativada com sucesso." });
+    })
+    .catch(function (erro) {
+      console.log("Erro ao reativar assinatura:", erro);
+      return res.status(500).json({ mensagem: "Não foi possível reativar a assinatura." });
+    });
+}
+
+function alterarPlano(req, res) {
+  const assinaturaId = Number(req.params.idAssinatura);
+  const rawPlanoId = req.body.idPlano;
+  const planoId = Number(rawPlanoId);
+  const idPlanoValido =
+    (typeof rawPlanoId === "number" && Number.isSafeInteger(rawPlanoId)) ||
+    (typeof rawPlanoId === "string" && /^\d+$/.test(rawPlanoId));
+
+  if (!/^\d+$/.test(req.params.idAssinatura) || !Number.isSafeInteger(assinaturaId) || assinaturaId <= 0) {
+    return res.status(400).json({ mensagem: "Id da assinatura inválido." });
+  }
+  if (!idPlanoValido || !Number.isSafeInteger(planoId) || planoId <= 0) {
+    return res.status(400).json({ mensagem: "Id do plano inválido." });
+  }
+
+  assinaturaModel
+    .alterarPlano(assinaturaId, planoId)
+    .then(function (resultado) {
+      if (resultado.affectedRows === 0) {
+        return res.status(404).json({ mensagem: "Assinatura ou plano não encontrado." });
+      }
+
+      return res.json({ mensagem: "Plano da assinatura atualizado com sucesso." });
+    })
+    .catch(function (erro) {
+      console.log("Erro ao alterar plano da assinatura:", erro);
+      return res.status(500).json({ mensagem: "Não foi possível alterar o plano da assinatura." });
+    });
+}
+
+function listarPlanos(req, res) {
+  assinaturaModel
+    .listarPlanos()
+    .then(function (resultado) {
+      res.json(resultado);
+    })
+    .catch(function (erro) {
+      console.log("Erro ao buscar planos:", erro);
+      res.status(500).json({ mensagem: "Não foi possível carregar os planos." });
+    });
+}
+
+function buscar(req, res) {
+  const userId = req.params.idUsuario;
+
+  if (!userId || !/^\d+$/.test(userId)) {
+    return res.status(400).send("Id do usuário inválido!");
+  }
+
+  assinaturaModel
+    .buscarUltima(userId)
+    .then(function (resultado) {
+      return res.json(resultado);
+    })
+    .catch(function (erro) {
+      console.log("Erro ao buscar usuário:", erro);
+      return res.status(500).json(erro.sqlMessage);
+    });
+}
+
 module.exports = {
   registrar,
   ativar,
+  cancelar,
+  reativar,
+  alterarPlano,
+  listarPlanos,
+  buscar,
 };

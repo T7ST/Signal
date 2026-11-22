@@ -88,34 +88,37 @@
             </div>
             <h2 class="card__title">Assinatura &amp; Faturamento</h2>
           </div>
-          <span class="status-pill label-sm">
+          <span class="status-pill label-sm" id="subscription-status" aria-live="polite">
             <span class="status-pill__dot"></span>
-            ATIVO
+            <span id="subscription-status-label">CARREGANDO</span>
           </span>
         </div>
 
         <div class="plan">
           <div>
             <span class="plan__label label-sm">Plano Atual</span>
-            <span class="plan__name">Signal Pro</span>
-            <span class="plan__cycle">Ciclo Anual • Renovação em Out/2025</span>
+            <span class="plan__name" id="subscription-plan">Carregando assinatura...</span>
+            <span class="plan__cycle" id="subscription-cycle"></span>
           </div>
-          <span class="plan__price label-lg">R$ 1.890/ano</span>
+          <span class="plan__price label-lg" id="subscription-price"></span>
         </div>
 
         <div class="plan-actions">
-          <button class="plan-action label-sm" type="button">
-            <span class="material-symbols-outlined">credit_card</span>
-            Trocar Pagamento
+          <button class="plan-action label-sm" id="change-plan-btn" type="button" disabled>
+            <span class="material-symbols-outlined">swap_horiz</span>
+            Trocar Plano
           </button>
-          <button class="plan-action label-sm" type="button">
+          <button class="plan-action label-sm" id="view-invoices-btn" type="button">
             <span class="material-symbols-outlined">receipt_long</span>
             Ver Faturas
           </button>
-          <!-- Botão vermelho com "X" no lugar do ícone de configuração -->
-          <button class="plan-action plan-action--danger label-sm" id="cancel-plan-btn" type="button">
+          <button class="plan-action plan-action--danger label-sm" id="cancel-plan-btn" type="button" hidden>
             <span class="material-symbols-outlined">close</span>
-            Cancelar Plano
+            Cancelar Assinatura
+          </button>
+          <button class="plan-action label-sm" id="reactivate-plan-btn" type="button" hidden>
+            <span class="material-symbols-outlined">autorenew</span>
+            Reativar Assinatura
           </button>
         </div>
       </section>
@@ -273,11 +276,11 @@
     </form>
   </dialog>
 
-  <!-- ================= MODAL: CANCELAR PLANO ================= -->
-  <dialog class="modal" id="cancel-modal" aria-labelledby="cancel-modal-title">
+  <!-- ================= MODAL: CANCELAR ASSINATURA ================= -->
+  <dialog class="modal" id="cancel-modal" aria-labelledby="subscription-action-title">
     <div class="modal__form form">
-      <h2 class="modal__title" id="cancel-modal-title">Cancelar plano?</h2>
-      <p class="modal__hint">Seu plano Signal Pro será cancelado e você sairá da conta agora.</p>
+      <h2 class="modal__title" id="subscription-action-title">Cancelar assinatura?</h2>
+      <p class="modal__hint" id="subscription-action-hint">A assinatura será marcada como cancelada e a data de fim será atualizada. Você continuará na sua conta.</p>
 
       <p class="modal__error" id="cancel-error" role="alert"></p>
 
@@ -285,8 +288,48 @@
         <button class="btn-ghost label-lg" id="cancel-keep" type="button">Manter plano</button>
         <button class="btn-primary label-lg" id="cancel-confirm" type="button">
           <span class="material-symbols-outlined">close</span>
-          <span>Cancelar e sair</span>
+          <span>Cancelar assinatura</span>
         </button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- ================= MODAL: TROCAR PLANO ================= -->
+  <dialog class="modal" id="change-plan-modal" aria-labelledby="change-plan-title">
+    <div class="modal__form form">
+      <h2 class="modal__title" id="change-plan-title">Trocar plano</h2>
+      <p class="modal__hint">Selecione o novo plano para esta assinatura.</p>
+      <div class="field">
+        <label class="field__label label-md" for="change-plan-select">Plano</label>
+        <div class="field__control">
+          <span class="material-symbols-outlined">workspace_premium</span>
+          <select class="field__input" id="change-plan-select" disabled>
+            <option value="">Carregando planos...</option>
+          </select>
+        </div>
+      </div>
+      <p class="modal__error" id="change-plan-error" role="alert"></p>
+      <div class="modal__actions">
+        <button class="btn-ghost label-lg" id="change-plan-close" type="button">Voltar</button>
+        <button class="btn-primary label-lg" id="change-plan-submit" type="button" disabled>
+          <span class="material-symbols-outlined">check</span>
+          <span>Salvar plano</span>
+        </button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- ================= MODAL: FATURAS ================= -->
+  <dialog class="modal invoices-modal" id="invoices-modal" aria-labelledby="invoices-modal-title">
+    <div class="modal__form form">
+      <h2 class="modal__title" id="invoices-modal-title">Transações da assinatura</h2>
+      <p class="modal__hint">Histórico de pagamentos registrados para este plano.</p>
+      <p class="modal__error" id="invoices-error" role="alert"></p>
+      <ul class="invoice-list" id="invoice-list" aria-live="polite">
+        <li class="invoice-list__message">Carregando transações...</li>
+      </ul>
+      <div class="modal__actions">
+        <button class="btn-ghost label-lg" id="invoices-close" type="button">Fechar</button>
       </div>
     </div>
   </dialog>
@@ -364,6 +407,17 @@
     const inputEmail = document.getElementById('user-email');
     const heroName = document.getElementById('hero-name');
     const heroAvatar = document.getElementById('hero-avatar');
+    const subscriptionStatusLabel = document.getElementById('subscription-status-label');
+    const subscriptionPlan = document.getElementById('subscription-plan');
+    const subscriptionCycle = document.getElementById('subscription-cycle');
+    const subscriptionPrice = document.getElementById('subscription-price');
+    const cancelPlanButton = document.getElementById('cancel-plan-btn');
+    const reactivatePlanButton = document.getElementById('reactivate-plan-btn');
+    let idAssinaturaAtual = null;
+    let idPlanoAtual = null;
+    let planosDisponiveis = [];
+    const changePlanButton = document.getElementById('change-plan-btn');
+    let assinaturaAtual = null;
 
     /* =====================================================
        DADOS PESSOAIS
@@ -393,6 +447,343 @@
         showStatus(err.message, true);
       }
     })();
+
+    (async function loadSubscription() {
+      try {
+        const idUsuario = sessionStorage.getItem('ID_USUARIO');
+        if (!idUsuario) throw new Error('Não foi possível identificar o usuário.');
+
+        const resposta = await fetch('/assinatura/' + encodeURIComponent(idUsuario));
+        const dados = await resposta.json().catch(() => null);
+        if (!resposta.ok) {
+          throw new Error(typeof dados === 'string' ? dados : 'Não foi possível carregar a assinatura.');
+        }
+        if (!Array.isArray(dados)) {
+          throw new Error('A resposta de assinatura está em um formato inválido.');
+        }
+
+        const assinatura = dados[0];
+        if (!assinatura) {
+          subscriptionStatusLabel.textContent = 'SEM ASSINATURA';
+          subscriptionPlan.textContent = 'Nenhum plano contratado';
+          subscriptionCycle.textContent = 'Não há dados de faturamento disponíveis.';
+          subscriptionPrice.textContent = '—';
+          return;
+        }
+
+        idAssinaturaAtual = assinatura.idAssinatura;
+        idPlanoAtual = Number(assinatura.fkPlano);
+        assinaturaAtual = assinatura;
+        changePlanButton.disabled = false;
+        const plano = assinatura.titulo || 'Plano não identificado';
+        const periodicidade = /mensal/i.test(plano) ? 'Mensal' : /anual/i.test(plano) ? 'Anual' : '';
+        const dataFim = assinatura.dataFim
+          ? new Date(assinatura.dataFim).toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' })
+          : '';
+        const assinaturaAtiva = String(assinatura.statusAssinatura || '').toLowerCase() === 'ativo';
+
+        const preco = Number(assinatura.preco);
+
+        subscriptionStatusLabel.textContent = String(assinatura.statusAssinatura || 'INDEFINIDO').toUpperCase();
+        subscriptionPlan.textContent = plano;
+        subscriptionCycle.textContent = [
+          periodicidade ? 'Ciclo ' + periodicidade : '',
+          dataFim ? (assinaturaAtiva ? 'Renovação em ' : 'Encerrada em ') + dataFim : ''
+        ].filter(Boolean).join(' • ');
+        subscriptionPrice.textContent = Number.isFinite(preco)
+          ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(preco)
+            + (periodicidade === 'Mensal' ? '/mês' : periodicidade === 'Anual' ? '/ano' : '')
+          : '—';
+        cancelPlanButton.hidden = !assinaturaAtiva;
+        reactivatePlanButton.hidden = assinaturaAtiva;
+      } catch (err) {
+        subscriptionStatusLabel.textContent = 'ERRO';
+        subscriptionPlan.textContent = 'Não foi possível carregar a assinatura';
+        subscriptionCycle.textContent = err.message;
+        subscriptionPrice.textContent = '—';
+        cancelPlanButton.hidden = true;
+        reactivatePlanButton.hidden = true;
+        changePlanButton.disabled = true;
+      }
+    })();
+
+    const changePlanModal = document.getElementById('change-plan-modal');
+    const changePlanSelect = document.getElementById('change-plan-select');
+    const changePlanError = document.getElementById('change-plan-error');
+    const changePlanSubmit = document.getElementById('change-plan-submit');
+
+    changePlanSelect.addEventListener('change', () => {
+      changePlanSubmit.disabled = !changePlanSelect.value || Number(changePlanSelect.value) === idPlanoAtual;
+    });
+
+    changePlanButton.addEventListener('click', async () => {
+      changePlanError.textContent = '';
+      changePlanSelect.replaceChildren();
+      const loadingOption = document.createElement('option');
+      loadingOption.value = '';
+      loadingOption.textContent = 'Carregando planos...';
+      changePlanSelect.appendChild(loadingOption);
+      changePlanSelect.disabled = true;
+      changePlanSubmit.disabled = true;
+      changePlanModal.showModal();
+
+      try {
+        const response = await fetch('/assinatura/planos');
+        const plans = await response.json().catch(() => null);
+        if (!response.ok) {
+          throw new Error(plans && plans.mensagem ? plans.mensagem : 'Não foi possível carregar os planos.');
+        }
+        if (!Array.isArray(plans)) {
+          throw new Error('A resposta de planos está em um formato inválido.');
+        }
+
+        planosDisponiveis = plans;
+        changePlanSelect.replaceChildren();
+        planosDisponiveis.forEach((plan) => {
+          const option = document.createElement('option');
+          option.value = plan.idPlano;
+          const price = Number(plan.preco);
+          const formattedPrice = Number.isFinite(price)
+            ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(price)
+            : 'Preço indisponível';
+          option.textContent = (plan.titulo || 'Plano') + ' • ' + formattedPrice;
+          changePlanSelect.appendChild(option);
+        });
+
+        if (!planosDisponiveis.length) {
+          throw new Error('Não há planos disponíveis para seleção.');
+        }
+
+        changePlanSelect.value = String(idPlanoAtual);
+        if (!changePlanSelect.value) {
+          changePlanSelect.selectedIndex = 0;
+        }
+        changePlanSelect.disabled = false;
+        changePlanSubmit.disabled = Number(changePlanSelect.value) === idPlanoAtual;
+      } catch (err) {
+        changePlanSelect.replaceChildren();
+        changePlanError.textContent = err.message;
+      }
+    });
+
+    document.getElementById('change-plan-close').addEventListener('click', () => changePlanModal.close());
+
+    changePlanSubmit.addEventListener('click', async () => {
+      changePlanError.textContent = '';
+      changePlanSubmit.disabled = true;
+
+      try {
+        if (!idAssinaturaAtual || !changePlanSelect.value) {
+          throw new Error('Selecione um plano para continuar.');
+        }
+        if (Number(changePlanSelect.value) === idPlanoAtual) {
+          throw new Error('Selecione um plano diferente do atual.');
+        }
+
+        const response = await fetch('/assinatura/' + encodeURIComponent(idAssinaturaAtual) + '/plano', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ idPlano: Number(changePlanSelect.value) })
+        });
+        const result = await response.json().catch(() => null);
+        if (!response.ok) {
+          throw new Error(result && result.mensagem ? result.mensagem : 'Não foi possível trocar o plano.');
+        }
+
+        window.location.reload();
+      } catch (err) {
+        changePlanError.textContent = err.message;
+        changePlanSubmit.disabled = false;
+      }
+    });
+
+    const invoicesModal = document.getElementById('invoices-modal');
+    const invoiceList = document.getElementById('invoice-list');
+    const invoicesError = document.getElementById('invoices-error');
+
+    function formatInvoiceDate(value) {
+      if (!value) return 'Data não informada';
+      const date = new Date(value);
+      return Number.isNaN(date.getTime())
+        ? 'Data não informada'
+        : date.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
+    }
+
+    function parseSubscriptionStartDate(value) {
+      if (typeof value !== 'string') return null;
+      const match = value.match(/^(\d{4})-(\d{2})-(\d{2})/);
+      if (!match) return null;
+
+      const year = Number(match[1]);
+      const month = Number(match[2]) - 1;
+      const day = Number(match[3]);
+      const date = new Date(year, month, day);
+      if (date.getFullYear() !== year || date.getMonth() !== month || date.getDate() !== day) return null;
+      return date;
+    }
+
+    function getNextInvoiceDate(assinatura) {
+      const startDate = parseSubscriptionStartDate(assinatura && assinatura.dataInicio);
+      if (!startDate) return null;
+
+      const planoAnual = /anual/i.test(assinatura.titulo || '');
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      for (let periods = 1; periods <= 1200; periods++) {
+        const year = planoAnual
+          ? startDate.getFullYear() + periods
+          : startDate.getFullYear() + Math.floor((startDate.getMonth() + periods) / 12);
+        const month = planoAnual
+          ? startDate.getMonth()
+          : (startDate.getMonth() + periods) % 12;
+        const day = Math.min(startDate.getDate(), new Date(year, month + 1, 0).getDate());
+        const dueDate = new Date(year, month, day);
+
+        if (dueDate >= today) return dueDate;
+      }
+
+      return null;
+    }
+
+    function formatBillingDate(date) {
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = date.toLocaleDateString('pt-BR', { month: 'long' });
+      return day + ' ' + month + ' ' + date.getFullYear();
+    }
+
+    function renderUpcomingInvoice() {
+      if (!assinaturaAtual || String(assinaturaAtual.statusAssinatura || '').toLowerCase() !== 'ativo') {
+        return false;
+      }
+
+      const dueDate = getNextInvoiceDate(assinaturaAtual);
+      if (!dueDate) return false;
+
+      const item = document.createElement('li');
+      item.className = 'invoice invoice--upcoming';
+
+      const heading = document.createElement('div');
+      heading.className = 'invoice__heading';
+
+      const label = document.createElement('strong');
+      label.className = 'invoice__protocol';
+      label.textContent = 'Próxima fatura';
+
+      const status = document.createElement('span');
+      status.className = 'invoice__status';
+      status.textContent = 'A vencer';
+
+      const amount = document.createElement('strong');
+      amount.className = 'invoice__amount';
+      const value = Number(assinaturaAtual.preco);
+      amount.textContent = Number.isFinite(value)
+        ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value)
+        : 'Valor indisponível';
+
+      const details = document.createElement('p');
+      details.className = 'invoice__details';
+      details.textContent = 'Vencimento: ' + formatBillingDate(dueDate);
+
+      const payButton = document.createElement('a');
+      payButton.className = 'btn-primary label-lg invoice__pay';
+      payButton.textContent = 'Pagar';
+      const planoAnual = /anual/i.test(assinaturaAtual.titulo || '');
+      const planoMensal = /mensal/i.test(assinaturaAtual.titulo || '');
+      payButton.href = planoAnual
+        ? './pagamento.html?plano=anual'
+        : planoMensal
+          ? './pagamento.html?plano=mensal'
+          : './pagamento.html';
+
+      heading.append(label, status);
+      item.append(heading, amount, details, payButton);
+      invoiceList.appendChild(item);
+      return true;
+    }
+
+    function renderInvoices(transactions) {
+      invoiceList.replaceChildren();
+      const hasUpcomingInvoice = renderUpcomingInvoice();
+      if (transactions.length === 0) {
+        if (hasUpcomingInvoice) return;
+        const emptyMessage = document.createElement('li');
+        emptyMessage.className = 'invoice-list__message';
+        emptyMessage.textContent = 'Nenhuma transação registrada para esta assinatura.';
+        invoiceList.appendChild(emptyMessage);
+        return;
+      }
+
+      transactions.forEach((transaction) => {
+        const item = document.createElement('li');
+        item.className = 'invoice';
+
+        const heading = document.createElement('div');
+        heading.className = 'invoice__heading';
+
+        const protocol = document.createElement('strong');
+        protocol.className = 'invoice__protocol';
+        protocol.textContent = transaction.protocolo || 'Transação sem protocolo';
+
+        const status = document.createElement('span');
+        status.className = 'invoice__status';
+        status.textContent = transaction.statusTransacao || 'Status não informado';
+
+        const amount = document.createElement('strong');
+        amount.className = 'invoice__amount';
+        const value = Number(transaction.valor);
+        amount.textContent = Number.isFinite(value)
+          ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value)
+          : 'Valor indisponível';
+
+        const details = document.createElement('p');
+        details.className = 'invoice__details';
+        const method = {
+          cartao: 'Cartão',
+          pix: 'Pix'
+        }[String(transaction.metodoPagamento || '').toLowerCase()] || transaction.metodoPagamento || 'Método não informado';
+        const date = formatInvoiceDate(transaction.dataPagamento || transaction.dataRegistro);
+        details.textContent = method + ' • ' + date;
+
+        heading.append(protocol, status);
+        item.append(heading, amount, details);
+        invoiceList.appendChild(item);
+      });
+    }
+
+    document.getElementById('view-invoices-btn').addEventListener('click', async () => {
+      invoicesError.textContent = '';
+      invoiceList.replaceChildren();
+      const loadingMessage = document.createElement('li');
+      loadingMessage.className = 'invoice-list__message';
+      loadingMessage.textContent = 'Carregando transações...';
+      invoiceList.appendChild(loadingMessage);
+      invoicesModal.showModal();
+
+      try {
+        if (!idAssinaturaAtual) {
+          throw new Error('Não foi possível identificar a assinatura deste usuário.');
+        }
+
+        const response = await fetch('/transacao/assinatura/' + encodeURIComponent(idAssinaturaAtual));
+        const transactions = await response.json().catch(() => null);
+        if (!response.ok) {
+          throw new Error(transactions && transactions.mensagem
+            ? transactions.mensagem
+            : 'Não foi possível carregar as transações.');
+        }
+        if (!Array.isArray(transactions)) {
+          throw new Error('A resposta de transações está em um formato inválido.');
+        }
+
+        renderInvoices(transactions);
+      } catch (err) {
+        invoiceList.replaceChildren();
+        invoicesError.textContent = err.message;
+      }
+    });
+
+    document.getElementById('invoices-close').addEventListener('click', () => invoicesModal.close());
 
     // Salva no banco e só então atualiza a tela
     form.addEventListener('submit', async (event) => {
@@ -483,8 +874,31 @@
     const cancelModal = document.getElementById('cancel-modal');
     const cancelError = document.getElementById('cancel-error');
     const cancelConfirm = document.getElementById('cancel-confirm');
+    const cancelKeepLabel = document.getElementById('cancel-keep');
+    const cancelConfirmIcon = cancelConfirm.querySelector('.material-symbols-outlined');
+    const cancelModalTitle = document.getElementById('subscription-action-title');
+    const cancelModalHint = document.getElementById('subscription-action-hint');
+    const cancelConfirmLabel = cancelConfirm.querySelector('span:last-child');
+    let subscriptionAction = 'cancelar';
 
     document.getElementById('cancel-plan-btn').addEventListener('click', () => {
+      subscriptionAction = 'cancelar';
+      cancelModalTitle.textContent = 'Cancelar assinatura?';
+      cancelModalHint.textContent = 'A assinatura será marcada como cancelada e a data de fim será atualizada. Você continuará na sua conta.';
+      cancelKeepLabel.textContent = 'Manter assinatura';
+      cancelConfirmIcon.textContent = 'close';
+      cancelConfirmLabel.textContent = 'Cancelar assinatura';
+      cancelError.textContent = '';
+      cancelModal.showModal();
+    });
+
+    reactivatePlanButton.addEventListener('click', () => {
+      subscriptionAction = 'reativar';
+      cancelModalTitle.textContent = 'Reativar assinatura?';
+      cancelModalHint.textContent = 'A assinatura voltará a ficar ativa e a data de fim será removida.';
+      cancelKeepLabel.textContent = 'Voltar';
+      cancelConfirmIcon.textContent = 'autorenew';
+      cancelConfirmLabel.textContent = 'Reativar assinatura';
       cancelError.textContent = '';
       cancelModal.showModal();
     });
@@ -495,10 +909,24 @@
       cancelError.textContent = '';
       cancelConfirm.disabled = true;
       try {
-        await api('/assinatura/cancelar', { method: 'POST' });
-        await logout('plano-cancelado');
+        if (!idAssinaturaAtual) {
+          throw new Error('Não foi possível identificar a assinatura deste usuário.');
+        }
+
+        const response = await fetch('/assinatura/' + encodeURIComponent(idAssinaturaAtual) + '/' + subscriptionAction, {
+          method: 'PATCH'
+        });
+        const resultado = await response.json().catch(() => null);
+        if (!response.ok) {
+          throw new Error(resultado && resultado.mensagem
+            ? resultado.mensagem
+            : 'Não foi possível ' + subscriptionAction + ' a assinatura.');
+        }
+
+        window.location.reload();
       } catch (err) {
         cancelError.textContent = err.message;
+      } finally {
         cancelConfirm.disabled = false;
       }
     });

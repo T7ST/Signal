@@ -2,7 +2,7 @@ var database = require("../database/config");
 
 function registrar(dataInicio, dataFim, statusAssinatura, email, plano) {
   console.log(
-    "ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function registrar():",
+    "ACESSEI O ASSINATURA MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function registrar():",
     dataInicio,
     dataFim,
     statusAssinatura,
@@ -27,15 +27,78 @@ function registrar(dataInicio, dataFim, statusAssinatura, email, plano) {
   return database.executar(instrucaoSql);
 }
 
-function ativar(id) {
+function ativar(id, metodo) {
   console.log(
-    "ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function registrar():",
+    "ACESSEI O ASSINATURA MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function registrar():",
     id,
+    metodo,
   );
 
   var instrucaoSql = `
-    UPDATE assinatura SET statusAssinatura = 'Ativo' WHERE idAssinatura = ${id};
+    UPDATE assinatura SET statusAssinatura = 'Ativo', metodoPagamento = '${metodo}' WHERE idAssinatura = ${id};
   `;
+
+  console.log("Executando a instrução SQL: \n" + instrucaoSql);
+  return database.executar(instrucaoSql);
+}
+
+function cancelar(idAssinatura) {
+  var instrucaoSql = `
+    UPDATE assinatura
+    SET statusAssinatura = 'Cancelado',
+        dataFim = CURRENT_TIMESTAMP
+    WHERE idAssinatura = ${idAssinatura};
+  `;
+
+  console.log("Cancelando assinatura:", idAssinatura);
+  return database.executar(instrucaoSql);
+}
+
+function reativar(idAssinatura) {
+  var instrucaoSql = `
+    UPDATE assinatura
+    SET statusAssinatura = 'Ativo',
+        dataFim = NULL
+    WHERE idAssinatura = ${idAssinatura};
+  `;
+
+  console.log("Reativando assinatura:", idAssinatura);
+  return database.executar(instrucaoSql);
+}
+
+function alterarPlano(idAssinatura, idPlano) {
+  var instrucaoSql = `
+    UPDATE assinatura
+    SET fkPlano = ${idPlano}
+    WHERE idAssinatura = ${idAssinatura}
+      AND EXISTS (SELECT 1 FROM plano WHERE idPlano = ${idPlano});
+  `;
+
+  console.log("Alterando plano da assinatura:", idAssinatura, idPlano);
+  return database.executar(instrucaoSql);
+}
+
+function listarPlanos() {
+  var instrucaoSql = `
+    SELECT idPlano, titulo, preco
+    FROM plano
+    ORDER BY idPlano;
+  `;
+
+  return database.executar(instrucaoSql);
+}
+
+function buscarUltima(idUsuario) {
+  console.log(
+    "ACESSEI O ASSINATURA MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function cadastrar():",
+    idUsuario,
+  );
+
+  var instrucaoSql = `
+    SELECT * FROM detalhesAssinatura
+    WHERE fkUsuario = ${idUsuario}
+    ORDER BY idAssinatura DESC
+    LIMIT 1;    `;
 
   console.log("Executando a instrução SQL: \n" + instrucaoSql);
   return database.executar(instrucaoSql);
@@ -44,4 +107,9 @@ function ativar(id) {
 module.exports = {
   registrar,
   ativar,
+  cancelar,
+  reativar,
+  alterarPlano,
+  listarPlanos,
+  buscarUltima,
 };

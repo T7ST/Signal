@@ -71,6 +71,7 @@ create table assinatura (
     dataInicio datetime,
     dataFim datetime,
     statusAssinatura varchar(10),
+    metodoPagamento varchar(10),
     dataRegistro datetime default CURRENT_TIMESTAMP,
     metodoPagamento varchar(45),
 
@@ -85,6 +86,7 @@ create table assinatura (
 create table transacao (
 	idTransacao int auto_increment,
     protocolo VARCHAR(20) NOT NULL UNIQUE,
+    valor DECIMAL(7,2) NOT NULL,
     metodoPagamento varchar(20) NOT NULL,
     statusTransacao varchar(20) NOT NULL,
     dataPagamento datetime,
@@ -141,8 +143,23 @@ INSERT INTO endereco (logradouro, numero, cidade, estado, fkEmpresa) VALUES
     ('Rua B', '456', 'Cidade B', 'SP', 2),
     ('Rua C', '789', 'Cidade C', 'SP', 3);
 
-select * from usuario;
-select * from assinatura;
-select * from transacao;
-select * from empresa;
-select * from endereco;
+INSERT INTO usuario (nome, email, senha, fkEmpresa) VALUES
+    ('Importador de Planilhas', 'importador@signal.local', 'SEM_LOGIN', 1);
+
+-- VIEWS
+
+CREATE VIEW detalhesAssinatura AS
+SELECT
+    a.idAssinatura,
+    a.fkUsuario,
+    a.fkPlano,
+    a.dataInicio,
+    a.dataFim,
+    a.statusAssinatura,
+    a.metodoPagamento,
+    a.dataRegistro,
+    p.titulo,
+    p.preco
+FROM assinatura a
+    JOIN plano p
+        ON p.idPlano = a.fkPlano;

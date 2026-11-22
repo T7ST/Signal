@@ -8,4 +8,8 @@ router.post("/registrar", function (req, res) {
   transacaoController.registrar(req, res);
 });
 
+router.get("/assinatura/:idAssinatura", function (req, res) {
+  transacaoController.buscarPorAssinatura(req, res);
+});
+
 module.exports = router;

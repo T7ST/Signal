@@ -12,4 +12,24 @@ router.patch("/ativar", function (req, res) {
   assinaturaController.ativar(req, res);
 });
 
+router.patch("/:idAssinatura/cancelar", function (req, res) {
+  assinaturaController.cancelar(req, res);
+});
+
+router.patch("/:idAssinatura/reativar", function (req, res) {
+  assinaturaController.reativar(req, res);
+});
+
+router.patch("/:idAssinatura/plano", function (req, res) {
+  assinaturaController.alterarPlano(req, res);
+});
+
+router.get("/planos", function (req, res) {
+  assinaturaController.listarPlanos(req, res);
+});
+
+router.get("/:idUsuario", function (req, res) {
+  assinaturaController.buscar(req, res);
+});
+
 module.exports = router;
