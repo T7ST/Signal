@@ -1,0 +1,41 @@
+services:
+  db:
+    container_name: signal_db
+    image: cauasptech/signal_bd:v1
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - signall
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p$$MYSQL_ROOT_PASSWORD"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  web:
+    container_name: signal_web
+    image: cauasptech/signal_site:v1
+    restart: always
+    ports:
+      - "${APP_PORT:-8080}:8080"
+    env_file:
+      - .env
+    networks:
+      - signall
+    depends_on:
+      db:
+        condition: service_healthy
+
+networks:
+  signall:
+    external: true # Se a rede não existir na instância, remova esta linha para que o docker compose crie a rede automaticamente
+    name: signall
+
+volumes:
+  db_data:
