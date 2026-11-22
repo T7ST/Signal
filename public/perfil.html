@@ -417,6 +417,7 @@
     let idPlanoAtual = null;
     let planosDisponiveis = [];
     const changePlanButton = document.getElementById('change-plan-btn');
+    let assinaturaAtual = null;
 
     /* =====================================================
        DADOS PESSOAIS
@@ -472,6 +473,7 @@
 
         idAssinaturaAtual = assinatura.idAssinatura;
         idPlanoAtual = Number(assinatura.fkPlano);
+        assinaturaAtual = assinatura;
         changePlanButton.disabled = false;
         const plano = assinatura.titulo || 'Plano não identificado';
         const periodicidade = /mensal/i.test(plano) ? 'Mensal' : /anual/i.test(plano) ? 'Anual' : '';
@@ -607,9 +609,104 @@
         : date.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
     }
 
+    function parseSubscriptionStartDate(value) {
+      if (typeof value !== 'string') return null;
+      const match = value.match(/^(\d{4})-(\d{2})-(\d{2})/);
+      if (!match) return null;
+
+      const year = Number(match[1]);
+      const month = Number(match[2]) - 1;
+      const day = Number(match[3]);
+      const date = new Date(year, month, day);
+      if (date.getFullYear() !== year || date.getMonth() !== month || date.getDate() !== day) return null;
+      return date;
+    }
+
+    function getNextInvoiceDate(assinatura) {
+      const startDate = parseSubscriptionStartDate(assinatura && assinatura.dataInicio);
+      if (!startDate) return null;
+
+      const planoAnual = /anual/i.test(assinatura.titulo || '');
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      for (let periods = 1; periods <= 1200; periods++) {
+        const year = planoAnual
+          ? startDate.getFullYear() + periods
+          : startDate.getFullYear() + Math.floor((startDate.getMonth() + periods) / 12);
+        const month = planoAnual
+          ? startDate.getMonth()
+          : (startDate.getMonth() + periods) % 12;
+        const day = Math.min(startDate.getDate(), new Date(year, month + 1, 0).getDate());
+        const dueDate = new Date(year, month, day);
+
+        if (dueDate >= today) return dueDate;
+      }
+
+      return null;
+    }
+
+    function formatBillingDate(date) {
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = date.toLocaleDateString('pt-BR', { month: 'long' });
+      return day + ' ' + month + ' ' + date.getFullYear();
+    }
+
+    function renderUpcomingInvoice() {
+      if (!assinaturaAtual || String(assinaturaAtual.statusAssinatura || '').toLowerCase() !== 'ativo') {
+        return false;
+      }
+
+      const dueDate = getNextInvoiceDate(assinaturaAtual);
+      if (!dueDate) return false;
+
+      const item = document.createElement('li');
+      item.className = 'invoice invoice--upcoming';
+
+      const heading = document.createElement('div');
+      heading.className = 'invoice__heading';
+
+      const label = document.createElement('strong');
+      label.className = 'invoice__protocol';
+      label.textContent = 'Próxima fatura';
+
+      const status = document.createElement('span');
+      status.className = 'invoice__status';
+      status.textContent = 'A vencer';
+
+      const amount = document.createElement('strong');
+      amount.className = 'invoice__amount';
+      const value = Number(assinaturaAtual.preco);
+      amount.textContent = Number.isFinite(value)
+        ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value)
+        : 'Valor indisponível';
+
+      const details = document.createElement('p');
+      details.className = 'invoice__details';
+      details.textContent = 'Vencimento: ' + formatBillingDate(dueDate);
+
+      const payButton = document.createElement('a');
+      payButton.className = 'btn-primary label-lg invoice__pay';
+      payButton.textContent = 'Pagar';
+      const planoAnual = /anual/i.test(assinaturaAtual.titulo || '');
+      const planoMensal = /mensal/i.test(assinaturaAtual.titulo || '');
+      payButton.href = planoAnual
+        ? './pagamento.html?plano=anual'
+        : planoMensal
+          ? './pagamento.html?plano=mensal'
+          : './pagamento.html';
+
+      heading.append(label, status);
+      item.append(heading, amount, details, payButton);
+      invoiceList.appendChild(item);
+      return true;
+    }
+
     function renderInvoices(transactions) {
       invoiceList.replaceChildren();
+      const hasUpcomingInvoice = renderUpcomingInvoice();
       if (transactions.length === 0) {
+        if (hasUpcomingInvoice) return;
         const emptyMessage = document.createElement('li');
         emptyMessage.className = 'invoice-list__message';
         emptyMessage.textContent = 'Nenhuma transação registrada para esta assinatura.';
