@@ -10,7 +10,7 @@
 
 <body>
     <div class="voltar">
-        <a href="./cadastro.html">↩</a>
+        <a href="./acessoEmpresa.html">↩</a>
     </div>
 
     <div class="corpo1">
@@ -31,14 +31,19 @@
             <label for="input_nome">RAZÃO SOCIAL <span id="mensagemnome"></span></label>
             <input type="text" id="input_nome" placeholder="LTDA / S.A" />
             <label for="input_cnpj">CNPJ <span id="mensagemcnpj"></span></label>
-            <input type="text" id="input_cnpj" oninput="mascaraCnpj()" onblur="buscarPorCnpj()" maxlength="18"
-                inputmode="numeric" placeholder="00.000.000/0000-00" />
+            <input type="text" id="input_cnpj" oninput="mascaraCnpj()" maxlength="18" inputmode="numeric"
+                placeholder="00.000.000/0000-00" />
             <h2 class="secao">ENDEREÇO DA EMPRESA</h2>
 
             <div class="linha">
                 <div class="coluna pequena">
-                    <label for="input_numero">CEP <span id="mensagemnumero"></span></label>
-                    <input type="text" id="input_numero" inputmode="numeric" placeholder="00000-00" maxlength="8" />
+                    <label for="input_cep">CEP <span id="mensagemcep"></span></label>
+                    <input type="text" id="input_cep" inputmode="numeric" placeholder="00000-000" maxlength="9"
+                        oninput="mascaraCep()" />
+                </div>
+                <div class="coluna grande">
+                    <label for="input_cidade">CIDADE <span id="mensagemcidade"></span></label>
+                    <input type="text" id="input_cidade" placeholder="Ex: São Paulo" />
                 </div>
                 <div class="coluna grande">
                     <label for="input_rua">LOGRADOURO <span id="mensagemrua"></span></label>
@@ -89,5 +94,67 @@
                 </div>
             </div>
 </body>
+<script>
+    function mascaraCnpj() {
+        input_cnpj.value = input_cnpj.value
+            .replace(/\D/g, "")
+            .slice(0, 14)
+            .replace(/^(\d{2})(\d)/, "$1.$2")
+            .replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
+            .replace(/\.(\d{3})(\d)/, ".$1/$2")
+            .replace(/(\d{4})(\d)/, "$1-$2");
+    }
+
+    function mascaraCep() {
+        input_cep.value = input_cep.value
+            .replace(/\D/g, "")
+            .slice(0, 8)
+            .replace(/^(\d{5})(\d)/, "$1-$2");
+    }
+    
+
+    function checar(valido, idMensagem, texto) {
+        document.getElementById(idMensagem).innerHTML = valido
+            ? ""
+            : `<span style="color: red">*${texto}</span>`;
+        return valido;
+    }
+
+    function cadastro() {
+        const nome = input_nome.value.trim();
+        const cnpj = input_cnpj.value.replace(/\D/g, "");
+        const logradouro = input_rua.value.trim();
+        const numero = input_numero.value.trim();
+        const cidade = input_cidade.value.trim();
+        const estado = input_estado.value;
+
+        const resultados = [
+            checar(nome.length >= 3, "mensagemnome", "Insira a razão social"),
+            checar(cnpj.length === 14, "mensagemcnpj", "O CNPJ precisa ter 14 dígitos"),
+            checar(logradouro.length >= 3, "mensagemrua", "Insira o logradouro"),
+            checar(numero !== "", "mensagemnumero", "Insira o número"),
+            checar(cidade.length >= 2, "mensagemcidade", "Insira a cidade"),
+            checar(estado !== "", "mensagemestado", "Escolha o estado"),
+        ];
+        if (!resultados.every(Boolean)) return;
+
+        fetch("/empresaAdmin", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ nome, cnpj, logradouro, numero, cidade, estado })
+        })
+            .then(async function (resposta) {
+                if (resposta.ok) {
+                    window.location.href = "./acessoEmpresa.html";
+                } else {
+                    checar(false, "mensagemcnpj", await resposta.text());
+                }
+            })
+            .catch(function (erro) {
+                console.log(`#ERRO: ${erro}`);
+                checar(false, "mensagemcnpj", "Erro ao conectar com o servidor");
+            });
+    }
+</script>
 
 </html>

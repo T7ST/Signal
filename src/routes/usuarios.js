@@ -12,12 +12,20 @@ router.post("/autenticar", function (req, res) {
     usuarioController.autenticar(req, res);
 });
 
-router.get("/:id", function (req, res) {
+router.get("/:id/:fkEmpresa", function (req, res) {
     usuarioController.buscar(req, res);
 });
 
 router.put("/excluir/:id/:fkEmpresa", function (req, res) {
     usuarioController.excluir(req, res);
+});
+
+router.put("/:id/:fkEmpresa", function (req, res) {
+    usuarioController.atualizar(req, res);
+});
+
+router.put("/senha/:id/:fkEmpresa", function (req, res) {
+    usuarioController.atualizarSenha(req, res);
 });
 
 module.exports = router;

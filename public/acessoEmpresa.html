@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Empresas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Plus+Jakarta+Sans:wght@600;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="./css/acessoEmpresa.css" />
+</head>
+
+<body>
+
+    <header class="topo">
+         <div class="voltar">
+        <a href="./login.html">↩</a>
+    </div>
+        <div class="topo-interno">
+            <div class="logo">
+                <div class="logo-icone"><span class="material-symbols-outlined">corporate_fare</span></div>
+                <span class="titulo">Empresas</span>
+            </div>
+        </div>
+        
+    </header>
+
+    <main class="conteudo">
+
+        <section class="resumo">
+            <div>
+                <span class="resumo-rotulo">Diretório corporativo</span>
+                <div class="resumo-linha">
+                    <span id="contador">0</span>
+                    <span class="resumo-texto">empresas registradas</span>
+                </div>
+            </div>
+            <button class="btn-nova" onclick="window.location.href='./administrador.html'">
+                <span class="material-symbols-outlined">add_business</span>
+                Nova Empresa
+            </button>
+        </section>
+
+        <div class="busca">
+            <span class="material-symbols-outlined">search</span>
+            <input id="busca" type="text" placeholder="Buscar por nome ou CNPJ..." oninput="renderizar()" />
+            <button title="Limpar" onclick="busca.value=''; renderizar()">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+
+        <div id="lista" class="lista"></div>
+
+        <div id="vazio" class="vazio">
+            <span class="material-symbols-outlined">search_off</span>
+            <p>Nenhuma empresa encontrada.</p>
+        </div>
+    </main>
+
+
+
+    <div id="modalEdicao" class="modal">
+        <div class="modal-caixa">
+            <h3 id="tituloModal" class="modal-titulo">Editar empresa</h3>
+
+            <label class="campo-rotulo" for="campoNome">Nome da empresa</label>
+            <input id="campoNome" class="campo" type="text" placeholder="Ex: Rostova Filmes Ltda" />
+
+            <label class="campo-rotulo" for="campoCnpj">CNPJ</label>
+            <input id="campoCnpj" class="campo mono" type="text" maxlength="18" inputmode="numeric"
+                placeholder="00.000.000/0000-00" oninput="mascaraCnpj(this)" />
+
+            <p id="erroEdicao" class="erro"></p>
+            <div class="botoes">
+                <button class="btn" onclick="fecharModais()">Cancelar</button>
+                <button class="btn primario" onclick="salvar()">Salvar</button>
+            </div>
+        </div>
+    </div>
+    <div id="modalExcluir" class="modal">
+        <div class="modal-caixa">
+            <div class="modal-icone"><span class="material-symbols-outlined">delete</span></div>
+            <h3 class="modal-titulo" style="margin-bottom:0">Excluir empresa?</h3>
+            <p class="modal-texto">
+                <strong id="nomeExcluir"></strong> será removida. Essa ação não pode ser desfeita.
+            </p>
+            <div class="botoes">
+                <button class="btn" onclick="fecharModais()">Cancelar</button>
+                <button class="btn primario" onclick="confirmarExclusao()">Excluir</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+</body>
+
+<script>
+     const API = "/empresaAdmin";
+    let empresas = [];
+    let idEditando = null, idExcluindo = null;
+
+    const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+    function formatarCnpj(v) {
+        return String(v).replace(/\D/g, "").slice(0, 14)
+            .replace(/^(\d{2})(\d)/, "$1.$2")
+            .replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
+            .replace(/\.(\d{3})(\d)/, ".$1/$2")
+            .replace(/(\d{4})(\d)/, "$1-$2");
+    }
+    function mascaraCnpj(el) { el.value = formatarCnpj(el.value); }
+
+    async function carregar() {
+        try {
+            const resp = await fetch(API);
+            if (!resp.ok) throw new Error(await resp.text());
+            const dados = await resp.json();
+            empresas = dados.map(e => ({ id: e.idEmpresa, nome: e.nome, cnpj: formatarCnpj(e.cnpj) }));
+        } catch (erro) {
+            console.log("#ERRO:", erro);
+            aviso("Não foi possível carregar as empresas.");
+        }
+        renderizar();
+    }
+
+    function renderizar() {
+        const termo = busca.value.toLowerCase().trim();
+        const termoNum = termo.replace(/\D/g, "");
+        const filtradas = empresas.filter(e =>
+            e.nome.toLowerCase().includes(termo) ||
+            e.cnpj.includes(termo) ||
+            (termoNum && e.cnpj.replace(/\D/g, "").includes(termoNum))
+        );
+        contador.textContent = empresas.length;
+        vazio.classList.toggle("visivel", filtradas.length === 0);
+
+        lista.innerHTML = filtradas.map(e => `
+    <div class="card">
+      <div class="card-linha">
+        <div class="card-info">
+          <div class="card-icone"><span class="material-symbols-outlined">business</span></div>
+          <div class="card-texto">
+            <h3 class="card-nome">${esc(e.nome)}</h3>
+            <span class="card-cnpj">${esc(e.cnpj)}</span>
+          </div>
+        </div>
+        <div class="acoes">
+          <button class="btn-icone" title="Editar empresa" onclick="abrirEdicao(${e.id})">
+            <span class="material-symbols-outlined">edit</span>
+          </button>
+          <button class="btn-icone perigo" title="Excluir empresa" onclick="abrirExclusao(${e.id})">
+            <span class="material-symbols-outlined">delete</span>
+          </button>
+        </div>
+      </div>
+    </div>`).join("");
+    }
+
+    function fecharModais() {
+        modalEdicao.classList.remove("aberto");
+        modalExcluir.classList.remove("aberto");
+    }
+
+    function abrirEdicao(id) {
+        const e = empresas.find(x => x.id === id);
+        if (!e) return;
+        idEditando = id;
+        campoNome.value = e.nome;
+        campoCnpj.value = e.cnpj;
+        erroEdicao.textContent = "";
+        modalEdicao.classList.add("aberto");
+        campoNome.focus();
+    }
+
+    async function salvar() {
+        const nome = campoNome.value.trim(), cnpj = campoCnpj.value.trim();
+        if (nome.length < 3) return erroEdicao.textContent = "Insira um nome válido.";
+        if (cnpj.replace(/\D/g, "").length !== 14) return erroEdicao.textContent = "O CNPJ precisa ter 14 dígitos.";
+
+        try {
+            const resp = await fetch(`${API}/${idEditando}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ nome, cnpj })
+            });
+            if (!resp.ok) return erroEdicao.textContent = await resp.text();
+            fecharModais();
+            aviso("Empresa atualizada.");
+            carregar();
+        } catch (erro) {
+            console.log("#ERRO:", erro);
+            erroEdicao.textContent = "Erro ao conectar com o servidor.";
+        }
+    }
+
+    function abrirExclusao(id) {
+        idExcluindo = id;
+        nomeExcluir.textContent = empresas.find(e => e.id === id).nome;
+        modalExcluir.classList.add("aberto");
+    }
+
+    async function confirmarExclusao() {
+        try {
+            const resp = await fetch(`${API}/${idExcluindo}`, { method: "DELETE" });
+            fecharModais();
+            if (!resp.ok) return aviso(await resp.text());
+            aviso("Empresa excluída.");
+            carregar();
+        } catch (erro) {
+            console.log("#ERRO:", erro);
+            fecharModais();
+            aviso("Erro ao conectar com o servidor.");
+        }
+    }
+
+    let timer;
+    function aviso(msg) {
+        toast.textContent = msg;
+        toast.classList.add("visivel");
+        clearTimeout(timer);
+        timer = setTimeout(() => toast.classList.remove("visivel"), 3200);
+    }
+
+    document.addEventListener("keydown", e => { if (e.key === "Escape") fecharModais(); });
+    [modalEdicao, modalExcluir].forEach(m => m.addEventListener("click", e => { if (e.target === m) fecharModais(); }));
+
+    carregar();
+</script>
+</script>
+
+</html>

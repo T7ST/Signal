@@ -6,7 +6,7 @@ body {
   box-sizing: border-box;
   overflow: hidden;
 }
-/*-----------------------FONTES--------------------------*/
+/*-----------------------FONTES------------------------*/
 .roboto-condensed-bold {
   font-family: "Roboto Condensed", sans-serif;
   font-optical-sizing: auto;
@@ -19,7 +19,7 @@ body {
   font-weight: lighter;
   font-style: normal;
 }
-/*-------------------------------------------------------*/
+/*--------------------------------------------------*/
 
 .pagina {
   display: flex;
@@ -73,7 +73,7 @@ body {
   align-items: center;
   flex-direction: column;
   width: 95%;
-  height: 50%;
+  height: 40%;
 }
 .campos input {
   width: 100%;
@@ -118,6 +118,71 @@ body {
   font-weight: bold;
 }
 
+.login {
+  display: flex;
+  justify-content: center;
+  color: #FFB4AA;
+  font-weight: 200;
+}
+.login a {
+  text-decoration: none;
+  color: #FF8A7C;
+  font-weight: bold;
+}
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+.modal.aberto { display: flex; }
+
+.modal-conteudo {
+  background: #1c1b1b;
+  color: #e5e2e1;
+  padding: 24px;
+  border-radius: 10px;
+  width: 300px;
+  text-align: center;
+}
+.modal-conteudo input {
+  width: 100%;
+  padding: 10px;
+  margin: 12px 0 4px;
+  box-sizing: border-box;
+  border-radius: 6px;
+  border: 1px solid #3a3a3a;
+  background: #121212;
+  color: #e5e2e1;
+}
+.modal-conteudo .erro {
+  color: #f87171;
+  font-size: 14px;
+  min-height: 18px;
+  margin: 0 0 10px;
+}
+.modal-conteudo .botoes {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+.modal-conteudo .botoes button {
+  flex: 1;
+  padding: 10px;
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  background: #2a2a2a;
+  color: #e5e2e1;
+}
+.modal-conteudo .botoes button:first-child {
+  background: #E50914;
+  color: #fff;
+}
 @media (min-width: 768px) {
   .pagina {
     justify-content: center;
