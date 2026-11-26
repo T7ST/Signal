@@ -73,7 +73,6 @@ create table assinatura (
     statusAssinatura varchar(10),
     metodoPagamento varchar(10),
     dataRegistro datetime default CURRENT_TIMESTAMP,
-    metodoPagamento varchar(45),
 
     fkUsuario int not null,
     fkPlano int not null, 
@@ -142,9 +141,15 @@ INSERT INTO endereco (logradouro, numero, cidade, estado, fkEmpresa) VALUES
     ('Rua A', '123', 'Cidade A', 'SP', 1),
     ('Rua B', '456', 'Cidade B', 'SP', 2),
     ('Rua C', '789', 'Cidade C', 'SP', 3);
-
-INSERT INTO usuario (nome, email, senha, fkEmpresa) VALUES
-    ('Importador de Planilhas', 'importador@signal.local', 'SEM_LOGIN', 1);
+    
+insert into cargos (titulo, descricao) values
+	('Usuário', 'Usuário padrão do sistema');
+    
+insert into preferencias (meioNotificacao, statuss) values 
+	('E-mail', 1);
+        
+INSERT INTO usuario (nome, email, senha, fkEmpresa, fkpreferencias, fkcargo) VALUES
+    ('Importador de Planilhas', 'importador@signal.local', 'SEM_LOGIN', 1, 1, 1);
 
 -- VIEWS
 
@@ -163,3 +168,10 @@ SELECT
 FROM assinatura a
     JOIN plano p
         ON p.idPlano = a.fkPlano;
+
+select usuario.*, empresa.*, endereco.*
+from endereco
+join empresa
+on empresa.idEmpresa = endereco.fkEmpresa
+join usuario
+on empresa.idEmpresa = usuario.fkEmpresa;
