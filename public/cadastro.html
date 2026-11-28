@@ -52,16 +52,16 @@
       <input type="password" id="input_senhaConfirmacao" placeholder="🔒︎ Repita sua senha" />
 
       <h2 class="secao">Dados da empresa</h2>
+      <label for="input_codigo">CÓDIGO DE ACESSO <span id="mensagemcodigo"></span></label>
+      <input type="password" id="input_codigo" onblur="buscarPorCodigo()" placeholder="~~~~~~~~" />
 
       <label for="input_empresa">NOME DA EMPRESA <span id="mensagemempresa"></span></label>
       <input type="text" id="input_empresa" placeholder="Ex: Rostova Filmes Ltda" />
 
       <label for="input_cnpj">CNPJ <span id="mensagemcnpj"></span></label>
-      <input type="text" id="input_cnpj" oninput="mascaraCnpj()" onblur="buscarPorCnpj()" maxlength="18"
-        inputmode="numeric" placeholder="00.000.000/0000-00" />
+      <input type="text" id="input_cnpj" oninput="mascaraCnpj()" maxlength="18" inputmode="numeric"
+        placeholder="00.000.000/0000-00" />
 
-      <label for="input_codigo">CÓDIGO DE ACESSO <span id="mensagemcodigo"></span></label>
-      <input type="password" id="input_codigo" placeholder="~~~~~~~~" />
 
       <h2 class="secao">Endereço da empresa</h2>
 
@@ -186,20 +186,29 @@
 
     let fkEmpresa;
 
-    async function buscarPorCnpj() {
-      const cnpj = input_cnpj.value.replace(/\D/g, "");
-      if (cnpj.length !== 14) return;
+    async function buscarPorCodigo() {
+      const codigo = input_codigo.value.trim();
+      if (codigo === "") return;
 
-      const empresa = await fetch(`/empresa/${cnpj}`).then((res) =>
-        res.json(),
-      );
-      if (empresa) {
-        fkEmpresa = empresa[0].idEmpresa;
-        input_empresa.value = empresa[0].nome;
-        input_rua.value = empresa[0].logradouro;
-        input_numero.value = empresa[0].numero;
-        input_cidade.value = empresa[0].cidade;
-        input_estado.value = empresa[0].estado;
+      try {
+        const resposta = await fetch(`/empresa/codigo/${encodeURIComponent(codigo)}`);
+        const empresa = await resposta.json();
+
+        if (resposta.ok && empresa.length > 0) {
+          fkEmpresa = empresa[0].idEmpresa;
+          input_empresa.value = empresa[0].nome;
+          input_cnpj.value = empresa[0].cnpj;
+          input_rua.value = empresa[0].logradouro;
+          input_numero.value = empresa[0].numero;
+          input_cidade.value = empresa[0].cidade;
+          input_estado.value = empresa[0].estado;
+          checar(true, "mensagemcodigo", "");
+        } else {
+          fkEmpresa = undefined;
+          checar(false, "mensagemcodigo", "Código de acesso inválido");
+        }
+      } catch (erro) {
+        console.log(`#ERRO: ${erro}`);
       }
     }
 
@@ -225,6 +234,11 @@
           senha === confirmacao && confirmacao !== "",
           "mensagemconfirm",
           "As senhas não coincidem",
+        ),
+        checar(
+          fkEmpresa !== undefined,
+          "mensagemcodigo",
+          "Informe um código de acesso válido",
         ),
       ];
 
