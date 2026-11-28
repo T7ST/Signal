@@ -5,7 +5,7 @@ create table empresa (
 	idEmpresa int primary key auto_increment,
     cnpj char(18) not null UNIQUE,
     nome varchar(100) not null,
-    codigo varchar(15)
+    codigo varchar(15) not null
 );
     
 create table endereco (
@@ -14,6 +14,7 @@ create table endereco (
     numero varchar(10),
     cidade varchar(50),
     estado char(2),
+    cep char (9),
     fkEmpresa int not null,
     constraint pkCompostaEndereco primary key (idEndereco, fkEmpresa),
     constraint fkEmpresaConstraint foreign key (fkEmpresa) references empresa(idEmpresa)
@@ -132,10 +133,10 @@ insert into administrador(senha) values
     ("senha123");    
     
     
-INSERT INTO empresa (nome, cnpj) VALUES
-    ('Empresa Teste', '12345678901234'),
-    ('Empresa Teste 2', '12345678901235'),
-    ('Empresa Teste 3', '12345678901236');
+INSERT INTO empresa (nome, cnpj, codigo) VALUES
+    ('Empresa Teste', '12345678901234', 'teste123'),
+    ('Empresa Teste 2', '12345678901235', 'teste2123'),
+    ('Empresa Teste 3', '12345678901236', 'teste3123');
 
 INSERT INTO endereco (logradouro, numero, cidade, estado, fkEmpresa) VALUES
     ('Rua A', '123', 'Cidade A', 'SP', 1),
@@ -175,3 +176,7 @@ join empresa
 on empresa.idEmpresa = endereco.fkEmpresa
 join usuario
 on empresa.idEmpresa = usuario.fkEmpresa;
+
+select * from usuario;
+select * from empresa;
+select * from endereco;

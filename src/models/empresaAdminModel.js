@@ -10,12 +10,12 @@ function listar() {
 
 async function criar(e) {
   var r = await database.executar(
-    `INSERT INTO empresa (nome, cnpj) VALUES (${q(e.nome)}, ${q(e.cnpj)});`
+    `INSERT INTO empresa (codigo, nome, cnpj) VALUES (${q(e.codigo)}, ${q(e.nome)}, ${q(e.cnpj)});`
   );
   try {
     await database.executar(
-      `INSERT INTO endereco (logradouro, numero, cidade, estado, fkEmpresa)
-       VALUES (${q(e.logradouro)}, ${q(e.numero)}, ${q(e.cidade)}, ${q(e.estado)}, ${r.insertId});`
+      `INSERT INTO endereco (cep, logradouro, numero, cidade, estado, fkEmpresa)
+       VALUES (${q(e.cep)}, ${q(e.logradouro)}, ${q(e.numero)}, ${q(e.cidade)}, ${q(e.estado)}, ${r.insertId});`
     );
   } catch (erro) {
     await database.executar(`DELETE FROM empresa WHERE idEmpresa = ${r.insertId};`);

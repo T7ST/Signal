@@ -24,7 +24,18 @@ function listarPorCnpj(cnpj) {
   return database.executar(instrucaoSql);
 }
 
+function listarPorCodigo(codigo) {
+  var instrucaoSql = `
+        SELECT * FROM empresa 
+        JOIN endereco ON empresa.idEmpresa = endereco.fkEmpresa 
+        WHERE codigo = '${codigo}';
+    `;
+  console.log("Executando a instrução SQL: \n" + instrucaoSql);
+  return database.executar(instrucaoSql);
+}
+
 module.exports = {
   cadastrar,
   listarPorCnpj,
+  listarPorCodigo,
 };
