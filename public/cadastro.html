@@ -56,38 +56,39 @@
       <input type="password" id="input_codigo" onblur="buscarPorCodigo()" placeholder="~~~~~~~~" />
 
       <label for="input_empresa">NOME DA EMPRESA <span id="mensagemempresa"></span></label>
-      <input type="text" id="input_empresa" placeholder="Ex: Rostova Filmes Ltda" />
+      <input type="text" id="input_empresa" readonly placeholder="Ex: Rostova Filmes Ltda" />
 
       <label for="input_cnpj">CNPJ <span id="mensagemcnpj"></span></label>
-      <input type="text" id="input_cnpj" oninput="mascaraCnpj()" maxlength="18" inputmode="numeric"
-        placeholder="00.000.000/0000-00" />
+     <input type="text" id="input_cnpj" readonly oninput="mascaraCnpj()" maxlength="18" inputmode="numeric"
+  placeholder="00.000.000/0000-00" />
 
 
       <h2 class="secao">Endereço da empresa</h2>
 <div class="coluna grande">
           <label for="input_cep">CEP <span id="mensagemcep"></span></label>
-          <input type="text" id="input_cep" oninput="mascaraCep()" maxlength="9" inputmode="numeric"
-            placeholder="Ex: 00000-000" />
+          <input type="text" id="input_cep" readonly oninput="mascaraCep()" maxlength="9" inputmode="numeric"
+  placeholder="Ex: 00000-000" />
       <div class="linha">
         
           <div class="coluna grande">
             <label for="input_rua">logradouro <span id="mensagemrua"></span></label>
-            <input type="text" id="input_rua" placeholder="Ex: Av. Paulista" />
+            <input type="text" id="input_rua" readonly placeholder="Ex: Av. Paulista" />
+
           </div>
           <div class="coluna pequena">
             <label for="input_numero">NÚMERO <span id="mensagemnumero"></span></label>
-            <input type="text" id="input_numero" inputmode="numeric" placeholder="1000" />
+            <input type="text" id="input_numero" readonly inputmode="numeric" placeholder="1000" />
           </div>
         </div>
 
         <div class="linha">
           <div class="coluna grande">
             <label for="input_cidade">CIDADE <span id="mensagemcidade"></span></label>
-            <input type="text" id="input_cidade" placeholder="Ex: São Paulo" />
+            <input type="text" id="input_cidade" readonly placeholder="Ex: São Paulo" />
           </div>
           <div class="coluna pequena">
             <label for="input_estado">ESTADO <span id="mensagemestado"></span></label>
-            <select id="input_estado">
+            <select id="input_estado" disabled>
               <option value="">UF</option>
               <option>AC</option>
               <option>AL</option>
