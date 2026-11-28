@@ -14,6 +14,7 @@ create table endereco (
     numero varchar(10),
     cidade varchar(50),
     estado char(2),
+    cep char (9),
     fkEmpresa int not null,
     constraint pkCompostaEndereco primary key (idEndereco, fkEmpresa),
     constraint fkEmpresaConstraint foreign key (fkEmpresa) references empresa(idEmpresa)
@@ -178,3 +179,4 @@ on empresa.idEmpresa = usuario.fkEmpresa;
 
 select * from usuario;
 select * from empresa;
+select * from endereco;
